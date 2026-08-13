@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+
+# Python
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+
+# Test / lint / type caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / local workspace
+.obsidian/
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~

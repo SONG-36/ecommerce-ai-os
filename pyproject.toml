@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecommerce-ai-os"
+version = "0.1.0"
+description = "Ecommerce AI OS scaffold"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.setuptools]
+package-dir = {"" = "src"}
