@@ -631,6 +631,11 @@ docs/
 
 不要在新聊天里重新恢复旧的：
 
+LEGACY / DEPRECATED PATHS — DO NOT USE
+
+以下路径仅用于记录已经废弃的旧 Documentation Architecture。
+它们不是 Current Path，不得作为文件引用、导航路径或新设计目标。
+
 ```text
 docs/01_kernel
 docs/02_capabilities
