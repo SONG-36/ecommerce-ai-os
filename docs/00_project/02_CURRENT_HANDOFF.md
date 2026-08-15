@@ -3,7 +3,7 @@
 - **文档类型**：Current Handoff / 新聊天交接入口
 - **项目**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：System Architecture Boundary Refinement / Handoff Preparation
+- **当前阶段**：System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice
 - **最后更新**：2026-08-15
 - **重要说明**：本文件是导航入口，不是 Architecture Authority
 
@@ -733,6 +733,16 @@ Platform-specific Operations final structure
 
 > **Architecture big, implementation small.**
 
+当前实现策略：
+
+```text
+Vertical Slice First
+Stable Core Thin First
+Kernel First       = No
+UI First           = No
+Framework First    = No
+```
+
 含义：
 
 - 架构允许给未来留扩展空间；
@@ -774,20 +784,15 @@ C01-C09 ACCEPTED and implemented in Current Candidate Architecture
 C10 Operational Observability DEFERRED
 ```
 
-这些文档在正式换聊天前应完成：
+上述阶段性审核与 V0.2 Documentation Completeness Fix 已完成。
 
-> **Final Consistency Audit**
+当前仍需保持的状态边界：
 
-重点检查：
-
-- 路径；
-- 状态；
-- Candidate / Approved 语义；
-- Runtime Governance 命名；
-- Product / System / Software 边界；
-- Legacy / Provider Lab Authority；
-- 交叉引用；
-- README / AGENTS 是否需要同步最小导航信息。
+- System Architecture = Candidate / Human-reviewed working architecture；
+- Entire System Architecture ≠ Approved；
+- Software Architecture = Not Yet Designed；
+- C01-C09 = ACCEPTED；
+- C10 Operational Observability = DEFERRED。
 
 ---
 
@@ -795,9 +800,7 @@ C10 Operational Observability DEFERRED
 
 本文件不写死当前 Ecommerce AI OS 的最新 Commit Hash。
 
-原因：
-
-> Final Handoff Package 尚需完成一致性审核和最后一次 Git Freeze。
+当前状态同步不代表 Candidate 升级为 Approved，也不代表已经完成 commit 或 push。
 
 新聊天开始前或最终 Freeze 时，必须由 Codex / Git 真实检查：
 
@@ -823,27 +826,27 @@ docs: freeze l0 runtime calibration handoff
 
 下一项任务：
 
-# **Review Current Candidate Architecture Diff**
+# **Development Strategy + First Vertical Slice — Research Execution Architecture**
 
-审核对象：
+当前下一阶段路线摘要：
 
 ```text
-docs/00_project/00_PROJECT_BASELINE_V0.1.md
-docs/00_project/01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md
-docs/01_product/00_PRODUCT_ARCHITECTURE.md
-docs/02_system/00_SYSTEM_ARCHITECTURE.md
-docs/03_software/00_SOFTWARE_ARCHITECTURE.md
-docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md
-docs/05_references/legacy/02_LEGACY_ARCHITECTURE_REFERENCE_AUDIT.md
-docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md
-docs/00_project/02_CURRENT_HANDOFF.md
+Development Strategy
+        ↓
+First Vertical Slice — Research Execution Architecture
+        ↓
+System Detailed Contracts required by the slice
+        ↓
+Minimal Software Architecture required by the slice
+        ↓
+Walking Implementation
+        ↓
+Runtime / Contract Validation
 ```
 
-审核通过并 Freeze 后：
+第一条候选 Vertical Slice 可以是 US / Car Vacuum / TikTok Content Research。
 
-> **由 Human Review 决定是否进入下一项专项 Contract / Software Architecture 工作。**
-
-优先从当前 Stable Core Candidate / System Boundary 继续，而不是重新讨论 Product / Documentation 顶层结构。
+新聊天应先读 Current Authority，以真实 Vertical Slice 为入口，先讨论业务边界和最小 Contract，再进入 Minimal Software Architecture。
 
 ---
 
@@ -871,7 +874,7 @@ docs/00_project/02_CURRENT_HANDOFF.md
 不要从 src scaffold 反推 Software Architecture。
 不要让 Provider API Shape 定义 Ecommerce AI OS。
 
-当前先基于仓库真实状态做审计，再继续 Handoff 指定的下一项 System Architecture 工作。
+当前先基于仓库真实状态确认状态，再继续 Handoff 指定的 Development Strategy / First Vertical Slice 工作。
 ```
 
 ---

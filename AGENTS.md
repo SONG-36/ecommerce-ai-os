@@ -6,7 +6,13 @@ This repository is the primary repository for the Ecommerce AI OS.
 
 Current phase:
 
-Architecture Baseline / Project Scaffold.
+System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice.
+
+Current status:
+
+- System Architecture V0.2 is Candidate / Human-reviewed working architecture;
+- Software Architecture is Not Yet Designed;
+- next phase is Development Strategy + First Vertical Slice / System Detailed Design.
 
 ## Current Boundary
 

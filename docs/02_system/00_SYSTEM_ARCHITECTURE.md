@@ -30,6 +30,74 @@
 - Agent / MCP / RAG 等技术概念的位置；
 - System Architecture 与 Software Architecture 的边界。
 
+## System Architecture V0.2 Current Candidate Overview
+
+> This is a responsibility map, not a strict runtime call graph.
+
+```mermaid
+flowchart TD
+
+    P["Product Architecture<br/>Research / Creative Production / Knowledge-assisted Work / Experiment & Validation"]
+
+    APP["Applications"]
+
+    SK["Skills<br/>Business Know-how / Platform Adaptation"]
+
+    subgraph CORE["Stable Core"]
+        TR["Task Runtime<br/>Lifecycle / State / Execution Coordination"]
+        SX["Skill Extension Mechanism<br/>Contract / Composition / Adaptation"]
+        CC["Capability Contract<br/>Invocation / I-O / Resolution"]
+        RG["Runtime Governance<br/>Enforcement Mechanism"]
+        ER["Execution Record<br/>Stable Execution Facts"]
+    end
+
+    CAP["Capabilities<br/>Search / Analyze / Generate / ..."]
+
+    subgraph FS["Foundation Services"]
+        K["Knowledge"]
+        EV["Evidence"]
+        ART["Artifact"]
+    end
+
+    RESEARCH["Research<br/>Product Family Confirmed<br/>System Placement Under Review"]
+
+    INV["Invocation Surface"]
+
+    subgraph PI["Provider / Integration Boundary"]
+        RES["Provider Resolution"]
+        AD["Adapter / Connector"]
+        PRO["Concrete Provider"]
+        ACCESS["API / SDK / MCP / Native Mechanism"]
+
+        RES --> AD
+        AD --> PRO
+        PRO --> ACCESS
+    end
+
+    COMP["Compatibility / Versioning<br/>Cross-cutting Concern"]
+
+    P --> APP
+    APP --> SK
+    SK --> CORE
+
+    CORE --> CAP
+    CORE --> FS
+
+    CAP --> INV
+    INV --> RES
+
+    FS --> RES
+
+    RESEARCH -. "system placement under review" .-> FS
+
+    COMP -. "cross-cutting" .-> CORE
+    COMP -. "cross-cutting" .-> CAP
+    COMP -. "cross-cutting" .-> FS
+    COMP -. "cross-cutting" .-> AD
+```
+
+这张总图用于表达当前 V0.2 的责任区域与主要关系，不新增 Tool Layer、Agent Layer、Orchestration Layer、Adapter Layer 或 MCP Layer。
+
 ---
 
 # 1. System Architecture 不是严格的六层流水线
@@ -620,9 +688,14 @@ Foundation Services
 │
 ├── Knowledge
 ├── Evidence
-├── Artifact
-└── Future Services
+└── Artifact
 ```
+
+未来扩展占位：
+
+> Additional Foundation Services may be proposed when supported by real business or system evidence.
+
+Future Service Placeholder ≠ Current Candidate Service。
 
 状态：
 
@@ -814,7 +887,11 @@ Capability / Service Contract
 ↓
 Provider Resolution
 ↓
+Adapter / Connector
+↓
 Concrete Provider
+↓
+API / SDK / MCP / Native Mechanism
 ```
 
 这样：

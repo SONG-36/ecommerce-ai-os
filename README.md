@@ -5,6 +5,8 @@ creative production, knowledge, and business workflows.
 
 Current status:
 
-Architecture Baseline / Project Scaffold Only.
+System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice.
 
-Do not write any deeper architecture details yet.
+Next phase: Development Strategy + First Vertical Slice / System Detailed Design.
+
+Software Architecture remains Not Yet Designed.

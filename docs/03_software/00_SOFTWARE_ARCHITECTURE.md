@@ -52,11 +52,11 @@ Code / Schema / Tests
 
 原因：
 
-- Product Architecture 刚建立总图；
-- System Architecture 仍处于 Candidate；
-- Stable Core 尚未完成专项审计；
-- Foundation Services 尚未完成边界审计；
+- Product Architecture 已有工作基线；
+- System Architecture V0.2 已完成当前 Candidate 边界收敛，但仍不是 Approved；
+- System Detailed Contracts 尚未设计；
 - Capability / Provider / Skill Contract 尚未设计；
+- 选定 Vertical Slice 所需的 Minimal Software Architecture 尚未设计；
 - 现在过早冻结软件架构会反过来污染 System Architecture。
 
 ---

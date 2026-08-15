@@ -1,11 +1,11 @@
 # Ecommerce AI OS — 项目基线 V0.1
 
 - **版本**：V0.1
-- **状态**：Draft for Human Review / 待人工审阅
+- **状态**：Current Project State Map / Human-reviewed working baseline
 - **文档类型**：Project Baseline / 项目总地图
 - **项目名称**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：Architecture Baseline / Handoff Preparation
+- **当前阶段**：System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice
 - **最后更新**：2026-08-15
 
 ---
@@ -393,7 +393,7 @@ Runtime Governance
 Architecture Governance
 ```
 
-六个 Candidate 的详细对象、字段和 Contract：
+五个 Stable Core Candidate Areas 的详细对象、字段和 Contract：
 
 **Not Yet Designed**
 
@@ -404,11 +404,15 @@ Architecture Governance
 当前 Candidate Foundation Services：
 
 ```text
-Knowledge
-Evidence
-Artifact
-Future Services
+Foundation Services
+├── Knowledge
+├── Evidence
+└── Artifact
 ```
+
+Future Service Placeholder ≠ Current Candidate Service。
+
+Additional Foundation Services may be proposed when supported by real business or system evidence.
 
 Research 仍是 Product Architecture 中的 Use Case Family，但在 System Architecture 中：
 
@@ -756,7 +760,19 @@ Legacy Architecture Reference Audit
 Provider Lab Asset Handoff
 ```
 
-这些文档仍需要最终一致性审核。
+以下阶段性工作已经完成：
+
+- Baseline Consistency Audit；
+- External AI Architecture Audit 当前阶段；
+- System Architecture Stress Test；
+- C01-C09 Human Review；
+- System Architecture V0.2 Boundary Refinement；
+- ADR-001；
+- V0.2 Documentation Completeness Fix。
+
+Current System Architecture 仍为 **Candidate / Human-reviewed working architecture**，不是 Approved Architecture。
+
+Software Architecture 仍为 **Not Yet Designed**。
 
 ---
 
@@ -834,9 +850,9 @@ System Placement Under Review
 
 # 11. Current Development Boundary / 当前开发边界
 
-当前阶段仍然是：
+当前阶段是：
 
-# **Architecture Baseline / Handoff Preparation**
+# **System Architecture V0.2 Candidate Stabilized / Preparing First Vertical Slice and System Detailed Design**
 
 当前不进入：
 
@@ -852,9 +868,25 @@ System Placement Under Review
 - Production Image / Video Pipeline；
 - Platform-specific Operations 全量实现。
 
-当前主要任务是：
+当前开发原则仍然是：
 
-> **在 Human Review 接受 C01-C09、C10 继续 DEFER 的基础上，维护 Current Candidate Architecture 的边界一致性。**
+> **Architecture big, implementation small.**
+
+当前可以开始：
+
+- Development Strategy；
+- First Vertical Slice System Detailed Design；
+- Selected slice 所需的 Minimal Software Architecture；
+- 在 slice 设计获批后进行 Walking Implementation。
+
+当前仍然不进入：
+
+- Production Agent / Multi-Agent platform；
+- Production RAG / Vector Database；
+- Full Provider integration；
+- Full UI / Full DB；
+- Full Creative pipeline；
+- 97 API 全量接入。
 
 ---
 
@@ -863,17 +895,29 @@ System Placement Under Review
 当前建议顺序：
 
 ```text
-1. 审核 Project Baseline
+1. Freeze / synchronize V0.2 current project state
         ↓
-2. 对全部 Baseline / Reference 文档做一致性审核
+2. Record Ecommerce AI OS Development Strategy
+   Top-down + Bottom-up
+   Vertical Slice First
+   Stable Core Thin First
         ↓
-3. 修复交叉引用、路径和状态冲突
+3. Start First Vertical Slice
+   Research Execution Architecture
         ↓
-4. 生成 docs/00_project/02_CURRENT_HANDOFF.md
+4. Define only the System Detailed Contracts
+   required by that slice
         ↓
-5. 冻结当前 Handoff Package
+5. Define Minimal Software Architecture
+   required by that slice
         ↓
-6. 新聊天继续专项 System Architecture Audit
+6. Walking Implementation
+        ↓
+7. Runtime / Contract Validation
+        ↓
+8. Use real failures / evidence to evolve Core
+        ↓
+9. Second Vertical Slice for reuse validation
 ```
 
 进入新聊天后，不应重新设计已经完成的 Product / Documentation 层级。
@@ -920,7 +964,7 @@ docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md
 
 当前文档状态：
 
-# **Draft for Human Review**
+# **Current Project State Map / Human-reviewed working baseline**
 
 批准本文件只代表：
 
