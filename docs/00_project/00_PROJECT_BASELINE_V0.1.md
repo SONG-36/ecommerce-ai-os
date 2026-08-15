@@ -6,7 +6,7 @@
 - **项目名称**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
 - **当前阶段**：Architecture Baseline / Handoff Preparation
-- **最后更新**：2026-08-14
+- **最后更新**：2026-08-15
 
 ---
 
@@ -314,17 +314,39 @@ Skill 负责：
 
 当前语义：
 
-> **Provider = 具体由谁实现或通过谁访问。**
+> **Provider = 实际提供外部数据、模型、能力或基础设施的一方。**
 
 例如：
 
 - Scrape Creators；
 - LLM Provider；
 - Image / Video Model Provider；
-- SDK / API；
-- MCP Server；
 - Storage Provider；
 - Future Provider。
+
+必须区分：
+
+```text
+Provider
+≠ Adapter / Connector
+≠ API / SDK / MCP
+```
+
+当前 Candidate 依赖方向：
+
+```text
+Capability / Service Contract
+        ↓
+Provider Resolution
+        ↓
+Adapter / Connector
+        ↓
+Concrete Provider
+        ↓
+API / SDK / MCP / Native Mechanism
+```
+
+不新增顶层 Adapter Layer；Provider-specific quirks 由 Adapter / Contract Boundary 优先吸收。
 
 核心边界：
 
@@ -345,16 +367,23 @@ Provider
 
 Stable Core 当前只负责系统级运行规则，不承载 TikTok / Amazon / Short Drama 等具体业务知识。
 
-当前六个 Candidate Areas：
+当前 Stable Core Candidate Areas：
 
 ```text
 Task Runtime
-Extension Runtime
+Skill Extension Mechanism
 Capability Contract
 Runtime Governance
 Execution Record
-Compatibility
 ```
+
+Compatibility 保留为：
+
+```text
+Cross-cutting Compatibility / Versioning Concern
+```
+
+不再作为独立一级 Stable Core Area。
 
 注意：
 
@@ -377,9 +406,15 @@ Architecture Governance
 ```text
 Knowledge
 Evidence
-Research
 Artifact
 Future Services
+```
+
+Research 仍是 Product Architecture 中的 Use Case Family，但在 System Architecture 中：
+
+```text
+Research
+→ System Placement Under Review
 ```
 
 它们是重要系统方向，但详细 Contract 尚未设计。
@@ -742,11 +777,16 @@ Stable Core Candidate Areas：
 
 ```text
 Task Runtime
-Extension Runtime
+Skill Extension Mechanism
 Capability Contract
 Runtime Governance
 Execution Record
-Compatibility
+```
+
+Cross-cutting：
+
+```text
+Compatibility / Versioning
 ```
 
 Candidate Foundation Services：
@@ -754,8 +794,13 @@ Candidate Foundation Services：
 ```text
 Knowledge
 Evidence
-Research
 Artifact
+```
+
+Research：
+
+```text
+System Placement Under Review
 ```
 
 ---
@@ -765,12 +810,13 @@ Artifact
 当前明确未设计：
 
 - Task Runtime internal contract；
-- Skill Contract details；
-- Capability Contract details；
+- Advanced Runtime Concerns：Checkpoint Strategy、Crash Recovery、Durable Execution、Retry Engine；
+- Skill Extension Contract details；
+- Capability Invocation Schema；
 - Provider Resolution；
 - Runtime Governance rules；
 - Execution Record schema；
-- Compatibility rules；
+- Cross-cutting Compatibility rules；
 - Foundation Service contracts；
 - Agent architecture；
 - Software package design；
@@ -808,7 +854,7 @@ Artifact
 
 当前主要任务是：
 
-> **完成当前 Baseline Package 的一致性审核，并生成可靠的新聊天 Handoff。**
+> **在 Human Review 接受 C01-C09、C10 继续 DEFER 的基础上，维护 Current Candidate Architecture 的边界一致性。**
 
 ---
 

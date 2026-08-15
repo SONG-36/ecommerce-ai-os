@@ -1,11 +1,11 @@
-# Ecommerce AI OS — System Architecture V0.1
+# Ecommerce AI OS — System Architecture V0.2
 
-- **版本**：V0.1
-- **状态**：Draft for Human Review / 待人工审阅
+- **版本**：V0.2
+- **状态**：Candidate / Human-reviewed working architecture
 - **文档类型**：System Architecture
 - **目标路径**：`docs/02_system/00_SYSTEM_ARCHITECTURE.md`
 - **项目**：Ecommerce AI OS
-- **最后更新**：2026-08-14
+- **最后更新**：2026-08-15
 
 ---
 
@@ -25,7 +25,7 @@
 - Capabilities；
 - Foundation Services；
 - Providers；
-- 六个 Stable Core Candidate Areas；
+- Stable Core Candidate Areas 与 Cross-cutting Concerns；
 - 依赖方向；
 - Agent / MCP / RAG 等技术概念的位置；
 - System Architecture 与 Software Architecture 的边界。
@@ -82,11 +82,10 @@ Knowledge Service
               │           Stable Core           │
               │                                 │
               │ Task Runtime                    │
-              │ Extension Runtime               │
+              │ Skill Extension Mechanism      │
               │ Capability Contract             │
               │ Runtime Governance              │
               │ Execution Record                │
-              │ Compatibility                   │
               └─────────┬──────────────┬────────┘
                         │              │
              ┌──────────▼───────┐  ┌──▼────────────────┐
@@ -94,9 +93,9 @@ Knowledge Service
              │                  │  │                    │
              │ Search           │  │ Knowledge          │
              │ Analyze          │  │ Evidence           │
-             │ Generate         │  │ Research           │
-             │ Image            │  │ Artifact           │
-             │ Video            │  │ Future Services    │
+             │ Generate         │  │ Artifact           │
+             │ Image            │  │                    │
+             │ Video            │  │                    │
              │ Future           │  │                    │
              └─────────┬────────┘  └─────────┬──────────┘
                        │                     │
@@ -104,9 +103,19 @@ Knowledge Service
                                   ▼
                        ┌─────────────────────┐
                        │      Providers      │
-                       │ APIs / Models / SDK │
-                       │ MCP / Storage / ... │
+                       │ Concrete Providers │
+                       │ via Adapters / ... │
                        └─────────────────────┘
+
+Research (Product Use Case Family)
+┌─────────────────────────────────────────────┐
+│ System Placement Under Review                │
+│ Not part of the confirmed Foundation        │
+│ Services Candidate Set                      │
+└─────────────────────────────────────────────┘
+
+Research may later be placed as a Domain Service, Workflow, Skill Composition,
+Capability Composition, or another structure. No final placement is decided.
 ```
 
 这是一张**责任关系图**，不是最终调用图、进程图或部署图。
@@ -239,7 +248,7 @@ Provider
 
 Provider 表示：
 
-> **具体外部实现、模型、数据访问方式、API、SDK、MCP Server、Storage 或其他基础设施适配器。**
+> **实际提供外部数据、模型、能力或基础设施的一方。**
 
 例如未来可能包括：
 
@@ -248,19 +257,51 @@ Provider 表示：
 - Kling；
 - 即梦；
 - Storage Provider；
-- MCP Server；
-- Other APIs / SDKs；
 - Future Providers。
 
-Provider 并不只服务 Capability，也可能服务：
+Provider 与以下概念必须区分：
 
-- Foundation Service；
-- Artifact Storage；
-- Integration。
+```text
+Provider
+≠ Adapter / Connector
+≠ API / SDK / MCP
+```
+
+其中：
+
+- `Provider` 是实际提供外部数据、模型、能力或基础设施的一方；
+- `Adapter / Connector` 是 Ecommerce AI OS 内部把具体 Provider 映射到稳定 Capability / Service Contract 的适配边界；
+- `Integration / Access Mechanism` 是 API、SDK、MCP 或 Native Integration 等连接方式。
+
+当前 Candidate 依赖方向：
+
+```text
+Capability / Service Contract
+        ↓
+Provider Resolution
+        ↓
+Adapter / Connector
+        ↓
+Concrete Provider
+        ↓
+API / SDK / MCP / Native Mechanism
+```
+
+不新增顶层 Adapter Layer。
 
 核心原则：
 
-> **Provider-specific quirks 不应该直接泄漏到业务 Skill。**
+> **Provider-specific quirks 应优先由 Adapter / Contract Boundary 吸收，不应直接泄漏到业务 Skill。**
+
+这些 quirks 包括：
+
+- parameter naming；
+- provider IDs；
+- pagination token；
+- missing fields；
+- error shape；
+- provider-specific filters；
+- region quirks。
 
 Provider Lab 提供 Provider 事实，但 Provider Lab 不定义 Ecommerce AI OS 顶层架构。
 
@@ -282,17 +323,19 @@ Stable Core 不承载：
 - Scrape Creators 字段；
 - 具体 Provider 业务逻辑。
 
-当前 Stable Core 六个 Candidate Areas：
+当前 Stable Core Candidate Areas：
 
 ```text
 Stable Core
 │
 ├── Task Runtime
-├── Extension Runtime
+├── Skill Extension Mechanism
 ├── Capability Contract
 ├── Runtime Governance
-├── Execution Record
-└── Compatibility
+└── Execution Record
+
+Cross-cutting:
+└── Compatibility / Versioning
 ```
 
 状态：
@@ -307,12 +350,38 @@ Stable Core
 
 候选职责：
 
-- Task；
-- Context Envelope；
-- State；
-- Checkpoint；
-- pause / resume；
-- 长任务状态恢复。
+- Task Identity；
+- Task Lifecycle；
+- Execution Context；
+- Runtime State；
+- Pause / Continue；
+- Failure Status；
+- Execution Coordination。
+
+职责边界：
+
+```text
+Skill / Workflow
+= 定义业务应该怎么做
+
+Task Runtime / Execution Coordination
+= 当前这一次执行如何推进
+
+Agent
+= 需要动态判断时使用的 Execution / Decision Strategy
+
+Capability
+= 提供具体可调用能力
+```
+
+以下属于 Advanced Runtime Concerns，当前尚未被业务需求证明，也尚未设计：
+
+```text
+Checkpoint Strategy
+Crash Recovery
+Durable Execution
+Retry Engine
+```
 
 详细设计：
 
@@ -320,20 +389,28 @@ Stable Core
 
 ---
 
-## 6.2 Extension Runtime
+## 6.2 Skill Extension Mechanism
 
 候选职责：
 
 - Skill Contract；
-- Extension Point；
+- Extension Registration；
 - Composition；
-- Dependency；
+- Dependency Declaration；
 - Context Binding；
-- Adaptation Mechanism。
+- Platform / Domain Adaptation。
 
 原则：
 
-> Skill 适配机制可能属于 Core，但具体业务适配规则属于 Skill。
+> **Skill 的可插拔、注册和组合机制可以属于 Core，但具体业务适配规则属于 Skill。**
+
+本机制不负责：
+
+- Task Lifecycle；
+- Runtime State；
+- Checkpoint；
+- Pause / Resume；
+- Recovery。
 
 详细设计：
 
@@ -345,10 +422,27 @@ Stable Core
 
 候选职责：
 
-- Skill 如何声明 Capability；
-- Capability Interface；
-- Capability Resolution Contract；
-- Capability 与 Provider 的边界。
+- Capability Identity；
+- Capability Declaration；
+- Invocation Surface；
+- Input Boundary；
+- Output Boundary；
+- Error Boundary；
+- Context Boundary；
+- Runtime Governance Hook；
+- Provider Resolution Boundary。
+
+语义边界：
+
+```text
+Capability
+= 系统会做什么
+
+Invocation Surface
+= Runtime 如何调用该 Capability
+```
+
+`Tool` 可以作为未来 Runtime / Software implementation representation，当前不新增 Tool Layer，也不在本层冻结 Tool Schema。
 
 详细设计：
 
@@ -370,11 +464,30 @@ Stable Core
 
 Runtime Governance 负责系统运行时，例如：
 
-- Permission；
-- Policy Enforcement；
+- Permission Enforcement；
+- Policy Evaluation Hook；
 - Human Gate；
-- Cost Gate；
-- Risk Gate。
+- Cost Gate Mechanism；
+- Risk Gate Mechanism；
+- Execution Approval / Block / Pause。
+
+Runtime Governance 的核心边界是：
+
+```text
+Runtime Governance
+= Enforcement Mechanism
+
+Concrete Policy Source
+= Skill / Platform / Domain / Capability / Configuration
+```
+
+Stable Core 不拥有：
+
+- TikTok-specific rule；
+- Amazon-specific rule；
+- Claim policy content；
+- Business threshold；
+- Platform-specific operating rule。
 
 例如：
 
@@ -413,13 +526,36 @@ Architecture Governance
 
 候选职责：
 
-- Run；
-- Artifact Reference；
-- Provenance；
+- Run Identity；
+- Task Reference；
+- Input References；
+- Skill Reference；
+- Capability Reference；
+- Provider Reference；
+- Version References；
+- Output / Artifact References；
 - Trace Reference；
-- 执行版本；
-- 可追溯性；
-- 可复现上下文。
+- Important Runtime Facts；
+- Reproducibility References。
+
+长期边界：
+
+```text
+Trace
+≠ Execution Record
+≠ Evidence
+≠ Artifact
+≠ Observability
+≠ Evaluation
+```
+
+Execution Record 不设计成：
+
+- 万能日志系统；
+- Evidence Store；
+- Artifact Store；
+- Metrics Backend；
+- Evaluation Framework。
 
 详细设计：
 
@@ -427,17 +563,41 @@ Architecture Governance
 
 ---
 
-## 6.6 Compatibility
+## 6.6 Cross-cutting Compatibility / Versioning
 
-候选职责：
+Compatibility 不再作为独立一级 Stable Core Area。
 
-- Contract Version；
-- Skill Version；
-- Capability Version；
-- Provider Version；
-- Compatibility；
-- Migration；
-- Deprecation。
+它保留为：
+
+> **Cross-cutting Compatibility / Versioning Concern**
+
+其候选归属为：
+
+```text
+Capability / Contract Version
+→ Capability Contract
+
+Skill Version / Compatibility
+→ Skill Extension Mechanism
+
+Provider Compatibility
+→ Provider Adapter / Integration
+
+Schema / Data Migration
+→ Software Architecture
+
+Architecture Deprecation / Supersession
+→ Architecture Governance
+```
+
+Compatibility concern is real.
+
+但：
+
+```text
+Standalone Compatibility Core Component
+= Not Currently Required
+```
 
 详细设计：
 
@@ -460,7 +620,6 @@ Foundation Services
 │
 ├── Knowledge
 ├── Evidence
-├── Research
 ├── Artifact
 └── Future Services
 ```
@@ -489,7 +648,22 @@ Foundation Services
 
 ## 7.3 Research
 
-可能负责：
+Research 仍然是 Product Architecture 中的跨平台 Use Case Family。
+
+但在 System Architecture 中：
+
+> **Research = System Placement Under Review**
+
+当前不预设 Research 必然属于 Foundation Service，也不在本文件决定它最终是：
+
+- Research Domain Service；
+- Research Workflow；
+- Skill Composition；
+- Capability Composition。
+
+Research 业务需求保持有效，后续再根据稳定的系统 Contract 判断其归属。
+
+此前可能的职责包括：
 
 - Research Question；
 - Evidence Need；
@@ -735,28 +909,32 @@ Capabilities    Foundation Services
 ### Stable Core Candidate Areas
 
 - Task Runtime；
-- Extension Runtime；
+- Skill Extension Mechanism；
 - Capability Contract；
 - Runtime Governance；
 - Execution Record；
-- Compatibility。
+- Cross-cutting Compatibility / Versioning Concern。
 
 ### Candidate Foundation Services
 
 - Knowledge；
 - Evidence；
-- Research；
 - Artifact。
+
+Research：
+
+> **System Placement Under Review**
 
 ### Not Yet Designed
 
 - Task Object；
-- Skill Contract Details；
-- Capability Schema；
+- Advanced Runtime Concerns：Checkpoint Strategy、Crash Recovery、Durable Execution、Retry Engine；
+- Skill Extension Contract Details；
+- Capability Invocation Schema；
 - Provider Resolution；
 - Runtime Governance Rules；
 - Execution Record Schema；
-- Compatibility Rules；
+- Cross-cutting Compatibility Rules；
 - Foundation Service Contracts；
 - Agent Architecture；
 - Event / Message Architecture；
@@ -792,14 +970,15 @@ Software Architecture
 
 当前文档状态：
 
-# **Draft for Human Review**
+# **Candidate / Human-reviewed working architecture**
 
 批准本文件只代表：
 
-> **当前 Ecommerce AI OS 的 System Architecture 责任区域、核心语义边界、六个 Stable Core Candidate、Candidate Foundation Services，以及 Provider / Capability / Skill 的基本关系，被接受为后续专项架构审计的工作基线。**
+> **C01-C09 Change Set 已经过 Human Review 并落实为 Current Candidate Architecture 的边界收敛；C10 Operational Observability 继续 DEFER。**
 
 不代表：
 
+- 整个 System Architecture 已升级为 Approved；
 - Stable Core 内部字段已批准；
 - Foundation Service Contract 已批准；
 - Agent 已批准；

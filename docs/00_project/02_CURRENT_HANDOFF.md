@@ -3,8 +3,8 @@
 - **文档类型**：Current Handoff / 新聊天交接入口
 - **项目**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：Architecture Baseline / Handoff Preparation
-- **最后更新**：2026-08-14
+- **当前阶段**：System Architecture Boundary Refinement / Handoff Preparation
+- **最后更新**：2026-08-15
 - **重要说明**：本文件是导航入口，不是 Architecture Authority
 
 ---
@@ -183,6 +183,8 @@ Capabilities  Foundation Services
 
 这不是严格 Runtime Call Graph。
 
+当前 System Architecture 已落实 Human Review 接受的 C01-C09 Change Set；C10 Operational Observability 继续 DEFER。完整 System Architecture 仍为 Current Candidate，不是 Approved Architecture。
+
 ---
 
 ## 2.4 Software Architecture
@@ -271,6 +273,12 @@ Provider Lab 交接：
 docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md
 ```
 
+System Architecture Stress Test：
+
+```text
+docs/05_references/ai_architecture/04_SYSTEM_ARCHITECTURE_STRESS_TEST.md
+```
+
 ---
 
 # 3. 当前 Product Architecture 基线
@@ -327,27 +335,42 @@ Capability
 = 系统会做什么
 
 Provider
-= 具体由谁实现 / 通过谁访问
+= 实际提供外部数据、模型、能力或基础设施的一方
+```
+
+Provider、Adapter / Connector 与 API / SDK / MCP 必须保持语义分离。当前 Candidate 依赖方向为：
+
+```text
+Capability / Service Contract
+        ↓
+Provider Resolution
+        ↓
+Adapter / Connector
+        ↓
+Concrete Provider
+        ↓
+API / SDK / MCP / Native Mechanism
 ```
 
 ---
 
 # 5. Stable Core 当前 Candidate
 
-当前 Stable Core 六个 Candidate Areas：
+当前 Stable Core Candidate Areas：
 
 ```text
 Task Runtime
-Extension Runtime
+Skill Extension Mechanism
 Capability Contract
 Runtime Governance
 Execution Record
-Compatibility
 ```
+
+Compatibility 保留为 Cross-cutting Compatibility / Versioning Concern，不再作为独立一级 Stable Core Area。
 
 注意：
 
-> 这六个只是 Candidate Areas。
+> 这些内容只是 Current Candidate Architecture，不代表整个 System Architecture 已 Approved。
 
 当前没有批准：
 
@@ -392,8 +415,14 @@ Architecture Governance 处理：
 ```text
 Knowledge
 Evidence
-Research
 Artifact
+```
+
+Research 仍是 Product Architecture 中的跨平台 Use Case Family，但在 System Architecture 中：
+
+```text
+Research
+→ System Placement Under Review
 ```
 
 状态：
@@ -655,13 +684,14 @@ docs/decisions
 ```text
 Task Runtime internal contract
 Context model
-Skill Contract details
+Skill Extension Contract details
 Skill Composition details
-Capability Contract details
+Capability Invocation Schema
 Provider Resolution
 Runtime Governance rules
 Execution Record schema
-Compatibility rules
+Cross-cutting Compatibility rules
+Advanced Runtime Concerns：Checkpoint Strategy、Crash Recovery、Durable Execution、Retry Engine
 Foundation Service contracts
 Agent architecture
 Python package design
@@ -737,6 +767,13 @@ Platform-specific Operations final structure
 02_CURRENT_HANDOFF.md
 ```
 
+当前 Change Set 状态：
+
+```text
+C01-C09 ACCEPTED and implemented in Current Candidate Architecture
+C10 Operational Observability DEFERRED
+```
+
 这些文档在正式换聊天前应完成：
 
 > **Final Consistency Audit**
@@ -782,11 +819,11 @@ docs: freeze l0 runtime calibration handoff
 
 # 16. 下一项唯一任务
 
-当前下一步不是立即开始实现。
+当前下一步不是立即开始 Software implementation。
 
 下一项任务：
 
-# **Final Baseline Consistency Audit**
+# **Review Current Candidate Architecture Diff**
 
 审核对象：
 
@@ -804,7 +841,7 @@ docs/00_project/02_CURRENT_HANDOFF.md
 
 审核通过并 Freeze 后：
 
-> **换新聊天继续 System Architecture 专项审计。**
+> **由 Human Review 决定是否进入下一项专项 Contract / Software Architecture 工作。**
 
 优先从当前 Stable Core Candidate / System Boundary 继续，而不是重新讨论 Product / Documentation 顶层结构。
 
