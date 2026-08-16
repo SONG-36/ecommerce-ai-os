@@ -1591,50 +1591,51 @@ Round 5 — Deferred / Not Yet Designed Register 已完成第一轮设计与审�
 
 当前下一步：
 
-# **Round 6 — Architecture Review Gate**
+# **System Detailed Contract Design**
 
-Round 6 是 First Vertical Slice Planning 的最终 Architecture Review Gate。
+Round 1–6 First Vertical Slice Planning 已完成。
 
-Round 6 不继续新增 Architecture。
+当前下一阶段：
 
-它将基于：
+# **System Detailed Contract Design**
 
-- `01_SLICE_BUSINESS_BOUNDARY.md`
-- `02_RESPONSIBILITY_COVERAGE.md`
-- `03_MINIMAL_RUNTIME_PATH.md`
-- `04_CONTRACT_INVENTORY.md`
-- `05_DEFERRED_REGISTER.md`
+推荐顺序：
 
-最终审查：
+### D1 — Execution Spine
 
-1. First Slice Business Boundary 是否完整且稳定；
-2. Responsibility Coverage 是否存在遗漏或职责冲突；
-3. Minimal Runtime Path 是否能够形成完整执行闭环；
-4. 9 个 Required Contract / Boundary 是否足以进入 System Detailed Contract Design；
-5. Deferred / Not Yet Designed Register 是否已经覆盖主要 Architecture Ambiguity；
-6. 是否存在必须重新打开 Product Architecture 的新证据；
-7. 是否存在必须重新打开 top-level System Architecture 的新证据；
-8. 哪些内容可以进入下一阶段 System Detailed Contracts；
-9. 哪些内容仍然不得进入 Implementation。
+- C1 — Task Execution Boundary
+- C2b — Task Runtime Execution Contract
+- C2a — Skill Contract
 
-Round 6 当前不设计：
+### D2 — Search Invocation Spine
 
-- Contract Fields；
-- JSON Schema；
-- Python Interfaces；
-- Database；
-- Persistence Implementation；
-- API；
-- UI；
-- Tool Schema；
-- Agent Framework；
-- Event / Message Architecture；
-- Retry / Durable Execution；
-- Scrape Creators endpoint implementation。
+- C3 — Search Capability Contract
+- C4a — Provider Resolution Boundary
 
-Round 6 完成后，只有 Architecture Review Gate 通过，才允许正式进入：
+### D3 — Research Semantics
 
-**System Detailed Contract Design**
+- C5a — Evidence Contract
+- C5b — Research Result Contract
+
+### D4 — Execution Record
+
+- C6 — Execution Record Contract
+
+### D5 — Provider Mapping
+
+- C4b — Scrape Creators Adapter Contract
+
+之后：
+
+```text
+Detailed Contract Consistency Review
+↓
+Minimum Scrape Creators Endpoint Selection
+↓
+Minimal Software Architecture
+↓
+Walking Implementation
+```
 
 ---
 
@@ -1899,6 +1900,163 @@ Current Next:
 **Round 6 — Architecture Review Gate**
 
 ---
+
+### Round 6 — Architecture Review Gate
+
+Status:
+
+**Candidate / Round 6 Reviewed**
+
+Review Result:
+
+**PASS**
+
+Detailed Record:
+
+`06_ARCHITECTURE_REVIEW.md`
+
+Final Gate Results:
+
+- Gate 1 — Business Boundary Integrity → PASS
+- Gate 2 — Responsibility Coverage Integrity → PASS_WITH_REFINEMENTS
+- Gate 3 — Runtime Closure → PASS_WITH_REFINEMENTS
+- Gate 4 — Contract Sufficiency → PASS_WITH_REFINEMENTS
+- Gate 5 — Deferred Register Coverage → PASS_WITH_REFINEMENTS
+- Gate 6 — Architecture Reopen Decision → PASS
+
+Final Architecture Decision:
+
+- Product Architecture Reopen → NO
+- Top-level System Architecture V0.2 Reopen → NO
+- Research System Placement Resolution Required Now → NO
+- First Vertical Slice Planning → COMPLETE
+- System Detailed Contract Design → AUTHORIZED NEXT PHASE
+- Software Architecture → STILL NOT YET DESIGNED
+- Direct Walking Implementation → NOT YET AUTHORIZED
+
+Round 6 Final Guardrails:
+
+### Business
+
+- Research = Decision Support
+- Research Result ≠ Final Business Decision
+
+### Responsibility
+
+- Research Skill = Business Method
+- Task Runtime = Execution Coordination
+- Skill Extension Mechanism ≠ Second Runtime
+
+### Sample Boundary
+
+- Research Skill determines Actual Sample Boundary。
+- Actual Sample Boundary then becomes a stable Research Execution Fact。
+- Task Runtime does not own sampling decisions。
+
+### Evidence
+
+- Evidence Contract = REQUIRED
+- Full Evidence Foundation Service = NOT YET PROVEN
+
+### Runtime
+
+- Business Completion precedes Execution Completion。
+- Execution Failure ≠ Insufficient Evidence ≠ Hypothesis Rejected Later
+
+### Provider
+
+- Provider Endpoint Count ≠ Capability Count
+- Provider Runtime Facts do not define OS Architecture。
+
+### Execution Record
+
+- Execution Record ≠ Trace ≠ Logs ≠ Evidence ≠ Artifact ≠ Observability ≠ Evaluation
+
+### Scope Governance
+
+- Absence Does Not Imply Gap
+- Deferred Does Not Imply Backlog
+- Not Yet Proven Must Earn Promotion
+- Primary Status Controls Default Action
+
+# First Vertical Slice Planning Status
+
+**COMPLETE**
+
+First Research Vertical Slice 已完成：
+
+1. Slice Business Boundary
+2. Responsibility Coverage
+3. Minimal Runtime Path
+4. Contract Inventory
+5. Deferred / Not Yet Designed Register
+6. Architecture Review Gate
+
+Architecture Review Result:
+
+**PASS**
+
+当前没有证据要求重新打开：
+
+- Product Architecture；
+- top-level System Architecture V0.2。
+
+Planning COMPLETE 不表示：
+
+- Entire System Architecture Approved；
+- Software Architecture Designed；
+- Walking Implementation Authorized；
+- First Slice Architecture frozen forever。
+
+它只表示：
+
+> 当前 Architecture Planning 精度已经足够，下一阶段应该向下进入 System Detailed Contract Design，而不是继续横向扩展 First Slice Planning。
+
+Next Phase Authorization:
+
+Round 6 PASS 授权的是：
+
+**System Detailed Contract Design**
+
+不是：
+
+**Direct Implementation**
+
+下一阶段允许：
+
+- 9 个 Required Contract / Boundary 的 detailed semantics；
+- Cross-contract identity / referenceability；
+- Version / compatibility references；
+- Traceability / provenance；
+- Missingness semantics；
+- Error boundary semantics；
+- Context propagation semantics；
+- Governance hook compatibility；
+- Record / Reference Retention semantics。
+
+下一阶段当前仍不得直接加入：
+
+- Agent as top-level layer；
+- Tool as top-level layer；
+- Standalone Orchestration Layer；
+- Full Evidence Service；
+- Independent Research Service；
+- Independent Analyze Capability；
+- Knowledge integration；
+- Artifact integration；
+- Retry Engine；
+- Checkpoint；
+- Crash Recovery；
+- Durable Execution；
+- Event / Message Architecture；
+- Dedicated Persistence Service；
+- Specific Database Technology；
+- Vector DB / RAG；
+- Production Research Workspace；
+- 97 API Full Integration；
+- Automatic Knowledge Update。
+
+`05_DEFERRED_REGISTER.md` 继续作为 scope guardrail。
 
 # 20. 当前 Authority Reminder
 
