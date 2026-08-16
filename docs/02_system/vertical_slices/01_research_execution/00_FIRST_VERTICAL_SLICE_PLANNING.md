@@ -1587,40 +1587,23 @@ Round 3 — Minimal Runtime Path 已完成第一轮设计与审查。
 
 当前下一步：
 
-# **Round 4 — Contract Inventory**
+# **Round 5 — Deferred / Not Yet Designed Register**
 
-Round 4 将基于：
+Round 5 只负责系统登记：
 
-- `01_SLICE_BUSINESS_BOUNDARY.md`
-- `02_RESPONSIBILITY_COVERAGE.md`
-- `03_MINIMAL_RUNTIME_PATH.md`
+```text
+DEFERRED
 
-识别当前 First Slice 中必须进一步进入 System Detailed Design 的 Contract Boundary。
+NOT YET PROVEN
 
-Round 4 只回答：
+NOT REQUIRED FOR FIRST SLICE
 
-- 哪些 Responsibility 之间必须存在明确 Contract；
-- 每个 Contract 负责什么；
-- 哪些 concern 属于 Contract；
-- 哪些 concern 明确不属于该 Contract；
-- 哪些 Contract 是 First Slice required；
-- 哪些只需要保留 future compatibility。
+NOT YET DESIGNED
 
-Round 4 当前仍然不进入：
+EXPLICITLY REJECTED FOR CURRENT SLICE
+```
 
-- Contract 字段；
-- JSON Schema；
-- Python interface；
-- Pydantic / dataclass；
-- Database；
-- Persistence；
-- API；
-- Tool Schema；
-- Agent Framework；
-- Sync / Async；
-- Event / Message Architecture；
-- Scrape Creators endpoint selection；
-- Software Architecture。
+Round 5 不继续新增 System Responsibility 或 Contract。
 
 ---
 
@@ -1747,6 +1730,48 @@ Key Round 3 Refinements:
 Next:
 
 **Round 4 — Contract Inventory**
+
+---
+
+### Round 4 — Contract Inventory
+
+Status:
+
+**Candidate / Round 4 Reviewed**
+
+Review Result:
+
+**PASS_WITH_REFINEMENTS**
+
+Detailed Record:
+
+`04_CONTRACT_INVENTORY.md`
+
+Current Contract Inventory:
+
+- C1 — Task Execution Boundary — REQUIRED
+- C2a — Skill Contract — REQUIRED
+- C2b — Task Runtime Execution Contract — REQUIRED
+- C3 — Search Capability Contract — REQUIRED
+- C4a — Provider Resolution Boundary — REQUIRED
+- C4b — Scrape Creators Adapter Contract — REQUIRED
+- C5a — Evidence Contract — REQUIRED
+- C5b — Research Result Contract — REQUIRED
+- C6 — Execution Record Contract — REQUIRED
+
+Round 4 Principle:
+
+**Local Ownership, Cross-boundary Reference**
+
+Key Result:
+
+First Slice 当前收敛为 9 个需要稳定 System Semantics 的 Contract / Boundary。
+
+Contract ≠ Component ≠ Service ≠ Class ≠ Process ≠ API。
+
+Current Next:
+
+**Round 5 — Deferred / Not Yet Designed Register**
 
 ---
 
