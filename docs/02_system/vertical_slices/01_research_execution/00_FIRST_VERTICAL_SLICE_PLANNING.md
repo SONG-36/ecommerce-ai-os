@@ -1585,25 +1585,56 @@ Round 2 — Responsibility Coverage 已完成第一轮设计与审查。
 
 Round 3 — Minimal Runtime Path 已完成第一轮设计与审查。
 
+Round 4 — Contract Inventory 已完成第一轮设计与审查。
+
+Round 5 — Deferred / Not Yet Designed Register 已完成第一轮设计与审查。
+
 当前下一步：
 
-# **Round 5 — Deferred / Not Yet Designed Register**
+# **Round 6 — Architecture Review Gate**
 
-Round 5 只负责系统登记：
+Round 6 是 First Vertical Slice Planning 的最终 Architecture Review Gate。
 
-```text
-DEFERRED
+Round 6 不继续新增 Architecture。
 
-NOT YET PROVEN
+它将基于：
 
-NOT REQUIRED FOR FIRST SLICE
+- `01_SLICE_BUSINESS_BOUNDARY.md`
+- `02_RESPONSIBILITY_COVERAGE.md`
+- `03_MINIMAL_RUNTIME_PATH.md`
+- `04_CONTRACT_INVENTORY.md`
+- `05_DEFERRED_REGISTER.md`
 
-NOT YET DESIGNED
+最终审查：
 
-EXPLICITLY REJECTED FOR CURRENT SLICE
-```
+1. First Slice Business Boundary 是否完整且稳定；
+2. Responsibility Coverage 是否存在遗漏或职责冲突；
+3. Minimal Runtime Path 是否能够形成完整执行闭环；
+4. 9 个 Required Contract / Boundary 是否足以进入 System Detailed Contract Design；
+5. Deferred / Not Yet Designed Register 是否已经覆盖主要 Architecture Ambiguity；
+6. 是否存在必须重新打开 Product Architecture 的新证据；
+7. 是否存在必须重新打开 top-level System Architecture 的新证据；
+8. 哪些内容可以进入下一阶段 System Detailed Contracts；
+9. 哪些内容仍然不得进入 Implementation。
 
-Round 5 不继续新增 System Responsibility 或 Contract。
+Round 6 当前不设计：
+
+- Contract Fields；
+- JSON Schema；
+- Python Interfaces；
+- Database；
+- Persistence Implementation；
+- API；
+- UI；
+- Tool Schema；
+- Agent Framework；
+- Event / Message Architecture；
+- Retry / Durable Execution；
+- Scrape Creators endpoint implementation。
+
+Round 6 完成后，只有 Architecture Review Gate 通过，才允许正式进入：
+
+**System Detailed Contract Design**
 
 ---
 
@@ -1772,6 +1803,100 @@ Contract ≠ Component ≠ Service ≠ Class ≠ Process ≠ API。
 Current Next:
 
 **Round 5 — Deferred / Not Yet Designed Register**
+
+---
+
+### Round 5 — Deferred / Not Yet Designed Register
+
+Status:
+
+**Candidate / Round 5 Reviewed**
+
+Review Result:
+
+**PASS_WITH_RECLASSIFICATIONS**
+
+Detailed Record:
+
+`05_DEFERRED_REGISTER.md`
+
+Round 5 Purpose:
+
+对所有未进入 First Slice Active Design / Implementation Scope 的事项进行明确成熟度分类，避免未来把“当前没有”误判为 Architecture Gap。
+
+Round 5 Primary Status Types:
+
+- DEFERRED
+- NOT YET PROVEN
+- NOT REQUIRED FOR FIRST SLICE
+- NOT YET DESIGNED
+- EXPLICITLY REJECTED FOR CURRENT SLICE
+
+Key Governance Rules:
+
+- Absence Does Not Imply Gap
+- Deferred Does Not Imply Backlog
+- Not Yet Proven Must Earn Promotion
+
+Key Classification Results:
+
+- Runtime Governance active path → NOT REQUIRED FOR FIRST SLICE
+- Pause / Continue → NOT REQUIRED FOR FIRST SLICE
+- Independent Analyze Capability → NOT YET PROVEN
+- Independent Retrieve Detail Capability → NOT YET PROVEN
+- Full Evidence Foundation Service → NOT YET PROVEN
+- Knowledge Foundation Service → NOT REQUIRED FOR FIRST SLICE
+- Artifact Foundation Service → NOT REQUIRED FOR FIRST SLICE
+- Independent Research Service → NOT YET PROVEN
+- Agent as Top-level System Layer → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Tool as Top-level System Layer → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Standalone Orchestration Layer → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Skill Composition Mechanism → NOT YET PROVEN
+- Dynamic Skill Discovery / Hot Reload / Marketplace → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Retry / Checkpoint / Crash Recovery / Durable Execution → NOT YET PROVEN
+- Advanced Provider Resolution / Multi-provider / Fallback → DEFERRED
+- Event / Message Architecture as required First-Slice mechanism → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Record / Reference Retention Semantics → NOT YET DESIGNED
+- Dedicated Persistence Subsystem → NOT YET PROVEN
+- Specific Database Technology → NOT YET PROVEN
+- Production Research Workspace / UI → NOT REQUIRED FOR FIRST SLICE
+- Application Interaction / Transport Representation → NOT YET DESIGNED
+- Scrape Creators 97 API Full Integration → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Minimum Scrape Creators Endpoint Selection → NOT YET DESIGNED
+- Comments as Evidence Source → DEFERRED
+- Independent Hypothesis Contract → NOT YET PROVEN
+- Unified Error Taxonomy → NOT YET PROVEN
+- Formal Comprehensive Research Lens Taxonomy → NOT YET PROVEN
+- Automatic Research Result → Knowledge Update → EXPLICITLY REJECTED FOR CURRENT SLICE
+- Operational Observability / C10 → DEFERRED
+- 9 Required Contract Fields / Detailed Schemas → NOT YET DESIGNED
+- Software Architecture → NOT YET DESIGNED
+
+Round 5 Guardrails:
+
+**Absence Does Not Imply Gap**
+
+**Deferred Does Not Imply Backlog**
+
+**Not Yet Proven Must Earn Promotion**
+
+```text
+NOT YET PROVEN
+≠
+NOT YET DESIGNED
+```
+
+不得把 NOT YET PROVEN 项目自动列入下一阶段 implementation backlog。
+
+Required Contract Status:
+
+Round 4 已确认的 9 个 Required Contract / Boundary 继续保持 REQUIRED。Round 5 只登记它们的 Detailed Fields / Schemas：
+
+**NOT YET DESIGNED**
+
+Current Next:
+
+**Round 6 — Architecture Review Gate**
 
 ---
 
