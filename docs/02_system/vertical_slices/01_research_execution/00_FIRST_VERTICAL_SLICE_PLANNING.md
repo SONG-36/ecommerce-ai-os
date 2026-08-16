@@ -1583,47 +1583,42 @@ Round 1 — Slice Business Boundary 已完成第一轮设计与审查。
 
 Round 2 — Responsibility Coverage 已完成第一轮设计与审查。
 
+Round 3 — Minimal Runtime Path 已完成第一轮设计与审查。
+
 当前下一步：
 
-# **Round 3 — Minimal Runtime Path**
+# **Round 4 — Contract Inventory**
 
-Round 3 将基于：
+Round 4 将基于：
 
-`01_SLICE_BUSINESS_BOUNDARY.md`
+- `01_SLICE_BUSINESS_BOUNDARY.md`
+- `02_RESPONSIBILITY_COVERAGE.md`
+- `03_MINIMAL_RUNTIME_PATH.md`
 
-和：
+识别当前 First Slice 中必须进一步进入 System Detailed Design 的 Contract Boundary。
 
-`02_RESPONSIBILITY_COVERAGE.md`
+Round 4 只回答：
 
-不再重新决定“哪些 Responsibility 应该存在”，而是审查已经确认参与 First Slice 的 Responsibility 在一次真实 Research Execution 中如何协作。
+- 哪些 Responsibility 之间必须存在明确 Contract；
+- 每个 Contract 负责什么；
+- 哪些 concern 属于 Contract；
+- 哪些 concern 明确不属于该 Contract；
+- 哪些 Contract 是 First Slice required；
+- 哪些只需要保留 future compatibility。
 
-Round 3 重点回答：
+Round 4 当前仍然不进入：
 
-- Operator 如何进入 First Slice；
-- Application Boundary 如何触发 Research Execution；
-- Research Skill 与 Task Runtime 的真实调用 / 协作方向；
-- Skill 如何触发 Search Capability；
-- Invocation Surface 在运行路径中的位置；
-- Provider Resolution 何时发生；
-- Adapter 如何进入调用链；
-- Search Result 在什么时候进入 Evidence Boundary；
-- Research Skill 如何从 Evidence 形成 Finding / Hypothesis；
-- Execution Record 在执行过程中还是执行结束时形成；
-- Research Result 如何返回 Operator；
-- 哪些箭头是真正 Runtime Interaction；
-- 哪些只是 Responsibility Relation。
-
-Round 3 当前仍然不进入：
-
-- System Detailed Contract 字段；
+- Contract 字段；
 - JSON Schema；
-- Python；
+- Python interface；
 - Pydantic / dataclass；
 - Database；
 - Persistence；
 - API；
 - Tool Schema；
 - Agent Framework；
+- Sync / Async；
+- Event / Message Architecture；
 - Scrape Creators endpoint selection；
 - Software Architecture。
 
@@ -1703,6 +1698,55 @@ Key Round 2 Findings:
 Next:
 
 **Round 3 — Minimal Runtime Path**
+
+---
+
+### Round 3 — Minimal Runtime Path
+
+Status:
+
+**Candidate / Round 3 Reviewed**
+
+Review Result:
+
+**PASS_WITH_REFINEMENTS**
+
+Detailed Record:
+
+`03_MINIMAL_RUNTIME_PATH.md`
+
+Current Runtime Summary:
+
+- Operator 通过 Application Boundary 启动 Research Execution；
+- Application 不直接运行 Research Skill；
+- Task Runtime 建立并协调一次 Research Execution；
+- Skill Extension Mechanism 只支持 Skill declaration / binding / dependency / context，不作为第二 Runtime Hop；
+- Research Skill 定义 Business Method，并表达当前需要的系统级 Capability action；
+- Task Runtime 协调 Capability Invocation；
+- Search Runtime Path 为 Capability Boundary → Provider Resolution → Adapter → Scrape Creators；
+- Provider-specific Result 经 Adapter 转换后才成为 Provider-neutral Search Result；
+- Search Result ≠ Evidence；
+- Research Skill 负责 relevance / sampling / evidence-worthiness 判断；
+- Evidence Boundary 负责 Evidence formalization semantics，但不建立 Full Evidence Service；
+- Research Skill 形成 Finding / Testable Hypothesis；
+- Research Result 表示 Business Completion；
+- Task Runtime 表示 Execution Completion；
+- Insufficient Evidence ≠ Execution Failure；
+- Stable Execution Facts / References 在 execution 中逐步变得已知；
+- Execution Record 在 task terminalization 时 finalize；
+- Application 最终接收 Research Result + Execution Outcome / Record Reference；
+- Runtime Governance、Analyze、Knowledge、Artifact 当前不进入 active runtime path。
+
+Key Round 3 Refinements:
+
+1. Skill Extension Mechanism ≠ Runtime hop；
+2. Evidence Boundary ≠ Full Evidence Service invocation；
+3. Execution Record ≠ every component directly writing logs/facts；
+4. Application ≠ full Execution Record consumer。
+
+Next:
+
+**Round 4 — Contract Inventory**
 
 ---
 
