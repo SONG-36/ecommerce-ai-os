@@ -1579,25 +1579,53 @@ flowchart TD
 
 # 19. 当前下一步
 
-当前暂停其他扩展讨论。
+Round 1 — Slice Business Boundary 已完成第一轮设计与审查。
 
-下一步正式进入：
+Round 2 — Responsibility Coverage 已完成第一轮设计与审查。
 
-# **Round 2 — Responsibility Traversal**
+当前下一步：
 
-基于已收敛的 Slice Business Boundary，逐项审查 System Architecture V0.2 Responsibilities，
-形成 Responsibility Coverage Matrix。
+# **Round 3 — Minimal Runtime Path**
 
-当前仍不进入：
+Round 3 将基于：
 
-```text
-不设计 System Detailed Contract
-不设计 Python
-不设计 Schema
-不设计 Database
-不设计 Scrape Creators endpoint selection
-不设计 Software Architecture
-```
+`01_SLICE_BUSINESS_BOUNDARY.md`
+
+和：
+
+`02_RESPONSIBILITY_COVERAGE.md`
+
+不再重新决定“哪些 Responsibility 应该存在”，而是审查已经确认参与 First Slice 的 Responsibility 在一次真实 Research Execution 中如何协作。
+
+Round 3 重点回答：
+
+- Operator 如何进入 First Slice；
+- Application Boundary 如何触发 Research Execution；
+- Research Skill 与 Task Runtime 的真实调用 / 协作方向；
+- Skill 如何触发 Search Capability；
+- Invocation Surface 在运行路径中的位置；
+- Provider Resolution 何时发生；
+- Adapter 如何进入调用链；
+- Search Result 在什么时候进入 Evidence Boundary；
+- Research Skill 如何从 Evidence 形成 Finding / Hypothesis；
+- Execution Record 在执行过程中还是执行结束时形成；
+- Research Result 如何返回 Operator；
+- 哪些箭头是真正 Runtime Interaction；
+- 哪些只是 Responsibility Relation。
+
+Round 3 当前仍然不进入：
+
+- System Detailed Contract 字段；
+- JSON Schema；
+- Python；
+- Pydantic / dataclass；
+- Database；
+- Persistence；
+- API；
+- Tool Schema；
+- Agent Framework；
+- Scrape Creators endpoint selection；
+- Software Architecture。
 
 ---
 
@@ -1628,6 +1656,53 @@ Current Boundary Summary:
 Next:
 
 **Round 2 — Responsibility Traversal**
+
+---
+
+### Round 2 — Responsibility Coverage
+
+Status:
+
+**Candidate / Round 2 Reviewed**
+
+Review Result:
+
+**PASS_WITH_REFINEMENTS**
+
+Detailed Record:
+
+`02_RESPONSIBILITY_COVERAGE.md`
+
+Current Coverage Summary:
+
+- Application = REQUIRED / THIN；
+- Research Skill = REQUIRED / SLICE-SUFFICIENT；
+- Task Runtime = REQUIRED / THIN；
+- Skill Extension Mechanism = REQUIRED / VERY THIN；
+- Capability Contract = REQUIRED / THIN；
+- Runtime Governance = NOT ACTIVELY REQUIRED / HOOK PRESERVED；
+- Execution Record = REQUIRED / MINIMAL / REFERENCE-ORIENTED；
+- Search Capability = REQUIRED / SLICE-SUFFICIENT；
+- Analyze Capability = NOT YET PROVEN / DO NOT DESIGN YET；
+- Evidence Boundary = REQUIRED / SLICE-SUFFICIENT；
+- Full Evidence Foundation Service = NOT YET PROVEN；
+- Knowledge = NOT REQUIRED / NOT USED；
+- Artifact = NOT REQUIRED / NOT USED；
+- Provider Resolution = REQUIRED / STATIC / SINGLE-PROVIDER；
+- Adapter / Connector = REQUIRED / MINIMAL / CONTRACT-DRIVEN；
+- Scrape Creators = CURRENT CONCRETE PROVIDER / MINIMUM ENDPOINT SUBSET ONLY；
+
+Key Round 2 Findings:
+
+1. Necessity 与 First-slice Depth 必须分开表达；
+2. Global Responsibility ≠ Every Slice Uses It；
+3. Analysis Activity ≠ Independent Analyze Capability；
+4. Evidence Boundary ≠ Full Evidence Foundation Service；
+5. Concrete Provider ≠ System Contract Dependency；
+
+Next:
+
+**Round 3 — Minimal Runtime Path**
 
 ---
 
