@@ -1,15 +1,15 @@
-# Ecommerce AI OS — First Research Slice — Contract Design Index V0.1
+# Ecommerce AI OS — First Research Slice — Contract Design Index V0.1（Contract 设计索引）
 
-- **Project**: Ecommerce AI OS
-- **Vertical Slice**: First Research Execution
-- **Business Scenario**: US / Car Vacuum / TikTok Content Research
-- **Phase**: System Detailed Contract Design
-- **Status**: Working Navigation / Design Index
-- **Architecture Authority**: No
+- **项目（Project）**：Ecommerce AI OS
+- **垂直切片（Vertical Slice）**：First Research Execution
+- **业务场景（Business Scenario）**：US / Car Vacuum / TikTok Content Research
+- **阶段（Phase）**：System Detailed Contract Design
+- **状态（Status）**：Working Navigation / Design Index
+- **架构权威（Architecture Authority）**：No
 
 ---
 
-# 0. Document Purpose
+# 0. 文档目的（Document Purpose）
 
 本文件是 First Research Vertical Slice 进入：
 
@@ -22,8 +22,8 @@
 1. 记录当前需要详细设计的 Contract / Boundary；
 2. 记录 D1–D5 的设计顺序；
 3. 记录每个 Contract 属于哪个设计阶段；
-4. 记录当前 Contract Design Progress；
-5. 保持 Detailed Contract Design 不偏离已经完成的 Round 1–6 Architecture Planning。
+4. 记录当前 Contract Design Progress（Contract 设计进度）；
+5. 保持 Detailed Contract Design 不偏离已经完成的 Round 1–6 Architecture Planning（架构规划）。
 
 本文件不是：
 
@@ -38,7 +38,7 @@
 
 ---
 
-# 1. Upstream Architecture Package
+# 1. 上游架构规划包（Upstream Architecture Package）
 
 本阶段直接继承以下 First Vertical Slice Planning Package：
 
@@ -107,7 +107,7 @@ COMPLETE
 
 ---
 
-# 2. Current Phase
+# 2. 当前阶段（Current Phase）
 
 当前阶段：
 
@@ -204,7 +204,7 @@ Failure-driven Architecture Evolution
 
 ---
 
-# 4. Contract Design ≠ Data Model Design ≠ Software Model Design
+# 4. Contract 设计 ≠ 数据模型设计（Data Model Design）≠ 软件模型设计（Software Model Design）
 
 System Detailed Contract Design 会开始接近：
 
@@ -321,7 +321,7 @@ API
 
 ---
 
-# 6. Why Only These 9 Contracts?
+# 6. 为什么只有这 9 个 Contract？（Why Only These 9 Contracts?）
 
 Round 4 已经完成 Contract Sufficiency Audit。
 
@@ -367,24 +367,24 @@ StableExecutionFactContract
 
 ---
 
-# 7. Detailed Contract Design Sequence
+# 7. Detailed Contract 设计顺序（Detailed Contract Design Sequence）
 
 当前 Detailed Contract Design 按 D1–D5 推进。
 
 ```mermaid
 flowchart TD
 
-    D1["D1 — Execution Spine<br/>C1 + C2b + C2a"]
+    D1["D1 — 执行主干（Execution Spine）<br/>C1 + C2b + C2a"]
 
-    D2["D2 — Search Invocation Spine<br/>C3 + C4a"]
+    D2["D2 — 搜索调用主干（Search Invocation Spine）<br/>C3 + C4a"]
 
-    D3["D3 — Research Semantics<br/>C5a + C5b"]
+    D3["D3 — 研究语义（Research Semantics）<br/>C5a + C5b"]
 
-    D4["D4 — Execution Record<br/>C6"]
+    D4["D4 — 执行记录（Execution Record）<br/>C6"]
 
-    D5["D5 — Provider Mapping<br/>C4b"]
+    D5["D5 — Provider 映射（Provider Mapping）<br/>C4b"]
 
-    REVIEW["Detailed Contract<br/>Consistency Review"]
+    REVIEW["Detailed Contract 全包一致性审核<br/>（Consistency Review）"]
 
     ENDPOINTS["Minimum Scrape Creators<br/>Endpoint Selection"]
 
@@ -404,7 +404,7 @@ flowchart TD
 
 ---
 
-# 8. D1 — Execution Spine
+# 8. D1 — 执行主干（Execution Spine）
 
 D1 包含：
 
@@ -493,7 +493,7 @@ Durable Execution
 
 ---
 
-# 9. D1 Contract Relationship
+# 9. D1 Contract 关系（Contract Relationship）
 
 D1 可以先这样理解：
 
@@ -545,7 +545,7 @@ C2a
 
 ---
 
-# 10. D2 — Search Invocation Spine
+# 10. D2 — 搜索调用主干（Search Invocation Spine）
 
 D2 包含：
 
@@ -626,7 +626,7 @@ Scrape Creators
 
 ---
 
-# 11. D3 — Research Semantics
+# 11. D3 — 研究语义（Research Semantics）
 
 D3 包含：
 
@@ -710,7 +710,7 @@ NOT YET PROVEN
 
 ---
 
-# 12. D4 — Execution Record
+# 12. D4 — 执行记录（Execution Record）
 
 D4 包含：
 
@@ -787,7 +787,7 @@ Evaluation
 
 同时必须支持：
 
-## Successful Execution
+## 成功执行（Successful Execution）
 
 可能存在：
 
@@ -797,7 +797,7 @@ Research Result Ref
 Capability Result Ref
 ```
 
-## Failed Execution
+## 执行失败（Failed Execution）
 
 这些 Ref 可以合法缺席。
 
@@ -805,7 +805,7 @@ Capability Result Ref
 
 ---
 
-# 13. D5 — Provider Mapping
+# 13. D5 — Provider 映射（Provider Mapping）
 
 D5 包含：
 
@@ -888,7 +888,7 @@ Search Capability
 
 ---
 
-# 14. Minimum Endpoint Selection
+# 14. 最小 Endpoint 选择（Minimum Endpoint Selection）
 
 当前：
 
@@ -950,7 +950,7 @@ Minimum Endpoint Subset
 
 ---
 
-# 15. Cross-contract Obligations
+# 15. 跨 Contract 义务（Cross-contract Obligations）
 
 9 个 Detailed Contract 不是彼此孤立的。
 
@@ -1003,7 +1003,7 @@ Execution Record
 
 ---
 
-# 16. Context Design Principle
+# 16. Context 设计原则（Context Design Principle）
 
 Context 当前采用：
 
@@ -1047,7 +1047,7 @@ Detailed Contract Design 应明确：
 
 ---
 
-# 17. Error Design Principle
+# 17. Error 设计原则（Error Design Principle）
 
 错误语义当前保持逐层翻译：
 
@@ -1097,7 +1097,7 @@ Universal Error Taxonomy
 
 ---
 
-# 18. Reference / Retention Principle
+# 18. Reference / Retention 原则（Reference / Retention Principle）
 
 当前已经证明：
 
@@ -1163,7 +1163,7 @@ NOT YET PROVEN
 
 ---
 
-# 19. Scope Guardrails
+# 19. 范围护栏（Scope Guardrails）
 
 `../05_DEFERRED_REGISTER.md` 在 Detailed Contract Design 阶段继续有效。
 
@@ -1223,7 +1223,7 @@ Primary Status Controls Default Action
 
 ---
 
-# 20. Planned Documentation Structure
+# 20. 计划中的文档结构（Planned Documentation Structure）
 
 Detailed Contract 文档计划按 D1–D5 逐步形成：
 
@@ -1281,7 +1281,7 @@ D1–D5 files were created incrementally following the
 
 ---
 
-# Documentation Organization Principle
+# 文档组织原则（Documentation Organization Principle）
 
 Detailed Contract 阶段采用：
 
@@ -1328,7 +1328,7 @@ C2a
 
 ---
 
-# Human Reading Mapping
+# 人类阅读映射（Human Reading Mapping）
 
 ```text
 01_EXECUTION_SPINE.md
@@ -1349,7 +1349,7 @@ C2a
 
 ---
 
-# Contract Documentation Writing Style
+# Contract 文档写作风格（Contract Documentation Writing Style）
 
 Detailed Contract 文档从现在开始采用：
 
@@ -1380,7 +1380,7 @@ Architecture rationale 已主要保留在 01–06 Planning Package。
 
 ---
 
-# Documentation Length Guardrail
+# 文档长度护栏（Documentation Length Guardrail）
 
 Detailed Contract Specification 应优先：
 
@@ -1398,11 +1398,11 @@ Implementation-useful
 
 ---
 
-# 21. Documentation Reading Layers
+# 21. 文档阅读层次（Documentation Reading Layers）
 
 当前 First Research Slice 文档分成三个阅读层。
 
-## Layer 1 — Human Understanding
+## 第 1 层 — 人类理解（Human Understanding）
 
 ```text
 ../00_READ_ME_FIRST.md
@@ -1414,7 +1414,7 @@ Implementation-useful
 
 ---
 
-## Layer 2 — Architecture Evidence
+## 第 2 层 — 架构证据（Architecture Evidence）
 
 ```text
 ../01_SLICE_BUSINESS_BOUNDARY.md
@@ -1436,7 +1436,7 @@ Implementation-useful
 
 ---
 
-## Layer 3 — Detailed Contract Design
+## 第 3 层 — Detailed Contract 设计（Detailed Contract Design）
 
 ```text
 contracts/
@@ -1470,7 +1470,7 @@ Tests
 
 ---
 
-# 22. Current Progress
+# 22. 当前进度（Current Progress）
 
 当前：
 
@@ -1524,7 +1524,7 @@ Detailed Semantics Covered
 
 ---
 
-# 23. Current Next
+# 23. 当前下一步（Current Next）
 
 当前下一步：
 
@@ -1540,7 +1540,7 @@ AUTHORIZED NEXT
 
 ---
 
-# 24. Learning Goal For The Next Phase
+# 24. 下一阶段学习目标（Learning Goal For The Next Phase）
 
 从这一阶段开始，希望逐渐形成：
 
@@ -1594,7 +1594,7 @@ SearchRequest
 
 ---
 
-# 25. Phase Completion Condition
+# 25. 阶段完成条件（Phase Completion Condition）
 
 System Detailed Contract Design 不以：
 
@@ -1634,7 +1634,7 @@ Evidence / Result / Execution Record 是否仍然分离？
 
 ---
 
-# Summary
+# 总结（Summary）
 
 First Vertical Slice Planning 已经回答：
 

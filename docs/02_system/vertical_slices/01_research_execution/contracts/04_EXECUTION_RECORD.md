@@ -1,25 +1,24 @@
-# D4 — Execution Record Specification
+# D4 — 执行记录规范（Execution Record Specification）
 
-- **Document Type**: Detailed Contract Engineering Specification
-- **Design Stage**: D4 — Execution Record
-- **Vertical Slice**: First Research Execution
-- **Business Scenario**: US / Car Vacuum / TikTok Content Research
-- **Covered Contract**: C6 — Execution Record Contract
-- **Architecture Status**: System Architecture V0.2 remains Candidate / Human-reviewed working architecture
-- **D4 Review Status**: Detailed Semantics Reviewed
-- **D4 Final Consistency Review**: PASS_WITH_REFINEMENTS
-- **Architecture Reopen**: NO
-- **New Contract Required**: NO
-- **Software Architecture**: NOT YET DESIGNED
+- **文档类型（Document Type）**：Detailed Contract Engineering Specification
+- **设计阶段（Design Stage）**：D4 — Execution Record
+- **垂直切片（Vertical Slice）**：First Research Execution
+- **业务场景（Business Scenario）**：US / Car Vacuum / TikTok Content Research
+- **覆盖 Contract（Covered Contract）**：C6 — Execution Record Contract
+- **架构状态（Architecture Status）**：System Architecture V0.2 remains Candidate / Human-reviewed working architecture
+- **D4 审核状态（Review Status）**：Detailed Semantics Reviewed
+- **D4 最终一致性审核（Final Consistency Review）**：PASS_WITH_REFINEMENTS
+- **架构重开（Architecture Reopen）**：NO
+- **需要新增 Contract（New Contract Required）**：NO
+- **软件架构（Software Architecture）**：NOT YET DESIGNED
 
-This specification defines the stable, reference-oriented execution facts that
-become available when an Execution reaches terminalization. It is not a Runtime
-Trace specification, Logging specification, Audit specification, Persistence
-design, Database schema, or Software Architecture.
+本规范定义 Execution 达到 terminalization 后可获得的稳定、reference-oriented
+execution facts。它不是 Runtime Trace specification、Logging specification、
+Audit specification、Persistence design、Database schema 或 Software Architecture。
 
-## 1. Purpose
+## 1. 目的（Purpose）
 
-D4 answers:
+D4 回答：
 
 ```text
 What stable facts describe one completed Execution?
@@ -28,9 +27,9 @@ How are successful and failed Executions finalized?
 What remains resolvable after terminalization?
 ```
 
-## 2. Scope and Non-Scope
+## 2. 范围与非范围（Scope and Non-Scope）
 
-### In scope
+### 范围内（In scope）
 
 - the semantic definition and lifecycle of C6 Execution Record;
 - actual execution facts and cross-contract references;
@@ -42,7 +41,7 @@ What remains resolvable after terminalization?
 - internal versus external reference obligations;
 - relevant version and reproducibility references.
 
-### Out of scope
+### 范围外（Out of scope）
 
 ```text
 Runtime State taxonomy
@@ -59,7 +58,7 @@ Retention duration
 Software model or implementation
 ```
 
-## 3. Execution Record Definition
+## 3. Execution Record 定义（Execution Record Definition）
 
 An Execution Record is the stable execution summary of an already established
 Execution, finalized after terminalization, consisting of:
@@ -90,7 +89,7 @@ C2b owns live Execution identity, terminalization, and stable fact availability.
 C6 owns the Execution Record semantic boundary and aggregates actual references
 from the local owners of those identities and results.
 
-## 4. Conceptual Record Lifecycle
+## 4. 概念记录生命周期（Conceptual Record Lifecycle）
 
 The semantic lifecycle is:
 
@@ -109,11 +108,11 @@ Record semantics. This is not a Persistence Design and must not be represented
 as “rebuild a Record from logs after the Task ends” or “rewrite the complete
 Record on every step.”
 
-## 5. Required Stable Facts and References
+## 5. 必须保留的稳定事实与引用（Required Stable Facts and References）
 
 These are semantic groups, not frozen fields or permanent non-null columns.
 
-### A. Execution identity and input
+### A. Execution identity 与输入
 
 ```text
 Execution Identity
@@ -121,7 +120,7 @@ Task Reference
 Input References
 ```
 
-### B. Actual execution participants
+### B. 实际执行参与者（Actual execution participants）
 
 ```text
 Actual Skill Reference
@@ -132,14 +131,14 @@ Resolved Provider Reference where resolution occurred
 Actually Used Provider Reference where Provider invocation occurred
 ```
 
-### C. Relevant intermediate results
+### C. 相关中间结果（Relevant intermediate results）
 
 ```text
 Relevant Capability Result References
 Evidence References where relevant
 ```
 
-### D. Final business output
+### D. 最终业务输出（Final business output）
 
 ```text
 Final Business Output Reference where present
@@ -148,45 +147,44 @@ Final Business Output Reference where present
 For a successful First Research Slice Execution, the Final Business Output is
 the Research Result Reference. It is not required on every execution path.
 
-### E. Terminal semantics
+### E. 终态语义（Terminal semantics）
 
 ```text
 Terminal Execution Outcome
 ```
 
-### F. Explanation and reproducibility
+### F. 解释与可复现性（Explanation and reproducibility）
 
 ```text
 Important Stable Runtime Facts
 Relevant Reproducibility References
 ```
 
-## 6. Responsibility / Ownership Matrix
+## 6. 责任 / 归属矩阵（Responsibility / Ownership Matrix）
 
-| Semantic concern | Local owner | C6 responsibility |
+| 语义关注点（Semantic concern） | 本地责任方（Local owner） | C6 责任（C6 responsibility） |
 |---|---|---|
-| Execution Identity | C2b | Aggregates the actual identity reference. |
-| Task Reference | C2b / execution-side task-reference semantics | Preserves the applicable Task Reference without deciding whether it shares a software identifier with Execution Identity. C1 may carry / expose upstream or terminal reference semantics but does not own Runtime Task identity. |
-| Input References | C1 / execution boundary | Records references relevant to the established Execution. |
-| Skill Identity / Version | C2a | C6 references the actual participating Skill and relevant version. |
-| Capability Identity / Version | C3 | C6 references capabilities actually invoked and relevant versions. |
-| Provider Identity | C4a / execution Provider path | C4a owns the resolution fact; C6 aggregates a Resolved Provider Reference where resolution occurred and an Actually Used Provider Reference only where invocation occurred. |
-| Capability Result | C3 | C6 references relevant results; it does not copy full payloads. |
-| Evidence Identity | C5a | C6 references Evidence where the execution path produced or used it. |
-| Research Result | C5b | C6 references the final Business Output where present. |
-| Terminalization | C2b | C2b finalizes the Execution; C6 finalizes Record semantics. |
-| Terminal Outcome | C2b | C6 preserves the terminal outcome as an execution fact. |
-| Stable failure explanation | C2b / relevant boundary | C6 preserves stable failure-stage facts and references, not dumps. |
-| Reproducibility references | Cross-contract | C6 aggregates relevant actual version and source references. |
-| Retention / persistence | Not owned by D4 | C6 has resolvability obligations but does not design storage. |
+| Execution Identity | C2b | 汇总实际 identity reference。 |
+| Task Reference | C2b / execution-side task-reference semantics | 保留适用的 Task Reference，不决定它是否与 Execution Identity 共用 software identifier。C1 可承载 / 暴露上游或终态引用语义，但不拥有 Runtime Task identity。 |
+| Input References | C1 / execution boundary | 记录与已建立 Execution 相关的引用。 |
+| Skill Identity / Version | C2a | C6 引用实际参与的 Skill 及相关版本。 |
+| Capability Identity / Version | C3 | C6 引用实际调用的 capabilities 及相关版本。 |
+| Provider Identity | C4a / execution Provider path | C4a 拥有 resolution fact；C6 在发生 resolution 时汇总 Resolved Provider Reference，只有发生 invocation 时才汇总 Actually Used Provider Reference。 |
+| Capability Result | C3 | C6 引用相关结果，不复制完整 payload。 |
+| Evidence Identity | C5a | 执行路径产生或使用 Evidence 时由 C6 引用。 |
+| Research Result | C5b | 存在时引用最终 Business Output。 |
+| Terminalization | C2b | C2b 完成 Execution；C6 完成 Record semantics。 |
+| Terminal Outcome | C2b | C6 将 terminal outcome 保留为 execution fact。 |
+| Stable failure explanation | C2b / relevant boundary | C6 保留稳定 failure-stage facts 与 references，而非 dump。 |
+| Reproducibility references | Cross-contract | C6 汇总相关的实际版本与来源引用。 |
+| Retention / persistence | Not owned by D4 | C6 具有 resolvability obligations，但不设计 storage。 |
 
-C6 does not redefine Skill, Capability, Provider, Evidence, or Research Result.
-It references the identity and result semantics owned by those Contracts.
+C6 不重新定义 Skill、Capability、Provider、Evidence 或 Research Result；它
+引用这些 Contract 所拥有的 identity 与 result semantics。
 
-## 7. Actual Facts Only
+## 7. 只记录实际事实（Actual Facts Only）
 
-The Record contains facts that actually occurred and became stable execution
-semantics. The following distinctions are mandatory:
+Record 只包含实际发生并成为稳定 execution semantics 的事实。以下区分是强制性的：
 
 ```text
 Declared Dependency
@@ -196,9 +194,8 @@ Planned Action
     != Actual Execution Fact
 ```
 
-Declaring that a Skill depends on Search does not prove that Search was
-invoked. A Capability Reference enters the Record as an actual invocation fact
-only when that invocation occurred.
+声明 Skill 依赖 Search，不证明 Search 已被调用。Capability Reference 只有在
+实际发生调用时，才作为 actual invocation fact 进入 Record。
 
 Provider facts are also path-sensitive:
 
@@ -208,7 +205,7 @@ Current / Configured Provider Binding
     != Actually Used Provider Fact
 ```
 
-A legal path may resolve a Provider and then fail before invocation:
+合法路径可能先解析 Provider、再在调用前失败：
 
 ```text
 Provider resolution succeeds
@@ -223,9 +220,9 @@ Actually Used Provider Reference is absent
 The exact software relationship between Task Reference and Execution Identity
 remains **NOT YET DESIGNED**; C6 does not force them to share one identifier.
 
-## 8. Successful Execution Record
+## 8. 成功 Execution Record（Successful Execution Record）
 
-A successful First Research Slice Record may contain:
+成功的 First Research Slice Record 可能包含：
 
 ```text
 Execution Identity
@@ -241,17 +238,17 @@ Terminal Successful Outcome
 Relevant Reproducibility References
 ```
 
-These are path-sensitive semantic obligations. D4 does not turn every item into
-an OS-wide mandatory non-null field. The governing rule is:
+这些是 path-sensitive semantic obligations。D4 不把每一项都变成 OS-wide
+mandatory non-null field。治理原则是：
 
 ```text
 Record what actually occurred.
 ```
 
-## 9. Failed Execution Record
+## 9. 失败 Execution Record（Failed Execution Record）
 
-A failed Execution must still produce a valid finalized Execution Record. A
-failure Record may contain:
+失败的 Execution 仍必须产生有效的 finalized Execution Record。Failure Record
+可能包含：
 
 ```text
 Execution Identity
@@ -264,7 +261,7 @@ Relevant stable failure-stage facts / references
 Terminal Failure Outcome
 ```
 
-It may legitimately lack:
+它可以合理地缺少：
 
 ```text
 Evidence Reference
@@ -277,13 +274,13 @@ Execution Record completeness
     != All possible references are non-null
 ```
 
-Completeness means that the actual stable facts appropriate to the execution
-path are preserved, including the facts needed to explain failure closure.
+完整性意味着保留与执行路径相匹配的实际稳定事实，包括解释 failure closure
+所需的事实。
 
-## 10. Failure Explanation Boundary
+## 10. 失败解释边界（Failure Explanation Boundary）
 
-A failed Record must preserve enough stable failure-stage semantics and
-references to explain terminal failure. It must not become a raw error dump.
+Failure Record 必须保留足够的稳定 failure-stage semantics 与 references 来
+解释 terminal failure，但不能变成 raw error dump。
 
 ```text
 Stable Failure Explanation
@@ -300,27 +297,25 @@ All debug logs
 All retry events
 ```
 
-The exact failure object, taxonomy, or enum is **NOT YET DESIGNED**. C6 records
-stable failure facts appropriate to the boundary; it does not create a global
-error or observability architecture.
+精确的 failure object、taxonomy 或 enum 为 **NOT YET DESIGNED**。C6 记录与
+边界相匹配的稳定 failure facts，不创建 global error 或 observability architecture。
 
-## 11. Pre-execution Request Rejection Boundary
+## 11. 执行前请求拒绝边界（Pre-execution Request Rejection Boundary）
 
-If C1 rejects a Business Work Request before an Execution is established:
+如果 C1 在建立 Execution 之前拒绝 Business Work Request：
 
 ```text
 No Execution established
     → no C6 Execution Record required
 ```
 
-This is distinct from a failed Execution, which must produce a finalized
-Record. D4 does not imply that the wider system can never log or identify a
-rejected request; future Application or Transport concerns may have request
-logs or request IDs. Such concerns are outside the current C6 Contract.
+这不同于必须产生 finalized Record 的 failed Execution。D4 不意味着更大的
+系统永远不能记录或识别 rejected request；未来 Application 或 Transport
+concerns 可以拥有 request logs 或 request IDs，但这些不属于当前 C6 Contract。
 
-## 12. Reference-oriented Record Boundary
+## 12. 面向 Reference 的 Record 边界（Reference-oriented Record Boundary）
 
-C6 is reference-oriented, not payload-oriented:
+C6 面向 reference，而不是面向 payload：
 
 ```text
 Execution Record
@@ -329,7 +324,7 @@ Execution Record
     → points to Final Business Output where present
 ```
 
-C6 must not default to copying:
+C6 不得默认复制：
 
 ```text
 Full Raw Provider Payload
@@ -360,11 +355,10 @@ Do not add `ExecutionRecorder`, `FactSink`, `AuditContract`, `TraceContract`,
 `EventContract`, `EventBus`, `Recorder Runtime`,
 `StableExecutionFactContract`, or `RuntimeExecutionRecordContract`.
 
-## 13. Post-terminal Resolvability
+## 13. 终态后可解析性（Post-terminal Resolvability）
 
-A finalized Execution Record has explanatory value only when the
-system-controlled internal references needed to explain the Execution remain
-resolvable after terminalization.
+finalized Execution Record 只有在解释 Execution 所需的 system-controlled
+internal references 于 terminalization 后仍可解析时，才具有解释价值。
 
 ```text
 Post-terminal resolvability
@@ -383,12 +377,12 @@ Evidence references
 Final Business Output reference
 ```
 
-This does not freeze a retention duration. `30 days`, `90 days`, `1 year`, and
-`forever` are not D4 semantics.
+这不冻结 retention duration。`30 days`、`90 days`、`1 year` 与 `forever` 都不是
+D4 语义。
 
-## 14. Retention, Persistence, and Storage Maturity
+## 14. Retention、Persistence 与存储成熟度（Storage Maturity）
 
-The current maturity is:
+当前成熟度为：
 
 ```text
 Record / Reference Retention Semantics
@@ -404,8 +398,8 @@ Specific Database Technology
     = NOT YET PROVEN
 ```
 
-Post-terminal resolvability does not imply a Persistence Service, Repository,
-Storage Service, or Database:
+Post-terminal resolvability 不意味着必须存在 Persistence Service、Repository、
+Storage Service 或 Database：
 
 ```text
 Execution Record exists
@@ -418,12 +412,12 @@ Evidence references exist
     ≠ Vector DB is required
 ```
 
-## 15. Internal and External References
+## 15. 内部与外部引用（Internal and External References）
 
 The Record must distinguish system-controlled internal references from external
 source references.
 
-### System-controlled internal references
+### 系统控制的内部引用（System-controlled internal references）
 
 Examples:
 
@@ -436,7 +430,7 @@ Research Result Reference
 
 Necessary internal references carry the post-terminal resolvability obligation.
 
-### External source references
+### 外部来源引用（External source references）
 
 Examples:
 
@@ -453,7 +447,7 @@ Source Reference Retained
     != External Source Guaranteed Available
 ```
 
-## 16. Versioning and Reproducibility
+## 16. 版本管理与可复现性（Versioning and Reproducibility）
 
 C6 must support relevant version and reproducibility references, including as
 applicable:
@@ -476,7 +470,7 @@ Compatibility engine
 The exact representation of Version References and Reproducibility References
 is **NOT YET DESIGNED**.
 
-## 17. Cross-contract Invariants
+## 17. 跨 Contract 不变量（Cross-contract Invariants）
 
 1. Execution Record = Stable Execution Facts + Cross-contract References + Terminal Outcome.
 2. Execution Record is not Runtime State.
@@ -497,7 +491,7 @@ is **NOT YET DESIGNED**.
 17. Retention / resolvability does not imply Persistence architecture.
 18. An Execution Record requirement does not imply Event, Audit, or Recorder architecture.
 
-## 18. Explicit Exclusions and Design Maturity
+## 18. 明确排除项与设计成熟度（Explicit Exclusions and Design Maturity）
 
 These statuses are intentionally distinct and do not all mean permanent
 prohibition.
@@ -542,7 +536,7 @@ Event Store
 Event / Message Architecture as a required First-Slice execution mechanism
 ```
 
-## 19. Open Representation Questions
+## 19. 尚未冻结的表示层问题（Open Representation Questions）
 
 The following do not block D4 semantic completion:
 
@@ -561,7 +555,7 @@ The following do not block D4 semantic completion:
 13. Exact post-terminal retention lifecycle.
 14. Storage / persistence mechanism.
 
-## 20. Review Result
+## 20. 审核结论（Review Result）
 
 ```text
 C6 — Execution Record Contract
@@ -595,7 +589,7 @@ R6 — External Source Availability
 R7 — Retention != Persistence
 ```
 
-## 21. Next Design Stage
+## 21. 下一设计阶段（Next Design Stage）
 
 ```text
 D5 — Provider Mapping

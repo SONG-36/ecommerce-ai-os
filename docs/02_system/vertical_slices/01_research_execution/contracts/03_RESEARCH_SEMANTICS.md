@@ -1,25 +1,25 @@
-# D3 — Research Semantics Specification
+# D3 — 研究语义规范（Research Semantics Specification）
 
-- **Document Type**: Detailed Contract Engineering Specification
-- **Design Stage**: D3 — Research Semantics
-- **Vertical Slice**: First Research Execution
-- **Business Scenario**: US / Car Vacuum / TikTok Content Research
-- **Covered Contracts**: C5a + C5b
-- **Architecture Status**: System Architecture V0.2 remains Candidate / Human-reviewed working architecture
-- **D3 Review Status**: Detailed Semantics Reviewed
-- **D3 Joint Consistency Review**: PASS_WITH_REFINEMENTS
-- **Architecture Reopen**: NO
-- **New Contract Required**: NO
-- **Software Architecture**: NOT YET DESIGNED
+- **文档类型（Document Type）**：Detailed Contract Engineering Specification
+- **设计阶段（Design Stage）**：D3 — Research Semantics
+- **垂直切片（Vertical Slice）**：First Research Execution
+- **业务场景（Business Scenario）**：US / Car Vacuum / TikTok Content Research
+- **覆盖 Contract（Covered Contracts）**：C5a + C5b
+- **架构状态（Architecture Status）**：System Architecture V0.2 remains Candidate / Human-reviewed working architecture
+- **D3 审核状态（Review Status）**：Detailed Semantics Reviewed
+- **D3 联合一致性审核（Joint Consistency Review）**：PASS_WITH_REFINEMENTS
+- **架构重开（Architecture Reopen）**：NO
+- **需要新增 Contract（New Contract Required）**：NO
+- **软件架构（Software Architecture）**：NOT YET DESIGNED
 
-This specification defines the evidence and research-result semantics for the
-First Research Slice. It is an Engineering Specification, not an Architecture
-Review transcript, Research Method handbook, data-science textbook, database
-schema, or Evidence / Research Service design.
+本规范定义 First Research Slice 的 Evidence 与 Research Result 语义。它是
+Engineering Specification，不是 Architecture Review transcript、Research
+Method handbook、data-science textbook、database schema，也不是 Evidence /
+Research Service design。
 
-## 1. Purpose
+## 1. 目的（Purpose）
 
-D3 answers:
+D3 回答：
 
 ```text
 When does a Search Capability Result qualify as Evidence?
@@ -38,19 +38,18 @@ Raw Provider Result
     != Testable Hypothesis
 ```
 
-## 2. Covered Contracts
+## 2. 覆盖的 Contract（Covered Contracts）
 
-| Contract | Boundary / responsibility | D3 role |
+| Contract | 边界 / 责任（Boundary / responsibility） | D3 作用（D3 role） |
 |---|---|---|
 | C5a | Evidence Contract | Owns the stable semantics that a selected observation must preserve to become referenceable Evidence. |
 | C5b | Research Result Contract | Owns the Human-reviewable Research Result boundary, including findings, hypotheses, answerability, limitations, traceability, and result referenceability. |
 
-Documentation grouping does not merge these Contracts. C5a and C5b remain two
-independent Contract identities.
+文档分组不会合并这些 Contract。C5a 与 C5b 仍然是两个独立的 Contract identity。
 
-## 3. D3 Core Semantic Layers
+## 3. D3 核心语义层（Core Semantic Layers）
 
-| Layer | Meaning | Primary responsibility |
+| 层（Layer） | 含义（Meaning） | 主要责任（Primary responsibility） |
 |---|---|---|
 | Raw Provider Result | Provider runtime reality | C4b Adapter (defined in D5) / concrete Provider boundary |
 | Search Capability Result | Provider-neutral output of C3 | C3, consumed by the Research Skill |
@@ -58,12 +57,12 @@ independent Contract identities.
 | Finding | Research interpretation of Evidence within a bounded sample | Research Skill |
 | Testable Hypothesis | Finding-based proposition awaiting future validation | Research Skill, exposed by C5b |
 
-These are not one data object with different names. Each layer changes the
-semantic responsibility and traceability requirements.
+这些不是同一个 data object 的不同名称。每一层都会改变 semantic
+responsibility 和 traceability requirements。
 
-## 4. Scope and Non-Scope
+## 4. 范围与非范围（Scope and Non-Scope）
 
-### In scope
+### 范围内（In scope）
 
 - Evidence identity, referenceability, observation, source, time, and missingness;
 - Actual Sample Boundary reference semantics;
@@ -74,7 +73,7 @@ semantic responsibility and traceability requirements.
 - claim-level and execution-level traceability;
 - Business Completion seam between C5b, C2a, and C2b.
 
-### Out of scope for D3
+### D3 范围外（Out of scope for D3）
 
 - Search invocation or Provider Resolution (C3/C4a);
 - Scrape Creators request/response translation or endpoint selection (C4b);
@@ -85,9 +84,9 @@ semantic responsibility and traceability requirements.
 - final business decision, Creative Direction, Script, Artifact, or Experiment execution;
 - Python models, JSON schemas, API schemas, or Software Architecture.
 
-## 5. D3 Conceptual Research Flow
+## 5. D3 概念研究流程（Conceptual Research Flow）
 
-The normal research path is:
+正常研究路径为：
 
 ```mermaid
 flowchart TD
@@ -103,7 +102,7 @@ flowchart TD
     BC --> EC["C2b Execution Completion"]
 ```
 
-The valid insufficient-evidence branch is also part of the contract:
+有效的 evidence-insufficient 分支也属于 Contract：
 
 ```text
 Evidence
@@ -122,37 +121,36 @@ C2a Business Completion
 Successful Execution
 ```
 
-## 6. Responsibility / Ownership Matrix
+## 6. 责任 / 归属矩阵（Responsibility / Ownership Matrix）
 
-| Semantic concern | Primary owner | Boundary / consumer obligation |
+| 语义关注点（Semantic concern） | 主要责任方（Primary owner） | 边界 / 消费方义务（Boundary / consumer obligation） |
 |---|---|---|
-| Search Capability Result | Upstream C3 | Supplies provider-neutral result semantics. |
-| Sampling Method | Research Skill | Decides how relevance and sampling are applied. |
-| Actual Sample Boundary determination | Research Skill | Determines the boundary for the current research work. |
-| Actual Sample Boundary after determination | Stable Research Execution Fact | C5a and C5b reference it; neither owns it as a separate Contract. |
-| Evidence formalization semantics | C5a | Defines what a selected observation must preserve as Evidence. |
-| Observed Fact | C5a preserves | Must remain distinguishable from interpretation. |
-| Evidence-worthiness decision | Research Skill | Decides why an observation is worth selecting. |
-| Source / Provider / Capability references | C5a | Preserves distinct traceability references. |
-| Missingness preservation | C5a | Preserves known missingness; does not infer zero or meaning. |
-| Evidence interpretation | Research Skill | Interprets Evidence within Research Boundary and Sample Boundary. |
-| Finding formation | Research Skill | Forms an evidence-backed, sample-bounded interpretation. |
-| Hypothesis formation | Research Skill | Forms a proposition for future Experiment & Validation. |
-| Research Result boundary | C5b | Defines the Human-reviewable business output. |
-| Answerability | C5b | States what the current Evidence can answer. |
-| Limitations | C5b | States why the answer is bounded. |
+| Search Capability Result | 上游 C3 | 提供 provider-neutral result semantics。 |
+| Sampling Method | Research Skill | 决定如何应用 relevance 与 sampling。 |
+| Actual Sample Boundary determination | Research Skill | 确定当前研究工作的边界。 |
+| Actual Sample Boundary after determination | Stable Research Execution Fact | C5a、C5b 引用它；二者都不把它拥有为独立 Contract。 |
+| Evidence formalization semantics | C5a | 定义被选观察必须以 Evidence 形式保留什么。 |
+| Observed Fact | C5a preserves | 必须与 interpretation 保持可区分。 |
+| Evidence-worthiness decision | Research Skill | 决定为什么值得选择某个观察。 |
+| Source / Provider / Capability references | C5a | 保留彼此不同的 traceability references。 |
+| Missingness preservation | C5a | 保留已知缺失，不推断为零或其他含义。 |
+| Evidence interpretation | Research Skill | 在 Research Boundary 和 Sample Boundary 内解释 Evidence。 |
+| Finding formation | Research Skill | 形成由 Evidence 支撑、受样本边界约束的解释。 |
+| Hypothesis formation | Research Skill | 形成供未来 Experiment & Validation 使用的命题。 |
+| Research Result boundary | C5b | 定义 Human-reviewable business output。 |
+| Answerability | C5b | 说明当前 Evidence 能回答什么。 |
+| Limitations | C5b | 说明答案为什么受到边界限制。 |
 | Evidence / claim traceability | C5a + C5b seam | Finding / Hypothesis can point to supporting Evidence. |
-| Business Completion | C2a using C5b-valid result | Skill declares completion after a valid Research Result exists. |
-| Execution Completion | C2b | Runtime recognizes completion and terminalizes the Execution. |
-| Execution Record | C6 (defined in D4) | D3 supplies references but does not design C6. |
+| Business Completion | C2a using C5b-valid result | 有效 Research Result 存在后，Skill 才声明完成。 |
+| Execution Completion | C2b | Runtime 识别完成并对 Execution 做终态收口。 |
+| Execution Record | C6（D4 定义） | D3 提供引用，但不设计 C6。 |
 
-## 7. C5a — Evidence Contract
+## 7. C5a — 证据 Contract（Evidence Contract）
 
-### 7.1 Evidence definition
+### 7.1 Evidence 定义（Evidence definition）
 
-Evidence is a research fact that, under an explicit Research Question and
-Actual Sample Boundary, was selected by the Research Method and preserved with
-the semantics needed for traceable review:
+Evidence（证据）是在明确 Research Question 与 Actual Sample Boundary 下，
+由 Research Method 选择，并以可追溯审核所需语义保留的研究事实：
 
 ```text
 Observed Fact
@@ -163,7 +161,7 @@ Missingness
 Provenance
 ```
 
-Evidence is not defined as:
+Evidence 不定义为：
 
 ```text
 high-play video
@@ -171,7 +169,7 @@ LLM opinion
 Research Finding
 ```
 
-### 7.2 Required C5a concerns
+### 7.2 C5a 必须覆盖的关注点（Required concerns）
 
 C5a covers:
 
@@ -189,12 +187,12 @@ Finding Referenceability seam
 Traceability / Provenance
 ```
 
-These are stable semantic concerns, not a requirement for one software field
-or one independently persisted object per line.
+这些是稳定语义关注点，并不要求每一行对应一个 software field 或一个独立
+持久化 object。
 
-### 7.3 Evidence-worthiness ownership
+### 7.3 Evidence-worthiness 归属
 
-The Research Skill decides:
+Research Skill 决定：
 
 ```text
 why an observation is worth studying
@@ -202,18 +200,18 @@ why it enters the current Sample
 how relevance / sampling method is applied
 ```
 
-C5a defines what must be preserved after an observation has been selected:
+C5a 定义观察被选中后必须保留什么：
 
 ```text
 Skill = decides WHY
 C5a   = defines WHAT must be preserved
 ```
 
-C5a does not decide research relevance, sampling quality, or business meaning.
+C5a 不决定 research relevance、sampling quality 或 business meaning。
 
-### 7.4 Observation versus interpretation
+### 7.4 观察与解释（Observation versus interpretation）
 
-The following distinction is mandatory:
+以下区分是强制性的：
 
 ```text
 Observed Fact
@@ -232,7 +230,7 @@ A statement such as “this pattern may matter for the current research question
 is Research Interpretation. Evidence formalization must preserve the Observed
 Fact without silently converting interpretation into observation.
 
-Observation Boundary is a C5a concern. D3 does not create:
+Observation Boundary 属于 C5a 关注点。D3 不创建：
 
 ```text
 Observation Contract
@@ -240,9 +238,9 @@ Observation Service
 Observation Repository
 ```
 
-### 7.5 Actual Sample Boundary semantics
+### 7.5 实际样本边界语义（Actual Sample Boundary semantics）
 
-Ownership is precise:
+Ownership 必须精确：
 
 ```text
 Sample Selection Method
@@ -258,8 +256,7 @@ C5b Research Result
     → references / exposes Actual Sample Boundary
 ```
 
-C5a and C5b do not own the Sample Boundary, and D3 does not create a
-`SampleBoundaryContract`.
+C5a 与 C5b 不拥有 Sample Boundary，D3 也不创建 `SampleBoundaryContract`。
 
 At semantic level, the boundary must make it possible to explain:
 
@@ -272,9 +269,9 @@ what selection logic or limitation applies
 
 D3 does not freeze field names, sample-size rules, or a sampling algorithm.
 
-### 7.6 Public Content versus Public Performance
+### 7.6 公开内容与公开表现（Public Content versus Public Performance）
 
-Evidence nature must remain distinguishable:
+Evidence 的性质必须保持可区分：
 
 ```text
 Public Content Evidence
@@ -300,7 +297,7 @@ comments count
 other public performance signals
 ```
 
-Public Performance Signal is not causal business truth:
+Public Performance Signal 不是因果业务真相：
 
 ```text
 Public Performance Signal
@@ -312,7 +309,7 @@ association or Finding. It does not by itself prove the Hook caused views,
 CTR, CVR, or GMV. D3 does not create a complete evidence taxonomy, dozens of
 `evidence_type` enum values, or an Evidence Ontology.
 
-### 7.7 Source, Provider, and Capability references
+### 7.7 Source、Provider 与 Capability 引用（references）
 
 The following references answer different questions:
 
@@ -330,7 +327,7 @@ Original Source Reference
 
 These are traceability semantics, not database foreign-key design.
 
-### 7.8 Evidence identity and referenceability
+### 7.8 Evidence identity 与引用可定位性（referenceability）
 
 Evidence must be referenceable so that Findings, Hypotheses, Research Results,
 and later Execution facts can identify the supporting research fact.
@@ -358,7 +355,7 @@ Exact retention lifecycle / duration remains **NOT YET DESIGNED**. Persistence
 mechanism is not defined by C5a/C5b. D3 does not create `EvidenceRepository`,
 `EvidenceService`, an Evidence table, or a vector database.
 
-### 7.9 Time semantics
+### 7.9 时间语义（Time semantics）
 
 C5a must preserve Observation Time Semantics because these can differ:
 
@@ -377,7 +374,7 @@ Observation Time Semantics = REQUIRED
 Exact field model = NOT YET DESIGNED
 ```
 
-### 7.10 Missingness semantics
+### 7.10 缺失语义（Missingness semantics）
 
 Missingness follows the established direction:
 
@@ -403,7 +400,7 @@ C5a must not automatically complete an unknown fact, interpret missing as zero,
 or interpret missing as negative evidence. Known missingness is itself a
 research fact that may bound Answerability and Limitations.
 
-### 7.11 Finding Referenceability seam
+### 7.11 Finding 引用可定位性接缝（Referenceability seam）
 
 Finding Referenceability does not mean that Evidence owns Finding. It means
 downstream Finding and Hypothesis semantics must be able to identify the
@@ -418,7 +415,7 @@ Whether the relationship is bidirectional, or whether Evidence stores a
 reverse Finding reference, remains **NOT YET DESIGNED**. D3 does not create a
 Finding Contract.
 
-### 7.12 C5a is not an Evidence Service
+### 7.12 C5a 不是 Evidence Service
 
 ```text
 Evidence Contract
@@ -431,7 +428,7 @@ Full Evidence Foundation Service
 The Contract defines stable Evidence semantics only. It does not imply an
 Evidence Service, repository, API, runtime, or database.
 
-## 8. Actual Sample Boundary Semantics
+## 8. 实际样本边界语义（Actual Sample Boundary Semantics）
 
 The Search Retrieval Semantics from D2 and the Research Sample Boundary are
 distinct:
@@ -450,7 +447,7 @@ The boundary is not an independently designed entity or Contract. It can be
 referenced by existing Evidence and Research Result semantics without adding a
 `SampleBoundaryContract`.
 
-## 9. Evidence Provenance, Missingness, and Time
+## 9. Evidence Provenance、缺失语义与时间（Missingness, and Time）
 
 C5a provenance is the chain that makes a research fact reviewable:
 
@@ -474,9 +471,9 @@ The chain does not prescribe storage. It defines the stable semantics needed to
 explain what was observed, where it came from, under what sample and time
 conditions, and what was not known.
 
-## 10. C5b — Research Result Contract
+## 10. C5b — 研究结果 Contract（Research Result Contract）
 
-### 10.1 Result definition and boundary
+### 10.1 结果定义与边界（Result definition and boundary）
 
 C5b defines the First Slice Business End Boundary:
 
@@ -502,7 +499,7 @@ Result Referenceability
 C5b references C5a Evidence semantics; it does not redefine or fully copy the
 Evidence Contract payload.
 
-### 10.2 Research Scope / Boundary
+### 10.2 Research Scope / Boundary（研究范围 / 边界）
 
 The Result must make clear the Research Boundary under which it applies. For
 the First Slice this may include:
@@ -518,7 +515,7 @@ Research Intent / Decision Need
 C5b does not simply duplicate the complete C1 Business Work Request. It retains
 the Research Boundary semantics necessary to understand Result applicability.
 
-### 10.3 Evidence references
+### 10.3 Evidence 引用（Evidence references）
 
 C5b must be able to cite the Evidence supporting the current Result:
 
@@ -530,9 +527,9 @@ C5b references Evidence
 The Result must not copy the complete Evidence payload merely for convenience.
 Inline versus reference representation remains **NOT YET DESIGNED**.
 
-## 11. Finding and Hypothesis Semantics
+## 11. Finding 与 Hypothesis 语义（Finding and Hypothesis Semantics）
 
-### 11.1 Finding
+### 11.1 研究发现（Finding）
 
 A Finding is a Research Skill interpretation formed from Evidence within the
 Research Boundary and Actual Sample Boundary.
@@ -556,7 +553,7 @@ Finding
 Finding formation belongs to the Research Skill. D3 does not create a Finding
 Contract.
 
-### 11.2 Causal discipline
+### 11.2 因果纪律（Causal discipline）
 
 Observed association does not equal causal conclusion:
 
@@ -570,7 +567,7 @@ performance sample may be a Finding. It does not automatically establish that
 the structure caused high views, CTR, CVR, or GMV. Future Experiment &
 Validation evidence is required for such claims.
 
-### 11.3 Testable Hypothesis
+### 11.3 可检验假设（Testable Hypothesis）
 
 A Testable Hypothesis is a proposition formed from a Finding that can be
 validated or falsified by a later Experiment & Validation process.
@@ -586,7 +583,7 @@ Hypothesis
 Hypothesis formation belongs to the Research Skill. An Independent Hypothesis
 Contract is **DO NOT ADD YET**.
 
-### 11.4 Outcome semantics and non-empty guardrail
+### 11.4 结果语义与非空护栏（Outcome semantics and non-empty guardrail）
 
 C5b must contain semantic Finding and Hypothesis outcomes. This does not mean:
 
@@ -607,9 +604,9 @@ Result completeness
     != Forced positive conclusion
 ```
 
-## 12. Answerability and Limitations
+## 12. 可回答性与局限性（Answerability and Limitations）
 
-### 12.1 Answerability
+### 12.1 可回答性（Answerability）
 
 Answerability states what the current Evidence permits the Research Question
 to answer and to what degree. For example, it may support that a pattern
@@ -619,7 +616,7 @@ causes purchase growth.
 D3 does not freeze `High / Medium / Low`, a confidence score, a 0–1 score, or
 another taxonomy. An Answerability Contract is **DO NOT ADD**.
 
-### 12.2 Limitations
+### 12.2 局限性（Limitations）
 
 Limitations state why the Result is bounded. Examples include:
 
@@ -642,7 +639,7 @@ Limitations   = why the answer is bounded
 
 An independent Limitation Contract is **DO NOT ADD**.
 
-## 13. Insufficient Evidence and Result Validity
+## 13. 证据不足与结果有效性（Insufficient Evidence and Result Validity）
 
 Insufficient Evidence is a valid research outcome when the Research Method has
 completed the available evidence work and the Result accurately states the
@@ -680,9 +677,9 @@ Execution Failure
 
 The current Runtime must not create `FAILED_INSUFFICIENT_EVIDENCE`.
 
-## 14. Traceability and Result Referenceability
+## 14. 可追溯性与结果引用可定位性（Traceability and Result Referenceability）
 
-### 14.1 Claim-level traceability
+### 14.1 Claim-level 可追溯性（traceability）
 
 C5b must support a traceability path such as:
 
@@ -701,7 +698,7 @@ What is stable is the obligation that a Finding / Hypothesis can identify the
 Evidence on which it depends, and that Evidence can be traced to its sample,
 Capability result, Provider reality, and original source.
 
-### 14.2 Execution-level traceability
+### 14.2 Execution-level 可追溯性（traceability）
 
 At the execution level:
 
@@ -716,7 +713,7 @@ Skill / Capability / Provider / Version References
 D3 does not design C6 or an Execution Record schema. It only preserves the
 cross-contract reference obligations.
 
-### 14.3 Result referenceability
+### 14.3 结果引用可定位性（Result referenceability）
 
 Research Result must be referenceable because C1 exposes the Business Result
 and C6 (defined in D4) may reference the final Business Output.
@@ -733,7 +730,7 @@ Result Referenceability
 Traceability is carried by existing Contract references. D3 does not create a
 `TraceabilityContract` or `TraceabilityService`.
 
-## 15. Business Completion Seam
+## 15. Business Completion 接缝（Business Completion Seam）
 
 C5b defines what constitutes a valid Research Result. C2a Research Skill uses
 that valid Result to declare Business Completion. C2b recognizes Business
@@ -757,7 +754,7 @@ Execution Completion
 
 C5b does not own Runtime State, Execution terminalization, or Execution Outcome.
 
-## 16. Research Result Product Boundary
+## 16. Research Result 产品边界（Research Result Product Boundary）
 
 The First Slice ends at a Human-reviewable Research Result. It does not make
 the final downstream business decision:
@@ -787,7 +784,7 @@ Creative Production
 Experiment & Validation
 ```
 
-## 17. Cross-contract Invariants
+## 17. 跨 Contract 不变量（Cross-contract Invariants）
 
 1. Raw Provider Result ≠ Search Capability Result ≠ Evidence ≠ Finding ≠ Hypothesis.
 2. Search Result is not Evidence.
@@ -810,7 +807,7 @@ Experiment & Validation
 19. Business Completion precedes Execution Completion.
 20. D3 does not add a standalone Sample Boundary, Finding, Hypothesis, Answerability, Limitation, or Traceability Contract.
 
-## 18. Explicit Exclusions and Design Maturity
+## 18. 明确排除项与设计成熟度（Explicit Exclusions and Design Maturity）
 
 These statuses are intentionally distinct. They do not all mean permanent
 prohibition.
@@ -875,7 +872,7 @@ Vector Database
 Evidence Ontology
 ```
 
-## 19. Open Representation Questions
+## 19. 尚未冻结的表示层问题（Open Representation Questions）
 
 The following remain open and do not block D3 semantic completion:
 
@@ -896,7 +893,7 @@ The following remain open and do not block D3 semantic completion:
 15. Limitations representation.
 16. Inline versus referenced Evidence in Research Result.
 
-## 20. Review Result
+## 20. 审核结论（Review Result）
 
 ```text
 C5a — Evidence Contract
@@ -933,7 +930,7 @@ R6 — Claim traceability
 R7 — Referenceability vs Persistence
 ```
 
-## 21. Next Design Stage
+## 21. 下一设计阶段（Next Design Stage）
 
 ```text
 D4 — Execution Record

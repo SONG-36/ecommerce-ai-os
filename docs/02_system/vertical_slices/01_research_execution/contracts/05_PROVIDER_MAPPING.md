@@ -1,25 +1,24 @@
-# D5 — Provider Mapping Specification
+# D5 — Provider 映射规范（Provider Mapping Specification）
 
-- **Document Type**: Detailed Contract Engineering Specification
-- **Design Stage**: D5 — Provider Mapping
-- **Vertical Slice**: First Research Execution
-- **Business Scenario**: US / Car Vacuum / TikTok Content Research
-- **Covered Contract**: C4b — Scrape Creators Adapter Contract
-- **Architecture Status**: System Architecture V0.2 remains Candidate / Human-reviewed working architecture
-- **D5 Review Status**: Detailed Semantics Reviewed
-- **D5 Final Consistency Review**: PASS_WITH_REFINEMENTS
-- **Architecture Reopen**: NO
-- **New Contract Required**: NO
-- **Software Architecture**: NOT YET DESIGNED
+- **文档类型（Document Type）**：Detailed Contract Engineering Specification
+- **设计阶段（Design Stage）**：D5 — Provider Mapping
+- **垂直切片（Vertical Slice）**：First Research Execution
+- **业务场景（Business Scenario）**：US / Car Vacuum / TikTok Content Research
+- **覆盖 Contract（Covered Contract）**：C4b — Scrape Creators Adapter Contract
+- **架构状态（Architecture Status）**：System Architecture V0.2 remains Candidate / Human-reviewed working architecture
+- **D5 审核状态（Review Status）**：Detailed Semantics Reviewed
+- **D5 最终一致性审核（Final Consistency Review）**：PASS_WITH_REFINEMENTS
+- **架构重开（Architecture Reopen）**：NO
+- **需要新增 Contract（New Contract Required）**：NO
+- **软件架构（Software Architecture）**：NOT YET DESIGNED
 
-This specification defines how stable Search Capability semantics map to current
-Scrape Creators runtime reality. It is not an API inventory, endpoint selection
-report, SDK wrapper design, concrete client implementation, Provider Lab
-report, or Software Architecture.
+本规范定义稳定的 Search Capability semantics 如何映射到当前 Scrape Creators
+runtime reality。它不是 API inventory、endpoint selection report、SDK wrapper
+design、concrete client implementation、Provider Lab report 或 Software Architecture。
 
-## 1. Purpose
+## 1. 目的（Purpose）
 
-D5 answers:
+D5 回答：
 
 > How does the stable C3 Search Capability Contract map through C4b to the
 > current Scrape Creators Provider without allowing Provider-specific syntax,
@@ -33,20 +32,20 @@ Stable OS Search Semantics
 Provider-specific Representation
 ```
 
-C4b absorbs Provider-specific volatility. It does not invent Research
-semantics or select the Provider.
+C4b 吸收 Provider-specific volatility，但不发明 Research semantics，也不选择
+Provider。
 
-## 2. Covered Contract
+## 2. 覆盖的 Contract（Covered Contract）
 
-| Contract | Boundary / responsibility | D5 role |
+| Contract | 边界 / 责任（Boundary / responsibility） | D5 作用（D5 role） |
 |---|---|---|
 | C4b | Scrape Creators Adapter Contract | Translates stable C3 Search semantics to and from the current Scrape Creators runtime, normalizes provider facts, and exposes bounded references and compatibility awareness. |
 
-C4b remains distinct from C3 Search Capability and C4a Provider Resolution.
+C4b 与 C3 Search Capability、C4a Provider Resolution 保持区分。
 
-## 3. Scope and Non-Scope
+## 3. 范围与非范围（Scope and Non-Scope）
 
-### In scope
+### 范围内（In scope）
 
 - provider-neutral request translation;
 - provider-result response translation;
@@ -57,7 +56,7 @@ C4b remains distinct from C3 Search Capability and C4a Provider Resolution.
 - faithful, bounded/lossy, and unsupported mapping semantics;
 - C4a, C3, C5a, and C6 cross-contract seams.
 
-### Out of scope
+### 范围外（Out of scope）
 
 ```text
 Concrete endpoint selection
@@ -74,9 +73,9 @@ Governance Policy
 Persistence, Repository, Database, or Software Architecture
 ```
 
-## 4. Provider Mapping Position
+## 4. Provider 映射位置（Provider Mapping Position）
 
-C4a and C4b answer different questions:
+C4a 与 C4b 回答不同问题：
 
 ```text
 C4a Provider Resolution
@@ -97,12 +96,11 @@ Search
 Provider Resolution != Provider Translation
 ```
 
-C4b does not own Provider Selection, Provider Ranking, Fallback, or
-Multi-provider Routing.
+C4b 不拥有 Provider Selection、Provider Ranking、Fallback 或 Multi-provider Routing。
 
-## 5. Conceptual Request / Return Flow
+## 5. 概念请求 / 返回流程（Conceptual Request / Return Flow）
 
-The stable direction is:
+稳定方向是：
 
 ```mermaid
 flowchart LR
@@ -118,7 +116,7 @@ flowchart LR
     RT --> SK
 ```
 
-The semantic layers remain distinct:
+语义层必须保持区分：
 
 ```text
 Raw Provider Result
@@ -126,37 +124,37 @@ Raw Provider Result
     != Evidence
 ```
 
-Response translation ends at the provider-neutral C3 boundary. It does not
-form Evidence, Finding, or Hypothesis.
+Response translation 在 provider-neutral C3 boundary 结束，不形成 Evidence、
+Finding 或 Hypothesis。
 
-## 6. Responsibility / Ownership Matrix
+## 6. 责任 / 归属矩阵（Responsibility / Ownership Matrix）
 
-| Semantic concern | Primary owner | C4b responsibility / boundary |
+| 语义关注点（Semantic concern） | 主要责任方（Primary owner） | C4b 责任 / 边界（C4b responsibility / boundary） |
 |---|---|---|
-| Research Search Why | C2a Research Skill | C4b consumes existing Search semantics only. |
-| Stable Search semantics | C3 | Defines what the Search request and result mean. |
-| Provider Resolution / Binding | C4a | Determines the current Provider; C4b consumes the resolved binding. |
-| Request Translation | C4b | Maps C3 request categories to Provider representation. |
-| Response Translation | C4b | Maps Provider result layout to C3 output semantics. |
-| Error Translation | C4b | Maps Provider failures to C3 Search-level failure semantics. |
-| Missingness Normalization | C4b | Normalizes Provider-specific absence without interpretation. |
-| Pagination Translation | C4b | Maps Provider continuation mechanics to C3 continuation semantics. |
-| Region / Filter Translation | C4b | Maps already-valid C3 scope and constraints to Provider representation. |
-| Provider ID Translation | C4b | Preserves Provider IDs and stable source/provenance references. |
-| Provider Quirk Absorption | C4b | Absorbs narrow representational or runtime irregularities. |
-| Raw Provider Result Referenceability | C4b | Makes relevant raw facts referenceable without defining retention. |
-| Version / Compatibility Awareness | C4b | Records mapping-level assumptions and compatibility facts. |
-| Research Sampling | C2a Research Skill | Not a Provider mapping responsibility. |
-| Evidence Interpretation | Research Skill / C5a seam | Not formed by C4b. |
-| Execution Record semantics | C6 | C4b exposes provider-side facts; C6 decides finalized Record semantics. |
-| Retry Policy | Not C4b | No Retry Engine or recovery policy is designed here. |
-| Governance Policy | Not C4b | C4b does not activate governance rules. |
+| Research Search Why | C2a Research Skill | C4b 只消费既有 Search semantics。 |
+| Stable Search semantics | C3 | 定义 Search request 与 result 的含义。 |
+| Provider Resolution / Binding | C4a | 确定当前 Provider；C4b 消费已解析 binding。 |
+| Request Translation | C4b | 将 C3 request categories 映射为 Provider representation。 |
+| Response Translation | C4b | 将 Provider result layout 映射为 C3 output semantics。 |
+| Error Translation | C4b | 将 Provider failures 映射为 C3 Search-level failure semantics。 |
+| Missingness Normalization | C4b | 在不解释的情况下归一化 Provider-specific absence。 |
+| Pagination Translation | C4b | 将 Provider continuation mechanics 映射为 C3 continuation semantics。 |
+| Region / Filter Translation | C4b | 将已有效的 C3 scope 与 constraints 映射为 Provider representation。 |
+| Provider ID Translation | C4b | 保留 Provider IDs 及稳定 source / provenance references。 |
+| Provider Quirk Absorption | C4b | 吸收狭窄的表示层或运行时不规则性。 |
+| Raw Provider Result Referenceability | C4b | 使相关 raw facts 可引用，但不定义 retention。 |
+| Version / Compatibility Awareness | C4b | 记录 mapping-level assumptions 与 compatibility facts。 |
+| Research Sampling | C2a Research Skill | 不属于 Provider mapping responsibility。 |
+| Evidence Interpretation | Research Skill / C5a seam | 不由 C4b 形成。 |
+| Execution Record semantics | C6 | C4b 暴露 Provider-side facts；C6 决定 finalized Record semantics。 |
+| Retry Policy | Not C4b | 本文不设计 Retry Engine 或 recovery policy。 |
+| Governance Policy | Not C4b | C4b 不激活 governance rules。 |
 
-## 7. C4b — Scrape Creators Adapter Contract
+## 7. C4b — Scrape Creators 适配器 Contract（Adapter Contract）
 
-### 7.1 Adapter definition
+### 7.1 Adapter 定义（Adapter definition）
 
-C4b is the translation boundary between:
+C4b 是以下两者之间的 translation boundary：
 
 ```text
 Stable C3 Search Capability Contract
@@ -164,11 +162,11 @@ Stable C3 Search Capability Contract
 Scrape Creators runtime reality
 ```
 
-Its job is to preserve stable OS semantics while absorbing Provider-specific
-volatility such as endpoint layout, parameter naming, cursor syntax, Provider
-IDs, response layout, error shape, and other bounded quirks.
+它的职责是在吸收 Provider-specific volatility 的同时保留稳定 OS semantics，
+例如 endpoint layout、parameter naming、cursor syntax、Provider IDs、response
+layout、error shape 以及其他有界 quirks。
 
-### 7.2 Adapter is not Provider or access mechanism
+### 7.2 Adapter 不是 Provider 或访问机制（access mechanism）
 
 ```text
 C4b Adapter
@@ -181,14 +179,14 @@ API / SDK / MCP
     = Concrete Access / Integration Mechanism
 ```
 
-Scrape Creators is an external Provider fact source, not a new OS Contract.
-D5 does not add `ScrapeCreatorsProviderContract`, `Provider API Contract`,
-`SDK Contract`, or `MCP Contract`.
+Scrape Creators 是外部 Provider fact source，不是新的 OS Contract。D5 不新增
+`ScrapeCreatorsProviderContract`、`Provider API Contract`、`SDK Contract` 或
+`MCP Contract`。
 
-## 8. Request Translation
+## 8. 请求翻译（Request Translation）
 
-C4b maps provider-neutral C3 request categories to a Scrape Creators-compatible
-representation. It may need to translate:
+C4b 将 provider-neutral C3 request categories 映射为 Scrape Creators-compatible
+representation，可能需要翻译：
 
 ```text
 Search Target / Criteria
@@ -207,7 +205,7 @@ C4b = defines HOW those semantics map to Provider representation
 D5 does not specify endpoint names, Provider parameter names, field names,
 request JSON, or a concrete request object.
 
-### 8.1 Translation does not invent business semantics
+### 8.1 Translation 不发明业务语义（does not invent business semantics）
 
 Valid:
 
@@ -232,7 +230,7 @@ C3 Search Constraint, not to the Adapter.
 Adapter translates != Adapter invents business semantics
 ```
 
-## 9. Response Translation
+## 9. 响应翻译（Response Translation）
 
 C4b maps:
 
@@ -242,10 +240,9 @@ Raw Provider Result
 Provider-neutral C3 Search Capability Result
 ```
 
-The mapped result must satisfy the C3 Output Boundary, including relevant
-result-item identity, source referenceability, returned-set semantics,
-continuation state, completeness semantics observable at the Provider boundary,
-and normalized missingness.
+映射结果必须满足 C3 Output Boundary，包括 relevant result-item identity、source
+referenceability、returned-set semantics、continuation state、Provider boundary
+可观察的 completeness semantics，以及 normalized missingness。
 
 Response Translation is not:
 
@@ -256,11 +253,11 @@ Finding Formation
 Hypothesis Formation
 ```
 
-C4b does not form Evidence, Finding, Hypothesis, or Research Result.
+C4b 不形成 Evidence、Finding、Hypothesis 或 Research Result。
 
-## 10. Missingness Normalization
+## 10. 缺失语义归一化（Missingness Normalization）
 
-Provider-side forms such as:
+Provider 侧的以下形式：
 
 ```text
 missing
@@ -270,8 +267,7 @@ unavailable
 not returned
 ```
 
-must be normalized into provider-neutral missingness semantics before the result
-reaches C3 and later C5a:
+必须在结果到达 C3 及后续 C5a 之前归一化为 provider-neutral missingness semantics：
 
 ```text
 Provider-specific Missingness
@@ -283,7 +279,7 @@ C5a preserves known missingness
 Research Skill interprets impact
 ```
 
-The Adapter must not convert missingness into:
+Adapter 不得把 missingness 转换为：
 
 ```text
 0
@@ -297,10 +293,10 @@ Missing != 0
 Missingness Normalization != Missingness Interpretation
 ```
 
-## 11. Pagination Translation
+## 11. 分页翻译（Pagination Translation）
 
-When the selected Provider representation has continuation mechanics, C4b maps
-Provider pagination reality to C3 provider-neutral continuation semantics.
+当选定的 Provider representation 具有 continuation mechanics 时，C4b 将
+Provider pagination reality 映射为 C3 provider-neutral continuation semantics。
 
 Possible Provider mechanisms include:
 
@@ -313,10 +309,10 @@ next token
 other Provider mechanism
 ```
 
-D5 does not freeze any mechanism. A Provider cursor or token must not leak into
-the Research Skill or become part of stable C3 semantics.
+D5 不冻结任何 mechanism。Provider cursor 或 token 不得泄漏到 Research Skill，
+也不得成为稳定 C3 semantics 的一部分。
 
-### 11.1 Pagination is not global completeness
+### 11.1 Pagination 不是全局完整性（global completeness）
 
 Provider-observable facts such as “no next page” or `has_more = false` may
 support Provider retrieval completeness semantics. They cannot be strengthened
@@ -332,10 +328,10 @@ Provider pagination != Global completeness
 
 C4b preserves only bounded continuation and retrieval-completeness semantics.
 
-## 12. Region and Filter Translation
+## 12. Region 与 Filter 翻译（Region and Filter Translation）
 
-C4b maps already-valid C3 region, market, and filter-related Search semantics to
-Provider representation. It does not create Research rules.
+C4b 将已经有效的 C3 region、market 与 filter-related Search semantics 映射为
+Provider representation，不创建 Research rules。
 
 ```text
 Provider Request Filter
@@ -354,10 +350,10 @@ business ranking rule
 from Research sampling intent. Such a constraint must already be part of the
 valid C3 Search semantics before C4b translates it.
 
-## 13. Provider ID and Source Identity Translation
+## 13. Provider ID 与 Source Identity 翻译（Translation）
 
-C4b must preserve Provider-specific IDs and make the relevant Search Result and
-source references provenance-capable.
+C4b 必须保留 Provider-specific IDs，并使相关 Search Result 与 source references
+具备 provenance 能力。
 
 These identities remain distinct:
 
@@ -375,9 +371,9 @@ a global canonical content ID without Provider Facts proving a valid mapping.
 The stable obligation is that Provider-specific identities are preserved or
 translated within the C3 / C5a reference semantics.
 
-## 14. Error Translation
+## 14. Error 翻译（Error Translation）
 
-The direction is:
+方向是：
 
 ```text
 Concrete Provider Error
@@ -389,11 +385,10 @@ C2b Runtime
 Execution continuation or failure closure
 ```
 
-Raw Provider errors must not enter the Research Skill directly. C4b may retain
-stable Provider-side failure semantics or references needed for explanation, but
-must not become a raw error dump.
+Raw Provider errors 不得直接进入 Research Skill。C4b 可以保留解释所需的稳定
+Provider-side failure semantics 或 references，但不能变成 raw error dump。
 
-### 14.1 Translation is not recovery policy
+### 14.1 Translation 不是恢复策略（recovery policy）
 
 ```text
 Error Translation != Retry Policy
@@ -402,10 +397,10 @@ Error Translation != Backoff
 Error Translation != Provider Selection
 ```
 
-C4b does not own a Retry Engine and does not define `retry_count`,
-`max_attempts`, exponential backoff, or fallback Provider behavior.
+C4b 不拥有 Retry Engine，也不定义 `retry_count`、`max_attempts`、exponential
+backoff 或 fallback Provider behavior。
 
-## 15. Provider-specific Quirk Absorption
+## 15. Provider-specific Quirk 吸收（Quirk Absorption）
 
 A Provider-specific Quirk is narrowly defined as:
 
@@ -437,7 +432,7 @@ Provider Selection
 
 C4b is not a `misc_provider_logic` container.
 
-## 16. Raw Provider Result Referenceability
+## 16. Raw Provider Result 引用可定位性（Referenceability）
 
 C4b must make relevant Raw Provider Results referenceable because a later
 provenance path may need to connect:
@@ -486,7 +481,7 @@ Retention Requirement
 Exact retention duration remains **NOT YET DESIGNED**, and the persistence
 mechanism remains outside C4b.
 
-## 17. Version and Compatibility Awareness
+## 17. 版本与兼容性意识（Version and Compatibility Awareness）
 
 C4b must have mapping-level Version / Compatibility Awareness. It must be
 possible to express:
@@ -509,27 +504,27 @@ Version Registry
 C4a may consume compatibility information when resolving a Provider, but C4b
 does not take over Provider Resolution ownership.
 
-## 18. Faithful, Bounded, and Unsupported Mapping
+## 18. 忠实、有界与不支持的映射（Faithful, Bounded, and Unsupported Mapping）
 
 D5 freezes the following semantic distinction without creating an enum:
 
-### Faithful Mapping
+### 忠实映射（Faithful Mapping）
 
 The Provider can express the C3-required semantic without material loss.
 
-### Explicitly Bounded / Lossy Mapping
+### 明确有界 / 有损映射（Explicitly Bounded / Lossy Mapping）
 
 The Provider can express only part of the semantic, but the limitation is
 explicitly preserved and C3 / downstream semantics allow the bounded result.
 
-### Unsupported Mapping
+### 不支持的映射（Unsupported Mapping）
 
 The Provider cannot legally satisfy a required C3 semantic.
 
 Do not create `FAITHFUL`, `LOSSY`, or `UNSUPPORTED` enums or a compatibility
 scoring system in D5.
 
-### 18.1 No silent semantic strengthening
+### 18.1 不得静默增强语义（No silent semantic strengthening）
 
 If Provider reality cannot fully support a C3 semantic, C4b must not silently
 approximate, strengthen, or fabricate exactness.
@@ -544,7 +539,7 @@ Provider limitation
 Stronger OS-level fact
 ```
 
-## 19. Provider Observation Is Not Inference
+## 19. Provider Observation 不是 Inference
 
 If the Provider does not return an observation, C4b must not infer it and wrap
 the inference as a Provider fact. The stable result is instead one of the
@@ -558,7 +553,7 @@ Provider observation absent
 
 Research inference remains the responsibility of the Research Skill.
 
-## 20. C4a / C4b / C3 Cross-contract Seams
+## 20. C4a / C4b / C3 跨 Contract 接缝（Cross-contract Seams）
 
 | Seam | Responsibility boundary |
 |---|---|
@@ -574,7 +569,7 @@ The central invariant is:
 C4a Provider Resolution != C4b Provider Translation
 ```
 
-## 21. C4b ↔ C5a Provenance Seam
+## 21. C4b ↔ C5a Provenance 接缝（Seam）
 
 C4b makes available:
 
@@ -599,7 +594,7 @@ C4b does not own Evidence, Evidence-worthiness, Sampling, or Evidence
 Interpretation. It must preserve enough references for C5a to maintain
 provenance without copying raw payloads by default.
 
-## 22. C4b ↔ C6 Execution Record Seam
+## 22. C4b ↔ C6 Execution Record 接缝（Seam）
 
 C4b can make these actual Provider-side facts referenceable:
 
@@ -618,7 +613,7 @@ C6  → decides finalized Execution Record semantics
 
 Configured Provider binding and actual Provider use remain separate facts.
 
-## 23. Implementation Scope and Endpoint Boundary
+## 23. 实现范围与 Endpoint 边界（Implementation Scope and Endpoint Boundary）
 
 C4b defines the complete stable adapter responsibility, but First Slice
 implementation may cover only a later-proven minimum endpoint subset.
@@ -647,7 +642,7 @@ Minimum Endpoint Subset Selection
 
 The Provider API inventory must not redefine C3 or C4b.
 
-## 24. Cross-contract Invariants
+## 24. 跨 Contract 不变量（Cross-contract Invariants）
 
 1. C3 Search Capability is not the Concrete Provider.
 2. C4a Provider Resolution is not C4b Provider Translation.
@@ -669,7 +664,7 @@ The Provider API inventory must not redefine C3 or C4b.
 18. C4b implementation scope is not all 97 APIs.
 19. D5 Adapter Contract Design is not Minimum Endpoint Selection.
 
-## 25. Explicit Exclusions and Design Maturity
+## 25. 明确排除项与设计成熟度（Explicit Exclusions and Design Maturity）
 
 These statuses are intentionally distinct and do not all mean permanent
 prohibition.
@@ -729,7 +724,7 @@ Specific Database Technology
 Scrape Creators 97 API Full Integration as module / backlog architecture
 ```
 
-## 26. Open Representation Questions
+## 26. 尚未冻结的表示层问题（Open Representation Questions）
 
 The following do not block D5 semantic completion:
 
@@ -748,7 +743,7 @@ The following do not block D5 semantic completion:
 13. Minimum endpoint subset.
 14. Raw Provider payload retention mechanism.
 
-## 27. Review Result
+## 27. 审核结论（Review Result）
 
 ```text
 C4b — Scrape Creators Adapter Contract
@@ -783,7 +778,7 @@ R7 — Unsupported / Lossy Mapping Must Be Explicit
 R8 — Raw Result Referenceability != Raw Payload Retention
 ```
 
-## 28. Detailed Contract Design Completion
+## 28. Detailed Contract 设计完成情况（Design Completion）
 
 D5 completes the planned D1–D5 specification set:
 
@@ -824,7 +819,7 @@ Detailed Contract Design Package
 = COMPLETE FOR CONSISTENCY REVIEW
 ```
 
-## 29. Next Phase
+## 29. 下一阶段（Next Phase）
 
 The next phase is:
 
