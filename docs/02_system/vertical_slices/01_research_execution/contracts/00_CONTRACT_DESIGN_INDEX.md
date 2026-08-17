@@ -1469,7 +1469,7 @@ IN PROGRESS
 
 当前 Design Stage：
 
-# **D4 — Execution Record**
+# **D5 — Provider Mapping**
 
 状态：
 
@@ -1480,20 +1480,30 @@ Reviewed / Specification Created
 Specification：
 
 ```text
-04_EXECUTION_RECORD.md
+05_PROVIDER_MAPPING.md
 ```
 
-D4 包含：
+D5 包含：
 
 ```text
-C6
-Execution Record Contract
+C4b
+Scrape Creators Adapter Contract
 ```
 
-当前还没有开始：
+Detailed Contract Specifications：
 
 ```text
-D5
+D1 = Created
+D2 = Created
+D3 = Created
+D4 = Created
+D5 = Created
+```
+
+All 9 Required Contracts：
+
+```text
+Detailed Semantics Covered
 ```
 
 ---
@@ -1502,22 +1512,15 @@ D5
 
 当前下一步：
 
-# **D5 — Provider Mapping**
+# **Detailed Contract Consistency Review**
 
-对应：
-
-```text
-C4b
-Scrape Creators Adapter Contract
-```
-
-不要写：
+Detailed Contract Design Package：
 
 ```text
-D5 completed
+COMPLETE FOR CONSISTENCY REVIEW
 ```
 
-不要创建 D5 文件。
+下一步不是直接进入 Walking Implementation 或 Software Architecture。
 
 ---
 
