@@ -1213,32 +1213,34 @@ Primary Status Controls Default Action
 
 # 20. Planned Documentation Structure
 
-Detailed Contract 文档计划按实际推进逐步形成：
+Detailed Contract 文档计划按 D1–D5 逐步形成：
 
 ```text
 contracts/
 
 ├── 00_CONTRACT_DESIGN_INDEX.md
 
-├── 01_execution_spine/
-│   ├── 01_TASK_EXECUTION_BOUNDARY.md
-│   ├── 02_TASK_RUNTIME_EXECUTION_CONTRACT.md
-│   └── 03_SKILL_CONTRACT.md
+├── 01_EXECUTION_SPINE.md
+│   ├── C1  Task Execution Boundary
+│   ├── C2b Task Runtime Execution Contract
+│   └── C2a Skill Contract
 
-├── 02_search_invocation/
-│   ├── 01_SEARCH_CAPABILITY_CONTRACT.md
-│   └── 02_PROVIDER_RESOLUTION_BOUNDARY.md
+├── 02_SEARCH_INVOCATION.md
+│   ├── C3  Search Capability Contract
+│   └── C4a Provider Resolution Boundary
 
-├── 03_research_semantics/
-│   ├── 01_EVIDENCE_CONTRACT.md
-│   └── 02_RESEARCH_RESULT_CONTRACT.md
+├── 03_RESEARCH_SEMANTICS.md
+│   ├── C5a Evidence Contract
+│   └── C5b Research Result Contract
 
-├── 04_execution_record/
-│   └── 01_EXECUTION_RECORD_CONTRACT.md
+├── 04_EXECUTION_RECORD.md
+│   └── C6 Execution Record Contract
 
-└── 05_provider_mapping/
-    └── 01_SCRAPE_CREATORS_ADAPTER_CONTRACT.md
+└── 05_PROVIDER_MAPPING.md
+    └── C4b Scrape Creators Adapter Contract
 ```
+
+上面缩进的 Contract 名称表示每个 Specification Document 覆盖的 Contract，不表示实际子文件。
 
 注意：
 
@@ -1248,7 +1250,130 @@ contracts/
 
 # **讨论到哪，文件建到哪。**
 
-因此当前不要提前创建 D2–D5 空文件。
+当前仍只保留：
+
+```text
+00_CONTRACT_DESIGN_INDEX.md
+```
+
+本轮不创建 5 个 D-stage Specification 文件或任何子目录。
+
+---
+
+# Documentation Organization Principle
+
+Detailed Contract 阶段采用：
+
+```text
+One D-stage
+=
+One Specification Document
+```
+
+而不是：
+
+```text
+One Contract
+=
+One Markdown File
+```
+
+原因：
+
+1. Contract Identity 继续独立保留；
+2. 文档按真实执行流 / 学习流组织；
+3. 强相关 Contract 放在同一 Specification 中联合设计；
+4. 减少文件碎片；
+5. 更容易与后续 Software Module / Code 对照；
+6. 避免每个 Contract 重复解释相同 Context / Runtime / Error / Reference 背景。
+
+必须明确：
+
+```text
+Documentation grouping
+≠
+Contract merging
+```
+
+例如，`01_EXECUTION_SPINE.md` 同时详细设计：
+
+```text
+C1
+C2b
+C2a
+```
+
+但三者仍然是三个不同 Contract / Boundary。
+
+---
+
+# Human Reading Mapping
+
+```text
+01_EXECUTION_SPINE.md
+→ 一次任务怎么进入、怎么运行、Skill 怎么参与？
+
+02_SEARCH_INVOCATION.md
+→ 系统怎么获得外部内容？
+
+03_RESEARCH_SEMANTICS.md
+→ Search Result 怎么成为 Evidence 和 Research Result？
+
+04_EXECUTION_RECORD.md
+→ 一次执行最终留下什么稳定事实？
+
+05_PROVIDER_MAPPING.md
+→ Scrape Creators 怎么映射到稳定 OS Contract？
+```
+
+---
+
+# Contract Documentation Writing Style
+
+Detailed Contract 文档从现在开始采用：
+
+> Engineering Specification Style
+
+而不是：
+
+> Architecture Review Transcript Style
+
+每份 D-stage Specification 建议固定包含：
+
+1. Purpose
+2. Covered Contracts
+3. Responsibility / Ownership
+4. Input Semantics
+5. Output Semantics
+6. Lifecycle / Completion Semantics
+7. Failure Semantics
+8. Cross-contract Seams
+9. Cross-contract Obligations
+10. Explicit Exclusions
+11. Open Questions
+12. Review Result
+
+不要记录完整聊天推理过程，也不要把每一个 rejected option 全部写成长篇历史。
+
+Architecture rationale 已主要保留在 01–06 Planning Package。
+
+---
+
+# Documentation Length Guardrail
+
+Detailed Contract Specification 应优先：
+
+```text
+Concise
++
+Traceable
++
+Implementation-useful
+```
+
+而不是追求最大篇幅。
+
+避免再次生成 1500–2500 行的单轮 Architecture Review 风格文档，除非真实 Contract complexity 后续证明有必要。
 
 ---
 
@@ -1376,11 +1501,15 @@ D5
 
 # **D1 — Execution Spine Design**
 
-第一步不是写 Python。
+讨论并完成 D1 — Execution Spine 的 Detailed Contract Semantics，最终形成：
 
-也不是一次性设计 C1、C2b、C2a 的完整 Schema。
+```text
+contracts/01_EXECUTION_SPINE.md
+```
 
-第一步从：
+第一步不是写 Python，也不是一次性设计 C1、C2b、C2a 的完整 Schema。
+
+设计入口仍然从以下接缝开始观察：
 
 ```text
 Application
