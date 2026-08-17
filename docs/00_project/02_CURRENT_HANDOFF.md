@@ -1,910 +1,1086 @@
 # Ecommerce AI OS — Current Handoff
 
-- **文档类型**：Current Handoff / 新聊天交接入口
-- **项目**：Ecommerce AI OS
-- **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice
-- **最后更新**：2026-08-15
-- **重要说明**：本文件是导航入口，不是 Architecture Authority
+- Project: Ecommerce AI OS
+- Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
+- Document role: Current navigation and handoff state
+- Authority status: Navigation only; this file is not an Architecture Authority
+- Last synchronized: 2026-08-17
 
----
+## 0. How To Use This Handoff
 
-## 0. 这份文档怎么用
+Read this file first when entering a new chat or session. It records the
+current project state, architecture authority boundaries, First Research
+Slice, Required Contracts, Detailed Contract package, deferred status, next
+authorized stage, and the next-chat reading order.
 
-如果你是一个新的 ChatGPT / Codex 会话，接手这个项目时：
+This is a navigation layer. It intentionally does not duplicate the full
+Product Architecture, System Architecture, Planning Package, Deferred
+Register, D1–D5 specifications, or Consistency Review.
 
-> **不要从聊天历史猜项目，不要重新设计顶层架构。**
+When this file conflicts with a Current Authority, follow that Current
+Authority and synchronize this handoff. Do not silently change an authority
+document while updating this file.
 
-先按照本文件给出的阅读顺序读取当前 Authority / Baseline 文档，再继续下一项工作。
+## 1. Current Project Identity
 
-如果本文件与正式 Product / System / Software / Governance 文档冲突：
+### Project
 
-> **以对应层级的 Current Authority 文档为准。**
+**Ecommerce AI OS** is a cross-platform, business-first, technology-neutral
+system direction for reusable Skills, stable Core responsibilities,
+extensible Capabilities, replaceable Providers, Evidence-aware Research, and
+future Creative Production, Knowledge-assisted Work, and Experiment &
+Validation workflows.
 
-本文件只负责：
-
-- 告诉新会话项目现在是什么；
-- 先读哪些文件；
-- 当前哪些结论已经形成工作基线；
-- 哪些内容仍是 Candidate；
-- 哪些内容明确 Not Yet Designed；
-- Provider Lab 当前冻结到哪里；
-- 当前禁止做什么；
-- 下一项工作是什么。
-
----
-
-# 1. Project Identity
-
-项目名称：
-
-# **Ecommerce AI OS**
-
-当前方向：
-
-> **构建一个面向跨境电商、长期可扩展的 AI-native 工作系统。**
-
-项目不是从“先做一个 AI OS”开始的。
-
-真实演变大致是：
+The project evolved from a real TikTok content-production problem:
 
 ```text
-TikTok 内容生产问题
-↓
-寻找参考视频
-↓
-发现只找爆款不足以指导高质量内容
-↓
-Research 扩张
-↓
-发现 Research 可以跨平台复用
-↓
-需要跨来源数据与 Evidence
-↓
-Creative Production 扩张
-↓
-Knowledge 复用
-↓
-Experiment & Validation
-↓
-专业运营 Skill 会持续变化
-↓
-需要稳定但可扩展的 Ecommerce AI OS
+TikTok content problem
+    ↓
+Reference content research
+    ↓
+Cross-platform Research need
+    ↓
+Evidence-aware decision support
+    ↓
+Creative Production / Knowledge / Experiment extensions
+    ↓
+Ecommerce AI OS
 ```
 
-核心长期原则：
+The project is not defined by the current Provider, one platform, an API
+inventory, a framework, or the current source-tree scaffold.
+
+### Current Major Phase
 
 ```text
-Stable Core
-+
-Extensible Capability
-+
-Replaceable Provider
-+
-Pluggable Skill
+Minimum Scrape Creators Endpoint Selection
+= AUTHORIZED NEXT
 ```
 
-同时保持：
+The current phase determines the smallest Provider endpoint subset required by
+the already-defined First Research Slice and its stable Contract semantics.
 
-- Business-first；
-- Technology-neutral；
-- Architecture big, implementation small；
-- Provider facts must not dictate OS architecture；
-- Unknown future use cases must remain possible。
-
----
-
-# 2. 必须先读的文件
-
-新会话进入项目后，按下面顺序读取。
-
-## 2.1 项目与需求
+### Explicit Current Status
 
 ```text
-docs/00_project/00_PROJECT_BASELINE_V0.1.md
-docs/00_project/01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md
+First Vertical Slice Planning
+= COMPLETE
+
+System Detailed Contract Design
+= COMPLETE / CONSISTENCY REVIEWED
+
+Detailed Contract Consistency Review
+= PASS_WITH_REFINEMENTS
+
+Consistency Refinement Sync
+= COMPLETE
+
+Consistency Re-check
+= PASS
+
+Minimum Scrape Creators Endpoint Selection
+= AUTHORIZED NEXT
 ```
 
-作用：
-
-- 理解项目是什么；
-- 理解为什么会从 TikTok 内容问题演变成 Ecommerce AI OS；
-- 理解当前需求边界和非目标。
-
----
-
-## 2.2 Product Architecture
+Software Architecture
 
 ```text
-docs/01_product/00_PRODUCT_ARCHITECTURE.md
+NOT YET DESIGNED
 ```
 
-只回答：
-
-> 用户能拿这个 OS 做什么。
-
-当前主要产品结构：
+Walking Implementation
 
 ```text
-Cross-platform Use Case Families
-├── Research
-├── Creative Production
-├── Knowledge-assisted Work
-└── Experiment & Validation
-
-Platform Adaptation Dimension
-├── TikTok Skill Pack
-├── Amazon Skill Pack
-├── Temu Skill Pack
-└── Future Platform Skill Pack
+NOT YET AUTHORIZED
 ```
 
-具体业务：
+This is design and selection work, not a code implementation phase.
+
+## 2. Current Architecture Authority Status
+
+| Area | Current Status |
+|---|---|
+| Product Architecture | CURRENT BASELINE |
+| System Architecture V0.2 | Candidate / Human-reviewed working architecture |
+| Software Architecture | See explicit status block above |
+| First Research Slice Planning | COMPLETE |
+| Detailed Contract Design Package | COMPLETE / CONSISTENCY REVIEWED |
+| Product Architecture Reopen | NO |
+| System Architecture V0.2 Reopen | NO |
+| Contract Inventory Reopen | NO |
+| New Contract Required | NO |
+| Research system placement final resolution | NOT REQUIRED NOW |
+
+Only new, concrete evidence that proves a conflict may reopen a frozen
+decision. A new chat, model change, Provider API shape, or implementation
+preference is not by itself new evidence.
+
+System Architecture V0.2
 
 ```text
-Use Case Family
-+
-Platform Adaptation
-+
-Business Context
-=
-Concrete Workflow
+Candidate / Human-reviewed working architecture
 ```
 
-当前 `Platform-specific Operations` 仍然是 Emerging Product Area，不要提前假装完整业务结构已经设计好。
-
----
-
-## 2.3 System Architecture
+Architecture approval promotion
 
 ```text
-docs/02_system/00_SYSTEM_ARCHITECTURE.md
+NOT PERFORMED
 ```
 
-只回答：
+This handoff does not promote any Candidate to a higher architecture status.
 
-> 为了支撑 Product Architecture，系统由什么职责区域组成。
+## 3. Current First Vertical Slice
 
-当前 Candidate Responsibility Map：
+### 3.1 Slice Identity
 
 ```text
-Product Architecture
-        ↓
-Applications
-        ↓
-Skills
-        ↓
-Stable Core
-      ↙        ↘
-Capabilities  Foundation Services
-      ↘        ↙
-        Providers
+First Vertical Slice — Research Execution
+Business Scenario — US / Car Vacuum / TikTok Content Research
 ```
 
-这不是严格 Runtime Call Graph。
+### 3.2 Business Decision Served
 
-当前 System Architecture 已落实 Human Review 接受的 C01-C09 Change Set；C10 Operational Observability 继续 DEFER。完整 System Architecture 仍为 Current Candidate，不是 Approved Architecture。
+The slice supports the question:
 
----
+> Which hypotheses should be prioritized in next US TikTok Car Vacuum content
+> experiments?
 
-## 2.4 Software Architecture
-
-```text
-docs/03_software/00_SOFTWARE_ARCHITECTURE.md
-```
-
-当前状态：
-
-# **Not Yet Designed**
-
-现有：
-
-```text
-src/ecommerce_ai_os/
-├── kernel/
-├── capabilities/
-├── skills/
-├── providers/
-├── services/
-└── applications/
-```
-
-只是：
-
-> **Project Scaffold / Candidate Package Boundary**
-
-不要用现有空目录反推 System Architecture。
-
----
-
-## 2.5 Architecture Governance
-
-```text
-docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md
-```
-
-重点理解：
-
-```text
-Draft
-↓
-Candidate
-↓
-Approved
-↓
-Implemented
-↓
-Validated
-```
-
-旁支：
-
-```text
-Rejected
-Deprecated
-Superseded
-```
-
-必须遵守：
-
-> **AI / Codex 无权自行把 Candidate 升级为 Approved。**
-
-以及：
-
-```text
-Architecture Governance
-≠
-Runtime Governance
-```
-
----
-
-## 2.6 Reference Assets
-
-旧架构审计：
-
-```text
-docs/05_references/legacy/02_LEGACY_ARCHITECTURE_REFERENCE_AUDIT.md
-```
-
-Provider Lab 交接：
-
-```text
-docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md
-```
-
-System Architecture Stress Test：
-
-```text
-docs/05_references/ai_architecture/04_SYSTEM_ARCHITECTURE_STRESS_TEST.md
-```
-
----
-
-# 3. 当前 Product Architecture 基线
-
-当前跨平台 Use Case Families：
+Research is Decision Support, not the Final Business Decision.
 
 ```text
 Research
-Creative Production
-Knowledge-assisted Work
-Experiment & Validation
+    → Decision Support
+
+Operator / downstream business workflow
+    → Final Test Priority Decision
 ```
 
-注意：
+The slice produces a human-reviewable Research Result containing, as
+applicable, Evidence, Findings, Testable Hypotheses, Answerability,
+Limitations, and Traceability / Provenance.
 
-> Current Product Families 不是永久固定模块。
+### 3.3 Start Boundary
 
-未来真实业务出现后，可以增加新的子能力，也可以在满足“独立、跨平台、完整用户工作”的条件下提出新的 Candidate Product Family。
-
-例如：
+The slice starts from existing business context and a Research Intent / Need,
+not from a Provider API request and not from an isolated keyword.
 
 ```text
-AI Voiceover
-→ Creative Production
-  → Audio / Voice
+Product / SKU Context
++ Platform Context = TikTok
++ Market Context = US
++ Business Goal = Commerce Content
++ Research Intent / Decision Need
 ```
 
-而不是为每个新 AI 功能新建顶层模块。
+Product / SKU Context is an upstream input. The slice does not create a
+complete Product Facts System, Product database, Claim Engine, or Product
+ingestion workflow.
 
-Platform Skill Pack 是第二维度，而不是第五个 Product Family。
+### 3.4 End Boundary
 
----
+First Slice Business End Boundary
 
-# 4. 当前 System Architecture 基线
+```text
+Human-reviewable Research Result
+```
 
-当前系统层的主要 Candidate：
+```text
+Business End Boundary
+    !=
+Execution Closure
+```
+
+After the Business End Boundary is satisfied, the same Execution still
+continues through execution closure. Execution closure after the Research
+Result does not expand the First Slice Business End Boundary.
+
+```text
+Human-reviewable Research Result
+    ↓
+C2a Business Completion
+    ↓
+C2b Execution Terminalization
+    ↓
+C6 Execution Record
+    ↓
+C1 Terminal Return
+```
+
+The slice does not own the downstream human decision of which hypothesis to
+test first, and it does not claim that a public-content pattern is a validated
+business truth.
+
+### 3.5 Stable Slice Semantics
+
+The following semantics must remain visible through later design:
+
+- Explicit Sample Boundary;
+- Actual Sample Boundary;
+- Evidence References;
+- Findings;
+- Testable Hypotheses;
+- Answerability;
+- Limitations;
+- Traceability / Provenance;
+- post-terminal resolvability of necessary internal references.
+
+```text
+Finding
+    != Creative Direction
+
+Hypothesis
+    != Script
+
+Hypothesis
+    != Validated Business Truth
+
+Research Result
+    != Final Business Decision
+```
+
+## 4. Current Global Responsibility Map
+
+This is a concise responsibility map, not a strict software component graph.
 
 ```text
 Applications
+    ↓
 Skills
+    ↓
 Stable Core
+    ↓
 Capabilities
-Foundation Services
-Providers
+    ↓
+Foundation Services where independently justified
+    ↓
+Provider / Integration Boundary
 ```
 
-核心语义：
+### Applications
+
+Application surfaces receive human or external workflow interaction and expose
+the resulting business work request. Interaction and transport details remain
+Not Yet Designed.
+
+### Skills
 
 ```text
-Skill
-= 业务上怎么做
-
-Capability
-= 系统会做什么
-
-Provider
-= 实际提供外部数据、模型、能力或基础设施的一方
+Skill = Business Method
 ```
 
-Provider、Adapter / Connector 与 API / SDK / MCP 必须保持语义分离。当前 Candidate 依赖方向为：
+A Skill expresses how a business method should approach a task. It must not
+own Provider-specific API logic.
+
+### Stable Core
+
+Current Stable Core Candidate Areas:
+
+- Task Runtime;
+- Skill Extension Mechanism;
+- Capability Contract;
+- Runtime Governance;
+- Execution Record.
+
+Compatibility / Versioning remains cross-cutting rather than a new top-level
+Core component.
+
+### Capabilities
 
 ```text
-Capability / Service Contract
-        ↓
+Capability = System Ability
+```
+
+Search is the required concrete Capability for this slice. Search is
+Provider-neutral and is not equivalent to Scrape Creators.
+
+### Foundation Services
+
+Knowledge, Evidence, and Artifact remain Candidate Foundation Service areas in
+the global System Architecture. Their independent First-Slice use and detailed
+software architecture are not all proven or designed.
+
+Research is a confirmed Product Family. Its final System placement is not
+required to be resolved now; the current Contract package is sufficient to
+continue.
+
+### Provider / Integration Boundary
+
+```text
 Provider Resolution
-        ↓
+    ↓
 Adapter / Connector
-        ↓
+    ↓
 Concrete Provider
-        ↓
+    ↓
 API / SDK / MCP / Native Mechanism
 ```
 
----
+```text
+Provider
+    != Adapter
+    != API / SDK / MCP
 
-# 5. Stable Core 当前 Candidate
+Provider
+    = who actually provides data or capability
+```
 
-当前 Stable Core Candidate Areas：
+Provider-specific quirks belong behind C4b or the relevant Contract boundary,
+not in the business Skill.
+
+### Cross-cutting Definitions
 
 ```text
+Agent = Execution / Decision Strategy
+Tool  = Invocation / Software Representation
+```
+
+Neither Agent nor Tool is a top-level architecture layer for the current
+slice.
+
+## 5. Required Contract Inventory
+
+The First Research Slice contains exactly these 9 Required Contracts /
+Boundaries:
+
+| ID | Contract / Boundary | Current Status |
+|---|---|---|
+| C1 | Task Execution Boundary | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C2a | Skill Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C2b | Task Runtime Execution Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C3 | Search Capability Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C4a | Provider Resolution Boundary | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C4b | Scrape Creators Adapter Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C5a | Evidence Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C5b | Research Result Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+| C6 | Execution Record Contract | DETAILED SEMANTICS COVERED + CONSISTENCY REVIEWED |
+
+The current package contains no tenth Contract.
+
+```text
+Contract
+    != Component
+    != Service
+    != Class
+    != Process
+    != API
+```
+
+Do not add Runtime–Skill, Capability Need / Action / Command, Concrete
+Provider, Identity, Traceability, or Stable Execution Fact Contracts merely
+because their concepts exist. Their necessary semantics are carried by the
+existing Contracts and cross-contract obligations unless new evidence proves
+otherwise.
+
+## 6. Detailed Contract Design Package
+
+### 6.1 Navigation
+
+```text
+docs/02_system/vertical_slices/01_research_execution/contracts/
+├── 00_CONTRACT_DESIGN_INDEX.md
+├── 01_EXECUTION_SPINE.md
+├── 02_SEARCH_INVOCATION.md
+├── 03_RESEARCH_SEMANTICS.md
+├── 04_EXECUTION_RECORD.md
+├── 05_PROVIDER_MAPPING.md
+└── 06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md
+```
+
+### 6.2 Document Ownership
+
+```text
+01_EXECUTION_SPINE.md
+    → C1 + C2b + C2a
+
+02_SEARCH_INVOCATION.md
+    → C3 + C4a
+
+03_RESEARCH_SEMANTICS.md
+    → C5a + C5b
+
+04_EXECUTION_RECORD.md
+    → C6
+
+05_PROVIDER_MAPPING.md
+    → C4b
+
+06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md
+    → Package-level Review Record
+```
+
+`06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md` is not D6, not a new Contract,
+and not an Architecture Authority.
+
+The package is complete for the current First-Slice Contract stage. This does
+not mean Software Architecture, persistence architecture, or implementation
+has been designed.
+
+## 7. First Slice Planning Package
+
+```text
+docs/02_system/vertical_slices/01_research_execution/
+├── 00_READ_ME_FIRST.md
+├── 00_FIRST_VERTICAL_SLICE_PLANNING.md
+├── 01_SLICE_BUSINESS_BOUNDARY.md
+├── 02_RESPONSIBILITY_COVERAGE.md
+├── 03_MINIMAL_RUNTIME_PATH.md
+├── 04_CONTRACT_INVENTORY.md
+├── 05_DEFERRED_REGISTER.md
+├── 06_ARCHITECTURE_REVIEW.md
+└── contracts/
+    ├── 00_CONTRACT_DESIGN_INDEX.md
+    ├── 01_EXECUTION_SPINE.md
+    ├── 02_SEARCH_INVOCATION.md
+    ├── 03_RESEARCH_SEMANTICS.md
+    ├── 04_EXECUTION_RECORD.md
+    ├── 05_PROVIDER_MAPPING.md
+    └── 06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md
+```
+
+The roles are:
+
+- `00_READ_ME_FIRST.md`: human guide to the slice package;
+- upstream `00–06`: First Vertical Slice planning evidence and review;
+- `contracts/01–05`: D1–D5 Detailed Contract specifications;
+- `contracts/06`: package-level consistency review record.
+
+First Vertical Slice Planning
+
+```text
+COMPLETE
+```
+
+## 8. Critical Invariants — Do Not Collapse
+
+```text
+Business Work Request
+    != Execution
+
+Skill
+    = Business Method
+
 Task Runtime
-Skill Extension Mechanism
-Capability Contract
-Runtime Governance
+    = Execution Coordination
+
+Declared Capability Dependency
+    != Runtime Capability Need
+    != Actual Capability Invocation Fact
+
+Search Capability
+    != Scrape Creators
+
+C4a
+    = Provider Resolution
+
+C4b
+    = Provider Translation
+
+Adapter
+    != Concrete Provider
+    != API / SDK / MCP
+
+Current Provider Binding
+    != Resolved Provider Fact
+    != Actually Used Provider Fact
+
+Raw Provider Result
+    != Search Capability Result
+    != Evidence
+    != Finding
+    != Testable Hypothesis
+
+Search Retrieval Semantics
+    != Actual Research Sample Boundary
+
+Observed Fact
+    != Research Interpretation
+
+Missing
+    != 0
+
+Insufficient Evidence
+    != Execution Failure
+
+Business Result
+    != Execution Outcome
+
+Business Completion
+    precedes Execution Completion
+
 Execution Record
+    != Runtime State
+    != Trace
+    != Logs
+    != Evidence
+    != Artifact
+    != Observability
+    != Evaluation
+
+Local Ownership
+    + Cross-boundary Reference
+
+Post-terminal Resolvability
+    = REQUIRED SEMANTIC OBLIGATION
+
+Record / Reference Retention Semantics
+    = REQUIRED / PARTIALLY REFINED
+
+Exact Retention Lifecycle / Duration
+    = NOT YET DESIGNED
+
+Retention / Resolvability
+    != Persistence Architecture
+
+Retention Requirement
+    != Persistence Architecture
 ```
 
-Compatibility 保留为 Cross-cutting Compatibility / Versioning Concern，不再作为独立一级 Stable Core Area。
-
-注意：
-
-> 这些内容只是 Current Candidate Architecture，不代表整个 System Architecture 已 Approved。
-
-当前没有批准：
-
-- 内部对象；
-- 字段；
-- Schema；
-- Runtime contract；
-- 具体 interface；
-- storage；
-- state model。
-
-特别注意：
+## 9. Runtime Semantic Spine
 
 ```text
-Runtime Governance
-≠
-Architecture Governance
+Operator
+    ↓
+Application
+    ↓
+C1 Task Execution Boundary
+    ↓
+C2b Task Runtime
+    ↔
+C2a Research Skill
 ```
 
-Runtime Governance 未来处理：
-
-- Permission；
-- Policy；
-- Human Gate；
-- Cost Gate；
-- Risk Gate。
-
-Architecture Governance 处理：
-
-- Draft / Candidate / Approved；
-- ADR；
-- Architecture Change；
-- Superseded；
-- Authority。
-
----
-
-# 6. Foundation Services 当前 Candidate
-
-当前候选：
+When the Skill needs Search:
 
 ```text
-Knowledge
-Evidence
-Artifact
+C2a Research Skill
+    ↓ provider-neutral Capability Need
+C2b Task Runtime
+    ↓ coordinates invocation
+C3 Search Capability
+    ↓ C4a Provider Resolution
+C4b Scrape Creators Adapter
+    ↓
+Scrape Creators / Concrete API
 ```
 
-Research 仍是 Product Architecture 中的跨平台 Use Case Family，但在 System Architecture 中：
+Return path:
 
 ```text
-Research
-→ System Placement Under Review
+Raw Provider Result
+    ↓ C4b translation / normalization
+C3 provider-neutral Search Capability Result
+    ↓
+C2b Task Runtime
+    ↓
+C2a Research Skill
 ```
 
-状态：
+Research completion path:
 
-> **Candidate / Detailed Architecture Not Yet Designed**
+```text
+Sampling
+    → Actual Sample Boundary
+    → C5a Evidence
+    → Finding
+    → Testable Hypothesis
+    → C5b Research Result
+    → C2a Business Completion
+    → C2b Execution Terminalization
+    → C6 Execution Record
+    → C1 Terminal Return
+```
 
-当前不要直接继承旧 SIG 对象作为正式新 Contract。
+```text
+C2b Task Runtime
+    = Execution / Capability Invocation Coordination
 
----
+C2a Research Skill
+    = Business Method
+```
 
-# 7. Agent / MCP / RAG / Embedding / Vector DB 当前定位
+The Skill must not appear to call C3 directly. The Runtime coordinates the
+Capability invocation and result return.
 
-当前没有：
+## 10. Detailed Contract Consistency Review Summary
+
+### Review Result
+
+```text
+Review Result
+= PASS_WITH_REFINEMENTS
+
+Refinement Sync
+= COMPLETE
+
+Consistency Re-check
+= PASS
+```
+
+### Review Gates
+
+All review gates are PASS or PASS_WITH_REFINEMENT_RESOLVED:
+
+1. Identity / Referenceability;
+2. Context Propagation;
+3. Capability / Provider Isolation;
+4. Missingness Semantics;
+5. Error / Failure Semantics;
+6. Business / Execution Completion;
+7. Research Semantic Separation;
+8. Traceability / Provenance;
+9. Execution Record Integrity;
+10. Retention / Post-terminal Resolvability.
+
+### Resolved Findings
+
+```text
+CR-1 Retention maturity / post-terminal inheritance
+    = RESOLVED
+
+CR-2 Task Reference ownership
+    = RESOLVED
+
+CR-3 Resolved Provider vs Actually Used Provider
+    = RESOLVED
+
+CR-4 Index stale navigation
+    = RESOLVED
+
+CR-5 Forward-reference maturity wording
+    = RESOLVED
+```
+
+Architecture Reopen
+
+```text
+NO
+```
+
+Contract Inventory Reopen
+
+```text
+NO
+```
+
+New Contract Required
+
+```text
+NO
+```
+
+Research system placement resolution required now
+
+```text
+NO
+```
+
+The Review Record does not upgrade System Architecture status, create D6,
+create a tenth Contract, or authorize unrelated architecture expansion.
+
+## 11. Deferred / Not Yet Designed / Not Yet Proven / Rejected
+
+The current Deferred Register remains the detailed status authority. This
+summary is a navigation aid and is not a new backlog.
+
+### 11.1 NOT YET DESIGNED
+
+- Minimum Scrape Creators Endpoint Selection: authorized next, design not yet started;
+- exact Search software fields and schemas;
+- exact Evidence / Research Result software model;
+- exact Execution Record software model;
+- exact reference representation;
+- exact Runtime state taxonomy;
+- exact retention lifecycle and duration;
+- Application interaction and transport;
+- Software Architecture;
+- detailed Provider endpoint subset.
+
+### 11.2 NOT YET PROVEN
+
+- Independent Analyze Capability;
+- Independent Retrieve Detail Capability;
+- Full Evidence Foundation Service;
+- Independent Research Service;
+- Skill Composition;
+- Retry Engine;
+- Checkpoint;
+- Crash Recovery;
+- Durable Execution;
+- Dedicated Persistence Subsystem;
+- Specific Database Technology;
+- Compatibility Service;
+- Provider Schema Registry;
+- comprehensive Research Lens taxonomy;
+- unified error taxonomy.
+
+### 11.3 NOT REQUIRED FOR FIRST SLICE
+
+- Knowledge Foundation Service;
+- Artifact Foundation Service;
+- Production Research Workspace / UI;
+- active Runtime Governance gates beyond the current thin hook;
+- Pause / Continue as an active First-Slice mechanism.
+
+### 11.4 DEFERRED
+
+- Multi-provider Routing;
+- Fallback;
+- Load Balancing;
+- Cost-aware Routing;
+- Health-aware Routing;
+- Provider Ranking;
+- Advanced Dynamic Resolution;
+- broader Provider integration beyond the minimum endpoint subset.
+- Comments as Evidence Source;
+- Operational Observability / C10;
+
+Current First Slice does not require Comments as a mandatory source. Revisit
+only if public content / public performance evidence proves insufficient for
+the current Research Question.
+
+### 11.5 EXPLICITLY REJECTED FOR CURRENT SLICE
+
+- Agent as Top-level Layer;
+- Tool as Top-level Layer;
+- Standalone Orchestration Layer;
+- Event / Message Architecture as the required First-Slice mechanism;
+- Scrape Creators 97 API Full Integration as an OS module or backlog architecture;
+- Automatic Research Result → Knowledge Update;
+- Dynamic Skill Discovery / Hot Reload / Marketplace.
+
+```text
+Absence Does Not Imply Gap
+Deferred Does Not Imply Backlog
+Not Yet Proven Must Earn Promotion
+Primary Status Controls Default Action
+```
+
+If this summary conflicts with the current Deferred Register, read the
+Register and synchronize this Handoff. Do not modify the Register as part of
+ordinary Handoff maintenance.
+
+## 12. Do Not Reopen Without New Evidence
+
+Do not reopen by default:
+
+- Documentation Architecture;
+- Product Architecture;
+- top-level System Architecture V0.2;
+- First Research Slice Business Boundary;
+- the 9 Required Contract Inventory;
+- D1–D5 Detailed Contract semantics;
+- C1–C6 ownership boundaries;
+- the C2b-mediated Capability invocation path.
+
+Reopening requires new evidence demonstrating a real semantic conflict,
+missing responsibility, or unsatisfied business requirement. Provider API
+shape, framework preference, implementation class, or a new chat is not
+sufficient.
+
+Do not default-add:
 
 ```text
 Agent Layer
+Tool Layer
+Standalone Orchestration Layer
+Runtime–Skill Contract
+Capability Need / Action / Command Contract
+Concrete Provider Contract
+Identity Contract
+Traceability Contract
+Stable Execution Fact Contract
 ```
 
-作为顶层 System Architecture。
+## 13. Provider Lab Relationship
 
-当前理解：
-
-```text
-Agent
-→ Execution / Decision Strategy
-
-MCP
-→ Integration / Capability Access Mechanism
-
-RAG
-→ Knowledge Retrieval Pattern
-
-Embedding
-→ Semantic Representation Technique
-
-Vector DB
-→ Storage / Retrieval Implementation
-
-LLM / Multimodal Model
-→ Capability / Provider Implementation
-
-Chat
-→ Application / Interaction Surface
-```
-
-以上都不应因为当前流行就直接升级成顶层架构。
-
----
-
-# 8. Legacy Architecture 当前边界
-
-旧架构统一三分：
-
-```text
-KEEP AS PRINCIPLE
-REFERENCE ONLY
-DO NOT INHERIT AS AUTHORITY
-```
-
-当前主要保留原则：
-
-- Business Question → Evidence Need；
-- Answerability；
-- Allowed Statement / Prohibited Overclaim；
-- Raw Evidence Preservation；
-- Processing Versioning；
-- Traceability / Provenance；
-- Missing != 0；
-- Correlation != Causation；
-- Public Signal != Real Business Truth；
-- Knowledge Update Requires Human Review。
-
-可以参考但不直接继承的旧对象：
-
-```text
-CollectionRun
-QueryExecution
-RawDataset / RawRecord
-ProcessingRun
-MarketSignalReport
-ResearchBasis
-ResearchTask
-Signal Layer
-EvidenceComparison / ConflictFinding
-```
-
-不再继承为顶层权威：
-
-```text
-SIG-P0 → SIG-P6
-N01 → N18
-Track A / B / C
-NormalizedVideoSignal as universal object
-MarketSignalReport as universal OS output
-TikTok / Video-first top-level architecture
-旧目录结构
-旧 cross-track message architecture
-```
-
----
-
-# 9. Scrape Creators Provider Lab 当前冻结事实
-
-独立仓库：
-
-`/Volumes/projects/andy/0810/scrape-creators-provider-lab`
-
-定位：
+### 13.1 Boundary
 
 ```text
 Provider Lab discovers facts.
-Ecommerce AI OS consumes and productizes those facts.
+Ecommerce AI OS productizes facts.
 ```
 
-当前 inventoried unique endpoints：
+Scrape Creators is currently:
 
 ```text
-97
+Current Concrete Provider
++ Provider Runtime Fact Source
 ```
 
-注意：
+It is not the System Architecture Authority.
 
-> 97 是当前 inventory，不代表 Scrape Creators 永远只有 97 个 API。
+### 13.2 Current Provider Facts
 
-当前 Runtime Final Disposition：
+The Provider Lab handoff records:
+
+- 97 inventoried unique endpoints;
+- Runtime Final Disposition: 92 SUCCESS, 1 BLOCKED_PROVIDER, 1 BLOCKED_RESOURCE_UNAVAILABLE, 3 BLOCKED_SEED_UNDISCOVERABLE;
+- L0 Runtime Calibration: 92 CONFIRMED, 0 CORRECTED, 5 UNKNOWN, 0 RULE_CONFLICT;
+- L2 intentionally paused;
+- Provider Lab freeze anchor: `1b1c35f docs: freeze l0 runtime calibration handoff`.
+
+The 97 API inventory is a Provider fact asset:
 
 ```text
-92 SUCCESS
-
-1 BLOCKED_PROVIDER
-→ TT-19
-
-1 BLOCKED_RESOURCE_UNAVAILABLE
-→ TT-09
-
-3 BLOCKED_SEED_UNDISCOVERABLE
-→ TT-04
-→ SHOP-02
-→ RD-05
+97 API Inventory
+    != 97 OS Capabilities
+    != 97 OS Modules
+    != Implementation Backlog
 ```
 
-当前 L0 Runtime Calibration：
+The Provider Lab is an external verified asset. It does not define Product
+Architecture, System Architecture, or the Required Contract Inventory.
+
+### 13.3 Correct Direction
 
 ```text
-92 CONFIRMED
-0 CORRECTED
-5 UNKNOWN
-0 RULE_CONFLICT
+Stable System Need
+    ↓
+Contract Semantics
+    ↓
+C3 / C4a / C4b obligations
+    ↓
+Provider Lab Facts
+    ↓
+Minimum Endpoint Subset
 ```
 
-UNKNOWN：
+Do not reverse this into:
 
 ```text
-TT-04
-TT-09
-TT-19
-SHOP-02
-RD-05
+97 API Inventory
+    ↓
+Pick interesting APIs
+    ↓
+Design Ecommerce AI OS around them
 ```
 
-注意：
+## 14. Current Next
+
+### Minimum Scrape Creators Endpoint Selection
 
 ```text
-Runtime SUCCESS
-≠
-L0 CONFIRMED
+Status
+= AUTHORIZED NEXT
+
+Goal
+= Determine the smallest Scrape Creators endpoint subset required to satisfy
+  the current First Research Slice.
 ```
 
-当前冻结 Commit：
+The decision sequence is:
 
 ```text
-1b1c35f
-docs: freeze l0 runtime calibration handoff
+Business Question
+    ↓
+Evidence Need
+    ↓
+C3 Detailed Search Contract
+    ↓
+C5a / C5b Evidence and Result Requirements
+    ↓
+C4b Adapter Obligations
+    ↓
+Provider Lab Facts
+    ↓
+Minimum Endpoint Subset
 ```
 
-当前：
+## 15. Questions For The Next Stage
+
+The next chat must answer these questions. This Handoff does not answer them:
+
+1. Which Provider Facts does the First Slice actually need?
+2. Which Provider Facts are mandatory?
+3. Which Provider Facts are optional or nice-to-have?
+4. Which needs are explicit in the C3 Search Contract?
+5. Which needs are explicit in C5a / C5b provenance and Evidence semantics?
+6. What translation obligations does C4b impose on endpoint selection?
+7. Which Scrape Creators endpoints provide the required Provider Facts?
+8. Can one endpoint cover multiple required needs?
+9. Is a detail endpoint really required?
+10. Is pagination or continuation really required?
+11. What are the Provider missingness, region, ID, and compatibility risks?
+12. Which endpoints are genuinely non-substitutable?
+13. What is the minimum endpoint subset?
+14. Is that subset sufficient for the later Walking Slice?
+
+## 16. Next Stage Prohibitions
+
+During Minimum Endpoint Selection:
 
 ```text
-L2 = PAUSED intentionally
+DO NOT WRITE CODE
+
+DO NOT DESIGN SOFTWARE ARCHITECTURE YET
+
+DO NOT IMPLEMENT ALL 97 APIs
+
+DO NOT ADD A NEW OS CAPABILITY
+just because the Provider exposes an endpoint
+
+DO NOT TURN AN ENDPOINT INTO A CONTRACT
+
+DO NOT TURN A PROVIDER FIELD INTO OS SEMANTICS
+without Contract justification
 ```
 
-原因：
+Endpoint selection remains downstream of stable system need and Contract
+obligations.
 
-> Ecommerce AI OS 正在先定义自己的 Capability / Service / Provider Boundary，不能让 Provider response schema 反向定义 OS。
+## 17. Recommended Reading Order For A New Chat
 
-正确未来方向：
+Use these real repository paths. The order is intentionally staged.
+
+### Tier 1 — Mandatory Orientation
+
+1. `docs/00_project/02_CURRENT_HANDOFF.md`
+2. `docs/00_project/00_PROJECT_BASELINE_V0.1.md`
+3. `docs/00_project/01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md`
+4. `docs/01_product/00_PRODUCT_ARCHITECTURE.md`
+5. `docs/02_system/00_SYSTEM_ARCHITECTURE.md`
+6. `docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md`
+7. `docs/02_system/vertical_slices/01_research_execution/contracts/00_CONTRACT_DESIGN_INDEX.md`
+8. `docs/02_system/vertical_slices/01_research_execution/contracts/06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md`
+9. `docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md`
+
+### Tier 2 — Required For Current Endpoint Selection
+
+10. `docs/02_system/vertical_slices/01_research_execution/contracts/02_SEARCH_INVOCATION.md`
+11. `docs/02_system/vertical_slices/01_research_execution/contracts/03_RESEARCH_SEMANTICS.md`
+12. `docs/02_system/vertical_slices/01_research_execution/contracts/05_PROVIDER_MAPPING.md`
+
+### Tier 3 — Read On Demand
+
+13. `docs/02_system/vertical_slices/01_research_execution/01_SLICE_BUSINESS_BOUNDARY.md`
+14. `docs/02_system/vertical_slices/01_research_execution/04_CONTRACT_INVENTORY.md`
+15. `docs/02_system/vertical_slices/01_research_execution/05_DEFERRED_REGISTER.md`
+16. `docs/02_system/vertical_slices/01_research_execution/contracts/01_EXECUTION_SPINE.md`
+17. `docs/02_system/vertical_slices/01_research_execution/contracts/04_EXECUTION_RECORD.md`
+
+The upstream package guide is:
+`docs/02_system/vertical_slices/01_research_execution/00_READ_ME_FIRST.md`.
+
+## 18. Suggested New Chat Starter
 
 ```text
-Ecommerce AI OS
-        ↓
-Capability / Service Contract
-        ↓
-Provider Adapter
-        ↓
-Provider Facts
-        ↓
-Provider Lab Runtime Evidence
-```
+Continue Ecommerce AI OS.
 
----
-
-# 10. 当前 Documentation Architecture
-
-```text
-docs/
-├── 00_project/
-│   ├── 00_PROJECT_BASELINE_V0.1.md
-│   ├── 01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md
-│   └── 02_CURRENT_HANDOFF.md
-│
-├── 01_product/
-│   └── 00_PRODUCT_ARCHITECTURE.md
-│
-├── 02_system/
-│   ├── 00_SYSTEM_ARCHITECTURE.md
-│   ├── kernel/
-│   ├── capabilities/
-│   ├── skills/
-│   ├── services/
-│   └── providers/
-│
-├── 03_software/
-│   └── 00_SOFTWARE_ARCHITECTURE.md
-│
-├── 04_governance/
-│   ├── 00_ARCHITECTURE_GOVERNANCE.md
-│   └── decisions/
-│
-└── 05_references/
-    ├── legacy/
-    └── provider_lab/
-```
-
-顶层分类已经确定。
-
-不要在新聊天里重新恢复旧的：
-
-LEGACY / DEPRECATED PATHS — DO NOT USE
-
-以下路径仅用于记录已经废弃的旧 Documentation Architecture。
-它们不是 Current Path，不得作为文件引用、导航路径或新设计目标。
-
-```text
-docs/01_kernel
-docs/02_capabilities
-docs/03_skills
-docs/04_services
-docs/decisions
-```
-
-这些旧顶层目录已经被 Documentation Architecture 重构取代。
-
----
-
-# 11. 当前明确 Not Yet Designed
-
-以下内容不要假装已经有答案：
-
-```text
-Task Runtime internal contract
-Context model
-Skill Extension Contract details
-Skill Composition details
-Capability Invocation Schema
-Provider Resolution
-Runtime Governance rules
-Execution Record schema
-Cross-cutting Compatibility rules
-Advanced Runtime Concerns：Checkpoint Strategy、Crash Recovery、Durable Execution、Retry Engine
-Foundation Service contracts
-Agent architecture
-Python package design
-Database
-Persistence
-Event / Message
-API
-UI / Workspace
-Deployment
-RAG / Retrieval implementation
-Vector DB
-Detailed multimodal implementation
-Platform-specific Operations final structure
-```
-
----
-
-# 12. 当前禁止事项
-
-新聊天接手后，当前不要：
-
-- 重新设计 Documentation Architecture；
-- 重新把 TikTok / Amazon / Temu 切成三套独立系统；
-- 把 Script / Image / Video / Short Drama 当成 TikTok 专属能力；
-- 把 Provider API Shape 当成 OS Domain Model；
-- 把旧 SIG / N01-N18 自动恢复为 Current Authority；
-- 把 Agent / MCP / RAG / Vector DB 提升为顶层架构；
-- 从现有 `src/` scaffold 反推 Software Architecture；
-- 一次开发全部 97 API；
-- 开始 Production DB / UI / Agent / RAG；
-- 自动把 Candidate 升成 Approved；
-- 未经 Human Review 大规模修改顶层架构。
-
----
-
-# 13. 当前开发哲学
-
-保持：
-
-> **Architecture big, implementation small.**
-
-当前实现策略：
-
-```text
-Vertical Slice First
-Stable Core Thin First
-Kernel First       = No
-UI First           = No
-Framework First    = No
-```
-
-含义：
-
-- 架构允许给未来留扩展空间；
-- 实现必须从窄的真实业务闭环开始；
-- 不因为愿景很大就一次实现所有模块；
-- 新需求先判断是否能进入已有 Family / Skill / Capability / Service；
-- 只有真实需求证明当前抽象不足时，才修改更高层架构。
-
----
-
-# 14. 当前工作状态
-
-当前已完成 / 已生成的 Baseline Package：
-
-```text
-00_PROJECT_BASELINE_V0.1.md
-
-01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md
-
-00_PRODUCT_ARCHITECTURE.md
-
-00_SYSTEM_ARCHITECTURE.md
-
-00_SOFTWARE_ARCHITECTURE.md
-
-00_ARCHITECTURE_GOVERNANCE.md
-
-02_LEGACY_ARCHITECTURE_REFERENCE_AUDIT.md
-
-03_PROVIDER_LAB_ASSET_HANDOFF.md
-
-02_CURRENT_HANDOFF.md
-```
-
-当前 Change Set 状态：
-
-```text
-C01-C09 ACCEPTED and implemented in Current Candidate Architecture
-C10 Operational Observability DEFERRED
-```
-
-上述阶段性审核与 V0.2 Documentation Completeness Fix 已完成。
-
-当前仍需保持的状态边界：
-
-- System Architecture = Candidate / Human-reviewed working architecture；
-- Entire System Architecture ≠ Approved；
-- Software Architecture = Not Yet Designed；
-- C01-C09 = ACCEPTED；
-- C10 Operational Observability = DEFERRED。
-
----
-
-# 15. Git 状态
-
-本文件不写死当前 Ecommerce AI OS 的最新 Commit Hash。
-
-当前状态同步不代表 Candidate 升级为 Approved，也不代表已经完成 commit 或 push。
-
-新聊天开始前或最终 Freeze 时，必须由 Codex / Git 真实检查：
-
-```bash
-git status --short
-git log -1 --oneline
-```
-
-不要从旧聊天或本文件猜当前 HEAD。
-
-Provider Lab 的独立冻结锚点仍为：
-
-```text
-1b1c35f
-docs: freeze l0 runtime calibration handoff
-```
-
----
-
-# 16. 下一项唯一任务
-
-当前下一步不是立即开始 Software implementation。
-
-下一项任务：
-
-# **Development Strategy + First Vertical Slice — Research Execution Architecture**
-
-当前下一阶段路线摘要：
-
-```text
-Development Strategy
-        ↓
-First Vertical Slice — Research Execution Architecture
-        ↓
-System Detailed Contracts required by the slice
-        ↓
-Minimal Software Architecture required by the slice
-        ↓
-Walking Implementation
-        ↓
-Runtime / Contract Validation
-```
-
-第一条候选 Vertical Slice 可以是 US / Car Vacuum / TikTok Content Research。
-
-新聊天应先读 Current Authority，以真实 Vertical Slice 为入口，先讨论业务边界和最小 Contract，再进入 Minimal Software Architecture。
-
----
-
-# 17. 新聊天启动提示
-
-建议新聊天第一条使用：
-
-```text
-继续 Ecommerce AI OS。
-
-项目路径：
-
+Repository:
 /Volumes/projects/andy/0813/ecommerce-ai-os
 
-先完整阅读：
+Read docs/00_project/02_CURRENT_HANDOFF.md first, then follow its
+Recommended Reading Order For A New Chat.
 
-docs/00_project/02_CURRENT_HANDOFF.md
+Do not redesign Documentation Architecture, Product Architecture, System
+Architecture V0.2, or the 9 Required Contracts.
 
-然后按照 Handoff 中的顺序读取当前 Authority / Baseline 文档。
+Current completed stage:
+System Detailed Contract Design = COMPLETE / CONSISTENCY REVIEWED
 
-不要重新设计 Documentation Architecture。
-不要重新定义 Product Architecture。
-不要把 Candidate 自动升级为 Approved。
-不要从旧 SIG / N01-N18 恢复旧顶层架构。
-不要从 src scaffold 反推 Software Architecture。
-不要让 Provider API Shape 定义 Ecommerce AI OS。
+Current next:
+Minimum Scrape Creators Endpoint Selection
 
-当前先基于仓库真实状态确认状态，再继续 Handoff 指定的 Development Strategy / First Vertical Slice 工作。
+Do not write code.
+Do not design Software Architecture yet.
+
+First report your understanding of:
+- current project state;
+- architecture authority;
+- First Research Slice;
+- 9 Contract status;
+- consistency review result;
+- deferred / NYD / NYP boundaries;
+- endpoint-selection decision process.
+
+Do not modify the repository until alignment is confirmed.
 ```
 
----
+## 19. Recent Milestone Commits
 
-# 18. Handoff Authority Boundary
-
-再次明确：
-
-> **CURRENT_HANDOFF 是导航，不是 Architecture Authority。**
-
-当内容冲突时：
+The following hashes were read from the current Ecommerce AI OS Git history:
 
 ```text
-Product 问题
-→ Product Architecture
-
-System 问题
-→ System Architecture
-
-Software 问题
-→ Software Architecture
-
-Architecture State / Change
-→ Architecture Governance
-
-Provider Runtime Fact
-→ Provider Lab
-
-Implementation Fact
-→ Code / Schema / Tests
+8b37338 docs: complete research contract consistency review
+2702f9f docs: align research contract consistency semantics
+0eb9f3d docs: define scrape creators provider mapping contract
+58fe910 docs: define research execution record contract
 ```
 
-不要让 Handoff 自己演变成第二份“大一统架构文档”。
+These are navigation anchors only. Inspect live Git state before describing
+current changes or deciding whether a file is clean.
+
+The Provider Lab has a separate repository and separate freeze anchor. Its hash
+must not be confused with an Ecommerce AI OS commit.
+
+## 20. Handoff Update Rules
+
+When synchronizing this file:
+
+1. Read the current authority files from the repository.
+2. Confirm live Git status before editing.
+3. Update this existing Handoff rather than creating a second Handoff.
+4. Preserve the single-authority model.
+5. Keep status words explicit and conservative.
+6. Record actual commit hashes only when confirmed by `git log`.
+7. Keep Provider Lab facts separate from OS architecture decisions.
+8. Keep Deferred / Not Yet Designed / Not Yet Proven distinctions intact.
+9. Do not turn a Handoff summary into a replacement architecture document.
+10. Validate that only the intended Handoff changed.
+
+The following statements must remain true unless new evidence changes the
+authority documents:
+
+```text
+System Architecture V0.2
+    = Candidate / Human-reviewed working architecture
+
+Software Architecture
+    = NOT YET DESIGNED
+
+Walking Implementation
+    = NOT YET AUTHORIZED
+
+Detailed Contract Design Package
+    = COMPLETE / CONSISTENCY REVIEWED
+
+Minimum Scrape Creators Endpoint Selection
+    = AUTHORIZED NEXT
+```
+
+## 21. Authority Boundary
+
+```text
+Project identity / requirements
+    → docs/00_project/00_PROJECT_BASELINE_V0.1.md
+    → docs/00_project/01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md
+
+Product question
+    → docs/01_product/00_PRODUCT_ARCHITECTURE.md
+
+System responsibility question
+    → docs/02_system/00_SYSTEM_ARCHITECTURE.md
+
+Architecture status / change governance
+    → docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md
+
+First-Slice business boundary
+    → docs/02_system/vertical_slices/01_research_execution/01_SLICE_BUSINESS_BOUNDARY.md
+
+Contract inventory / maturity
+    → docs/02_system/vertical_slices/01_research_execution/04_CONTRACT_INVENTORY.md
+    → docs/02_system/vertical_slices/01_research_execution/05_DEFERRED_REGISTER.md
+
+Detailed Contract semantics
+    → docs/02_system/vertical_slices/01_research_execution/contracts/
+
+Provider runtime fact
+    → docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md
+
+Implementation fact
+    → src/ / tests/ and the live repository state
+```
+
+This Handoff is the starting point for navigation. It is not a second Product
+Architecture, System Architecture, Software Architecture, Contract, Provider
+Lab, or Deferred Register.
