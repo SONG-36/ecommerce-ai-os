@@ -1469,7 +1469,7 @@ IN PROGRESS
 
 当前 Design Stage：
 
-# **D3 — Research Semantics**
+# **D4 — Execution Record**
 
 状态：
 
@@ -1480,23 +1480,19 @@ Reviewed / Specification Created
 Specification：
 
 ```text
-03_RESEARCH_SEMANTICS.md
+04_EXECUTION_RECORD.md
 ```
 
-D3 包含：
+D4 包含：
 
 ```text
-C5a
-Evidence Contract
-
-C5b
-Research Result Contract
+C6
+Execution Record Contract
 ```
 
 当前还没有开始：
 
 ```text
-D4
 D5
 ```
 
@@ -1506,22 +1502,22 @@ D5
 
 当前下一步：
 
-# **D4 — Execution Record**
+# **D5 — Provider Mapping**
 
 对应：
 
 ```text
-C6
-Execution Record Contract
+C4b
+Scrape Creators Adapter Contract
 ```
 
-不要提前写：
+不要写：
 
 ```text
-D4 completed
+D5 completed
 ```
 
-不要创建 D4 文件。
+不要创建 D5 文件。
 
 ---
 
