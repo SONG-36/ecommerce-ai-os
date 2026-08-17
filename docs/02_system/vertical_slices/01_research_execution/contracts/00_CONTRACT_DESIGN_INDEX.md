@@ -1469,7 +1469,7 @@ IN PROGRESS
 
 当前 Design Stage：
 
-# **D2 — Search Invocation Spine**
+# **D3 — Research Semantics**
 
 状态：
 
@@ -1480,24 +1480,22 @@ Reviewed / Specification Created
 Specification：
 
 ```text
-02_SEARCH_INVOCATION.md
+03_RESEARCH_SEMANTICS.md
 ```
 
-D2 包含：
+D3 包含：
 
 ```text
-C3
-Search Capability Contract
+C5a
+Evidence Contract
 
-C4a
-Provider Resolution Boundary
+C5b
+Research Result Contract
 ```
 
 当前还没有开始：
 
 ```text
-D2
-D3
 D4
 D5
 ```
@@ -1508,27 +1506,22 @@ D5
 
 当前下一步：
 
-# **D3 — Research Semantics**
+# **D4 — Execution Record**
 
 对应：
 
 ```text
-C5a
-Evidence Contract
-
-+
-
-C5b
-Research Result Contract
+C6
+Execution Record Contract
 ```
 
-不要写：
+不要提前写：
 
 ```text
-D3 completed
+D4 completed
 ```
 
-不要创建 D3 文件。
+不要创建 D4 文件。
 
 ---
 
