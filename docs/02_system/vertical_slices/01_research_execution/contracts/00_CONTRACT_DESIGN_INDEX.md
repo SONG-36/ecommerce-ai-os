@@ -1469,7 +1469,7 @@ IN PROGRESS
 
 当前 Design Stage：
 
-# **D1 — Execution Spine**
+# **D2 — Search Invocation Spine**
 
 状态：
 
@@ -1480,20 +1480,17 @@ Reviewed / Specification Created
 Specification：
 
 ```text
-01_EXECUTION_SPINE.md
+02_SEARCH_INVOCATION.md
 ```
 
-D1 包含：
+D2 包含：
 
 ```text
-C1
-Task Execution Boundary
+C3
+Search Capability Contract
 
-C2b
-Task Runtime Execution Contract
-
-C2a
-Skill Contract
+C4a
+Provider Resolution Boundary
 ```
 
 当前还没有开始：
@@ -1511,37 +1508,27 @@ D5
 
 当前下一步：
 
-# **D2 — Search Invocation Spine**
+# **D3 — Research Semantics**
 
 对应：
 
 ```text
-C3
-Search Capability Contract
+C5a
+Evidence Contract
 
 +
 
-C4a
-Provider Resolution Boundary
+C5b
+Research Result Contract
 ```
 
-不要提前写：
+不要写：
 
 ```text
-D2 completed
+D3 completed
 ```
 
-不要创建 D2 文档。
-
-同时观察它和：
-
-```text
-C2b Task Runtime Execution Contract
-
-C2a Skill Contract
-```
-
-之间的接缝。
+不要创建 D3 文件。
 
 ---
 
