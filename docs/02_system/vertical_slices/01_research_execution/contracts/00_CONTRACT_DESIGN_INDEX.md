@@ -1250,6 +1250,9 @@ contracts/
 
 └── 05_PROVIDER_MAPPING.md
     └── C4b Scrape Creators Adapter Contract
+
+└── 06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md
+    └── Review Record, not Contract Specification
 ```
 
 上面缩进的 Contract 名称表示每个 Specification Document 覆盖的 Contract，不表示实际子文件。
@@ -1480,32 +1483,27 @@ COMPLETE
 当前阶段：
 
 ```text
-System Detailed Contract Design
+Detailed Contract Design Package
 =
-IN PROGRESS
+COMPLETE / CONSISTENCY REVIEWED
 ```
 
-当前 Design Stage：
-
-# **D5 — Provider Mapping**
-
-状态：
+当前 Review Stage：
 
 ```text
-Reviewed / Specification Created
+Detailed Contract Consistency Review
+=
+PASS_WITH_REFINEMENTS
+
+Consistency Re-check
+=
+PASS
 ```
 
-Specification：
+Review Record：
 
 ```text
-05_PROVIDER_MAPPING.md
-```
-
-D5 包含：
-
-```text
-C4b
-Scrape Creators Adapter Contract
+06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md
 ```
 
 Detailed Contract Specifications：
@@ -1530,15 +1528,15 @@ Detailed Semantics Covered
 
 当前下一步：
 
-# **Detailed Contract Consistency Review**
+# **Minimum Scrape Creators Endpoint Selection**
 
-Detailed Contract Design Package：
+状态：
 
 ```text
-COMPLETE FOR CONSISTENCY REVIEW
+AUTHORIZED NEXT
 ```
 
-下一步不是直接进入 Walking Implementation 或 Software Architecture。
+不要创建 Endpoint Selection 文件。
 
 ---
 
@@ -1652,25 +1650,27 @@ Which contracts are required?
 What must not be added yet?
 ```
 
-System Detailed Contract Design 接下来回答：
+System Detailed Contract Design 当前结果：
 
-> **这些已经确认的边界，如何通过横向一致性 Review 形成可继续向下的稳定 Contract Package？**
+> **D1–D5 Detailed Specifications 已通过横向一致性 Review，形成可继续向下的稳定 Contract Package。**
 
 当前 Review Stage：
 
 ```text
 D1–D5 Detailed Specifications
 =
-CREATED
+CONSISTENCY REVIEWED
+
+Consistency Re-check
+=
+PASS
 
 Current Next
 =
-Detailed Contract Consistency Review
+Minimum Scrape Creators Endpoint Selection
 ```
 
-开始。
-
-只有 Contract Semantics 足够稳定后，才进入：
+下一阶段仍然不直接进入 Software Architecture 或 Walking Implementation：
 
 ```text
 Minimal Software Architecture
