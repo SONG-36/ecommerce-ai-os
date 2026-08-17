@@ -52,7 +52,7 @@ independent Contract identities.
 
 | Layer | Meaning | Primary responsibility |
 |---|---|---|
-| Raw Provider Result | Provider runtime reality | Future C4b / concrete Provider boundary |
+| Raw Provider Result | Provider runtime reality | C4b Adapter (defined in D5) / concrete Provider boundary |
 | Search Capability Result | Provider-neutral output of C3 | C3, consumed by the Research Skill |
 | Evidence | Selected, source- and context-grounded research fact | C5a formalization semantics |
 | Finding | Research interpretation of Evidence within a bounded sample | Research Skill |
@@ -144,7 +144,7 @@ Successful Execution
 | Evidence / claim traceability | C5a + C5b seam | Finding / Hypothesis can point to supporting Evidence. |
 | Business Completion | C2a using C5b-valid result | Skill declares completion after a valid Research Result exists. |
 | Execution Completion | C2b | Runtime recognizes completion and terminalizes the Execution. |
-| Execution Record | Future C6 | D3 supplies references but does not design C6. |
+| Execution Record | C6 (defined in D4) | D3 supplies references but does not design C6. |
 
 ## 7. C5a — Evidence Contract
 
@@ -341,9 +341,22 @@ Referenceability != Repository
 Referenceability != Database
 ```
 
-Record / Reference Retention Semantics remain **NOT YET DESIGNED**. D3 does not
-create `EvidenceRepository`, `EvidenceService`, an Evidence table, or a vector
-database.
+Record / Reference Retention Semantics
+    = REQUIRED / PARTIALLY REFINED
+
+If an Evidence Reference or Research Result Reference becomes a
+system-controlled internal reference necessary for a required provenance chain
+or finalized Execution explanation, it inherits the D4 / C6 post-terminal
+resolvability obligation:
+
+```text
+Post-terminal Resolvability
+    = REQUIRED SEMANTIC OBLIGATION
+```
+
+Exact retention lifecycle / duration remains **NOT YET DESIGNED**. Persistence
+mechanism is not defined by C5a/C5b. D3 does not create `EvidenceRepository`,
+`EvidenceService`, an Evidence table, or a vector database.
 
 ### 7.9 Time semantics
 
@@ -370,7 +383,7 @@ Missingness follows the established direction:
 
 ```text
 Provider-specific Missingness
-        ↓ future C4b normalization
+        ↓ C4b Adapter (defined in D5) normalization
 C3 provider-neutral Search Result
         ↓
 C5a preserves known missingness
@@ -695,7 +708,7 @@ At the execution level:
 ```text
 Research Result
     ↓
-Execution Record (future C6)
+Execution Record (C6 defined in D4)
     ↓
 Skill / Capability / Provider / Version References
 ```
@@ -706,7 +719,7 @@ cross-contract reference obligations.
 ### 14.3 Result referenceability
 
 Research Result must be referenceable because C1 exposes the Business Result
-and future C6 may reference the final Business Output.
+and C6 (defined in D4) may reference the final Business Output.
 
 ```text
 Result Referenceability
@@ -830,7 +843,8 @@ Specific Database Technology
 Evidence software model
 Research Result software model
 Evidence / Result reference representation
-Record / Reference retention semantics
+Exact retention lifecycle / duration
+Reference lifecycle details
 Exact time field model
 Exact Answerability representation
 Finding / Hypothesis relationship representation

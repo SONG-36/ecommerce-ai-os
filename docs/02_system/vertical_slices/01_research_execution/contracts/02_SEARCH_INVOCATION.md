@@ -31,7 +31,7 @@ The governing distinction is:
 C3  = What stable system ability is being invoked?
 C4a = Who is currently bound to provide that ability?
 C4b = How stable Search semantics map to concrete Provider reality
-      (future boundary)
+      (defined in D5; D2 only owns the seam)
 ```
 
 ## 2. Covered Contracts
@@ -53,7 +53,7 @@ independent Contract / Boundary identities.
 - retrieval-set, continuation, and known-completeness semantics;
 - capability and Provider referenceability obligations;
 - current static, single-Provider resolution;
-- the C3 ↔ C4a ↔ future C4b seams;
+- the C3 ↔ C4a ↔ C4b Adapter (defined in D5) seams;
 - explicit distinctions between resolution, invocation, empty, and missing outcomes.
 
 ### Out of scope for D2
@@ -76,7 +76,7 @@ flowchart LR
     SK["C2a Research Skill"] -->|"provider-neutral Search Need"| RT["C2b Task Runtime"]
     RT -->|"coordinates invocation"| C3["C3 Search Capability"]
     C3 --> C4A["C4a Provider Resolution\nStatic / Single Provider"]
-    C4A --> C4B["future C4b Adapter"]
+    C4A --> C4B["C4b Adapter (defined in D5)"]
     C4B --> P["Scrape Creators\nConcrete Provider"]
     P --> C4B
     C4B -->|"provider-neutral result / error"| C3
@@ -84,15 +84,15 @@ flowchart LR
     RT --> SK
 ```
 
-The future C4b seam is shown to preserve the established runtime direction.
-This document does not design C4b.
+The C4b Adapter is defined in D5; D2 only owns the seam and does not design
+C4b here.
 
 The return distinction is:
 
 ```mermaid
 sequenceDiagram
     participant P as Concrete Provider
-    participant A as future C4b Adapter
+    participant A as C4b Adapter (defined in D5)
     participant C as C3 Search Capability
     participant R as C2b Runtime
     participant S as C2a Research Skill
@@ -124,12 +124,12 @@ errors and payloads must not bypass the C3/C4b boundary into C2a.
 | Current Provider Binding | C4a | Current First Slice binding is Search → Scrape Creators. |
 | Resolved Provider Identity | C4a | Actual provider used can be exposed as an execution fact. |
 | Provider Eligibility | C4a | Minimal legal-binding check only. |
-| Endpoint Mapping | Future C4b | Not owned by C3 or C4a. |
-| Provider Parameter Translation | Future C4b | Not owned by C3 or C4a. |
-| Pagination Translation | Future C4b | Not owned by C3 or C4a. |
-| Missingness Normalization | Future C4b → C3 | C3 receives stable missingness semantics; it does not invent provider quirks. |
+| Endpoint Mapping | C4b Adapter (defined in D5) | Not owned by C3 or C4a. |
+| Provider Parameter Translation | C4b Adapter (defined in D5) | Not owned by C3 or C4a. |
+| Pagination Translation | C4b Adapter (defined in D5) | Not owned by C3 or C4a. |
+| Missingness Normalization | C4b Adapter (defined in D5) → C3 | C3 receives stable missingness semantics; it does not invent provider quirks. |
 | Research Sampling | C2a Research Skill | Search retrieval bound is not the Research Sample Boundary. |
-| Evidence Interpretation | C2a / future C5a boundary | D2 does not define Evidence semantics. |
+| Evidence Interpretation | C2a / C5a (defined in D3) boundary | D2 does not define Evidence semantics. |
 
 ## 6. C3 — Search Capability Contract
 
@@ -322,9 +322,31 @@ Referenceability != Retention Policy
 Referenceability != Persistence Design
 ```
 
-Record / Reference Retention Semantics are **NOT YET DESIGNED**. D2 therefore
-does not define retention days, a database, repository, storage service, or
-payload persistence.
+Record / Reference Retention Semantics
+    = REQUIRED / PARTIALLY REFINED
+
+If a Search Capability Result Reference or Result Item Reference becomes a
+system-controlled internal reference necessary for provenance or finalized
+Execution explanation, it inherits the D4 / C6 post-terminal resolvability
+obligation:
+
+```text
+Post-terminal Resolvability
+    = REQUIRED for necessary internal references
+```
+
+C3 does not own retention duration or design persistence. Exact retention
+lifecycle / duration remains **NOT YET DESIGNED**, and the persistence
+mechanism is not owned by C3 and remains **NOT YET PROVEN** at architecture
+level.
+
+```text
+Referenceability != Retention Policy
+Post-terminal Resolvability != Persistence Design
+```
+
+D2 therefore does not define retention days, a database, repository, storage
+service, or payload persistence.
 
 ### 6.9 Missingness and result completeness
 
@@ -332,7 +354,7 @@ Provider-specific missingness follows this direction:
 
 ```text
 Provider-specific Missingness
-        ↓ future C4b normalization
+        ↓ C4b Adapter (defined in D5) normalization
 C3 provider-neutral result semantics
         ↓ later boundary preserves missingness
 Evidence / Research semantics
@@ -491,7 +513,7 @@ The existence of C4a does not imply a `ProviderRouterService`,
 `ProviderRegistryService`, `ProviderSelector`, or scoring engine. Current
 implementation depth is static and single-provider.
 
-## 8. C3 / C4a / Future C4b Cross-contract Seams
+## 8. C3 / C4a / C4b Cross-contract Seams
 
 ### 8.1 C3 ↔ C4a
 
@@ -500,9 +522,9 @@ uses that Capability identity to determine the current legal Provider binding.
 C4a returns binding / resolution outcome to the invocation path; it does not
 modify the provider-neutral Search request into endpoint syntax.
 
-### 8.2 C4a ↔ future C4b
+### 8.2 C4a ↔ C4b Adapter (defined in D5)
 
-| C4a owns | Future C4b owns |
+| C4a owns | C4b Adapter (defined in D5) owns |
 |---|---|
 | Who provides Search? | Request Translation |
 | Current Provider Binding | Response Translation |
@@ -539,7 +561,7 @@ Evidence semantics. D2 does not create C5a or C5b structures.
 The complete research path is:
 
 ```text
-Provider / future C4b
+Provider / C4b Adapter (defined in D5)
         ↓
 Provider-neutral Search Capability Result
         ↓
@@ -601,7 +623,7 @@ The required direction is:
 
 ```text
 Concrete Provider Error
-        ↓ future C4b translation
+        ↓ C4b Adapter (defined in D5) translation
 C3 Search-level error semantics
         ↓
 C2b Task Runtime
@@ -621,7 +643,7 @@ The D2 obligations are:
 4. C3 preserves a Governance Hook without activating a Governance Policy.
 5. C4a exposes current and actually resolved Provider identity as distinct semantics.
 6. C4a eligibility does not become endpoint selection.
-7. Provider-specific references are normalized at the future C4b seam before being consumed as C3 semantics.
+7. Provider-specific references are normalized at the C4b Adapter (defined in D5) seam before being consumed as C3 semantics.
 
 ## 12. Cross-contract Invariants
 
@@ -653,7 +675,8 @@ Exact Search request fields
 Exact Search result fields
 Continuation token representation
 Capability version representation
-Record / Reference retention semantics
+Exact retention lifecycle / duration
+Reference lifecycle representation
 Minimum Scrape Creators Endpoint Selection
 ```
 

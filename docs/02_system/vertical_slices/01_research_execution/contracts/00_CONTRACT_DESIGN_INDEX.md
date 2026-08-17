@@ -1136,7 +1136,15 @@ Dedicated Persistence Service Required
 当前：
 
 ```text
+Post-terminal Resolvability
+=
+REQUIRED SEMANTIC OBLIGATION
+
 Record / Reference Retention Semantics
+=
+REQUIRED / PARTIALLY REFINED
+
+Exact Retention Lifecycle / Duration
 =
 NOT YET DESIGNED
 ```
@@ -1145,6 +1153,10 @@ NOT YET DESIGNED
 
 ```text
 Dedicated Persistence Subsystem
+=
+NOT YET PROVEN
+
+Specific Database Technology
 =
 NOT YET PROVEN
 ```
@@ -1250,13 +1262,19 @@ contracts/
 
 # **讨论到哪，文件建到哪。**
 
-当前仍只保留：
+Current Specification Set：
 
 ```text
 00_CONTRACT_DESIGN_INDEX.md
+01_EXECUTION_SPINE.md
+02_SEARCH_INVOCATION.md
+03_RESEARCH_SEMANTICS.md
+04_EXECUTION_RECORD.md
+05_PROVIDER_MAPPING.md
 ```
 
-本轮不创建 5 个 D-stage Specification 文件或任何子目录。
+D1–D5 files were created incrementally following the
+“讨论到哪，文件建到哪” principle.
 
 ---
 
@@ -1636,11 +1654,19 @@ What must not be added yet?
 
 System Detailed Contract Design 接下来回答：
 
-> **这些已经确认的边界，到底承诺什么稳定语义？**
+> **这些已经确认的边界，如何通过横向一致性 Review 形成可继续向下的稳定 Contract Package？**
 
-当前从：
+当前 Review Stage：
 
-# **D1 — Execution Spine**
+```text
+D1–D5 Detailed Specifications
+=
+CREATED
+
+Current Next
+=
+Detailed Contract Consistency Review
+```
 
 开始。
 

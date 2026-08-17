@@ -128,7 +128,8 @@ Actual Skill Reference
 Relevant Skill Version Reference
 Actually Invoked Capability References
 Relevant Capability Version References
-Resolved / Actually Used Provider Reference
+Resolved Provider Reference where resolution occurred
+Actually Used Provider Reference where Provider invocation occurred
 ```
 
 ### C. Relevant intermediate results
@@ -165,11 +166,11 @@ Relevant Reproducibility References
 | Semantic concern | Local owner | C6 responsibility |
 |---|---|---|
 | Execution Identity | C2b | Aggregates the actual identity reference. |
-| Task Reference | C1 / C2b seam | Preserves the applicable reference without deciding its representation. |
+| Task Reference | C2b / execution-side task-reference semantics | Preserves the applicable Task Reference without deciding whether it shares a software identifier with Execution Identity. C1 may carry / expose upstream or terminal reference semantics but does not own Runtime Task identity. |
 | Input References | C1 / execution boundary | Records references relevant to the established Execution. |
 | Skill Identity / Version | C2a | C6 references the actual participating Skill and relevant version. |
 | Capability Identity / Version | C3 | C6 references capabilities actually invoked and relevant versions. |
-| Provider Identity | C4a | C6 references the Provider actually resolved / used where applicable. |
+| Provider Identity | C4a / execution Provider path | C4a owns the resolution fact; C6 aggregates a Resolved Provider Reference where resolution occurred and an Actually Used Provider Reference only where invocation occurred. |
 | Capability Result | C3 | C6 references relevant results; it does not copy full payloads. |
 | Evidence Identity | C5a | C6 references Evidence where the execution path produced or used it. |
 | Research Result | C5b | C6 references the final Business Output where present. |
@@ -191,17 +192,36 @@ semantics. The following distinctions are mandatory:
 Declared Dependency
     != Actual Invocation Fact
 
-Configured Provider Binding
-    != Actually Used Provider Fact
-
 Planned Action
     != Actual Execution Fact
 ```
 
 Declaring that a Skill depends on Search does not prove that Search was
 invoked. A Capability Reference enters the Record as an actual invocation fact
-only when that invocation occurred. A configured Provider binding does not
-prove that the Provider was actually resolved and used.
+only when that invocation occurred.
+
+Provider facts are also path-sensitive:
+
+```text
+Current / Configured Provider Binding
+    != Resolved Provider Fact
+    != Actually Used Provider Fact
+```
+
+A legal path may resolve a Provider and then fail before invocation:
+
+```text
+Provider resolution succeeds
+        ↓
+Resolved Provider Reference exists
+        ↓
+Failure before Provider invocation
+        ↓
+Actually Used Provider Reference is absent
+```
+
+The exact software relationship between Task Reference and Execution Identity
+remains **NOT YET DESIGNED**; C6 does not force them to share one identifier.
 
 ## 8. Successful Execution Record
 
@@ -212,7 +232,8 @@ Execution Identity
 Task / Input References
 Actual Skill Reference + relevant version
 Actually Invoked Capability References + relevant versions
-Actually Used Provider Reference
+Resolved Provider Reference where resolution occurred
+Actually Used Provider Reference where Provider invocation occurred
 Relevant Capability Result References
 Evidence References where relevant
 Final Research Result Reference
@@ -237,7 +258,8 @@ Execution Identity
 Task / Input References
 Actual Skill Reference where established
 Actually Invoked Capability Reference if invocation occurred
-Resolved / Actually Used Provider Reference if resolution or invocation occurred
+Resolved Provider Reference if resolution occurred
+Actually Used Provider Reference only if Provider invocation occurred
 Relevant stable failure-stage facts / references
 Terminal Failure Outcome
 ```
@@ -462,7 +484,7 @@ is **NOT YET DESIGNED**.
 4. Execution Record is not Evidence.
 5. Execution Record is not Artifact, Observability, or Evaluation.
 6. Declared Dependency is not Actual Invocation Fact.
-7. Configured Provider Binding is not the Actually Used Provider Fact.
+7. Current / Configured Provider Binding is not the Resolved Provider Fact and is not the Actually Used Provider Fact.
 8. Planned Action is not Actual Execution Fact.
 9. C2b owns terminalization and fact availability; C6 owns Record semantics.
 10. Local identity ownership is preserved; C6 aggregates cross-contract references.
