@@ -1464,12 +1464,24 @@ COMPLETE
 ```text
 System Detailed Contract Design
 =
-STARTING
+IN PROGRESS
 ```
 
 当前 Design Stage：
 
 # **D1 — Execution Spine**
+
+状态：
+
+```text
+Reviewed / Specification Created
+```
+
+Specification：
+
+```text
+01_EXECUTION_SPINE.md
+```
 
 D1 包含：
 
@@ -1499,35 +1511,27 @@ D5
 
 当前下一步：
 
-# **D1 — Execution Spine Design**
+# **D2 — Search Invocation Spine**
 
-讨论并完成 D1 — Execution Spine 的 Detailed Contract Semantics，最终形成：
-
-```text
-contracts/01_EXECUTION_SPINE.md
-```
-
-第一步不是写 Python，也不是一次性设计 C1、C2b、C2a 的完整 Schema。
-
-设计入口仍然从以下接缝开始观察：
+对应：
 
 ```text
-Application
+C3
+Search Capability Contract
 
-↓
++
 
-C1 Task Execution Boundary
-
-↓
-
-Task Runtime
+C4a
+Provider Resolution Boundary
 ```
 
-开始。
+不要提前写：
 
-首先回答：
+```text
+D2 completed
+```
 
-> **C1 Task Execution Boundary 最小必须承诺什么系统语义？**
+不要创建 D2 文档。
 
 同时观察它和：
 
