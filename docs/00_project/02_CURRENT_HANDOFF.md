@@ -53,12 +53,12 @@ inventory, a framework, or the current source-tree scaffold.
 ### Current Major Phase
 
 ```text
-Minimum Scrape Creators Endpoint Selection
+Minimal Software Architecture
 = AUTHORIZED NEXT
 ```
 
-The current phase determines the smallest Provider endpoint subset required by
-the already-defined First Research Slice and its stable Contract semantics.
+The current phase determines how the already-defined First Research Slice and
+stable Contract semantics are represented in software.
 
 ### Explicit Current Status
 
@@ -78,8 +78,20 @@ Consistency Refinement Sync
 Consistency Re-check
 = PASS
 
-Minimum Scrape Creators Endpoint Selection
-= AUTHORIZED NEXT
+Minimum Endpoint Candidate Screening
+= COMPLETE
+
+TT-17 Endpoint Admission Review
+= PASS_WITH_LIMITATIONS
+
+Minimum Endpoint Subset
+= {TT-17 Search by Keyword}
+
+Minimum Endpoint Selection
+= CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
+
+Current Next
+= Minimal Software Architecture
 ```
 
 Software Architecture
@@ -684,7 +696,6 @@ summary is a navigation aid and is not a new backlog.
 
 ### 11.1 NOT YET DESIGNED
 
-- Minimum Scrape Creators Endpoint Selection: authorized next, design not yet started;
 - exact Search software fields and schemas;
 - exact Evidence / Research Result software model;
 - exact Execution Record software model;
@@ -692,8 +703,8 @@ summary is a navigation aid and is not a new backlog.
 - exact Runtime state taxonomy;
 - exact retention lifecycle and duration;
 - Application interaction and transport;
-- Software Architecture;
-- detailed Provider endpoint subset.
+- Software Architecture: NOT YET DESIGNED;
+- additional Provider endpoint subsets beyond TT-17.
 
 ### 11.2 NOT YET PROVEN
 
@@ -857,15 +868,14 @@ Design Ecommerce AI OS around them
 
 ## 14. Current Next
 
-### Minimum Scrape Creators Endpoint Selection
+### Minimal Software Architecture
 
 ```text
 Status
 = AUTHORIZED NEXT
 
-Goal
-= Determine the smallest Scrape Creators endpoint subset required to satisfy
-  the current First Research Slice.
+Precondition
+= Minimum Endpoint Selection CLOSED
 ```
 
 The decision sequence is:
@@ -883,12 +893,15 @@ C4b Adapter Obligations
     ↓
 Provider Lab Facts
     ↓
-Minimum Endpoint Subset
+Minimum Endpoint Subset = {TT-17 Search by Keyword}
+    ↓
+Minimal Software Architecture
 ```
 
-## 15. Questions For The Next Stage
+## 15. Historical Endpoint Selection Questions
 
-The next chat must answer these questions. This Handoff does not answer them:
+The following questions record the completed Endpoint Selection stage; they do
+not define the current Minimal Software Architecture phase:
 
 1. Which Provider Facts does the First Slice actually need?
 2. Which Provider Facts are mandatory?
@@ -905,9 +918,10 @@ The next chat must answer these questions. This Handoff does not answer them:
 13. What is the minimum endpoint subset?
 14. Is that subset sufficient for the later Walking Slice?
 
-## 16. Next Stage Prohibitions
+## 16. Historical Endpoint Selection Guardrails
 
-During Minimum Endpoint Selection:
+The following guardrails record the completed Endpoint Selection stage and do
+not define the current phase:
 
 ```text
 DO NOT WRITE CODE
@@ -940,23 +954,24 @@ Use these real repository paths. The order is intentionally staged.
 4. `docs/01_product/00_PRODUCT_ARCHITECTURE.md`
 5. `docs/02_system/00_SYSTEM_ARCHITECTURE.md`
 6. `docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md`
-7. `docs/02_system/vertical_slices/01_research_execution/contracts/00_CONTRACT_DESIGN_INDEX.md`
-8. `docs/02_system/vertical_slices/01_research_execution/contracts/06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md`
-9. `docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md`
+7. `docs/03_software/01_MINIMAL_SOFTWARE_ARCHITECTURE_PHASE_HANDOFF.md`
+8. `docs/02_system/vertical_slices/01_research_execution/contracts/00_CONTRACT_DESIGN_INDEX.md`
+9. `docs/02_system/vertical_slices/01_research_execution/contracts/06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md`
+10. `docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md`
 
-### Tier 2 — Required For Current Endpoint Selection
+### Tier 2 — Required For TT-17 Closure Context
 
-10. `docs/02_system/vertical_slices/01_research_execution/contracts/02_SEARCH_INVOCATION.md`
-11. `docs/02_system/vertical_slices/01_research_execution/contracts/03_RESEARCH_SEMANTICS.md`
-12. `docs/02_system/vertical_slices/01_research_execution/contracts/05_PROVIDER_MAPPING.md`
+11. `docs/02_system/vertical_slices/01_research_execution/contracts/02_SEARCH_INVOCATION.md`
+12. `docs/02_system/vertical_slices/01_research_execution/contracts/03_RESEARCH_SEMANTICS.md`
+13. `docs/02_system/vertical_slices/01_research_execution/contracts/05_PROVIDER_MAPPING.md`
 
 ### Tier 3 — Read On Demand
 
-13. `docs/02_system/vertical_slices/01_research_execution/01_SLICE_BUSINESS_BOUNDARY.md`
-14. `docs/02_system/vertical_slices/01_research_execution/04_CONTRACT_INVENTORY.md`
-15. `docs/02_system/vertical_slices/01_research_execution/05_DEFERRED_REGISTER.md`
-16. `docs/02_system/vertical_slices/01_research_execution/contracts/01_EXECUTION_SPINE.md`
-17. `docs/02_system/vertical_slices/01_research_execution/contracts/04_EXECUTION_RECORD.md`
+14. `docs/02_system/vertical_slices/01_research_execution/01_SLICE_BUSINESS_BOUNDARY.md`
+15. `docs/02_system/vertical_slices/01_research_execution/04_CONTRACT_INVENTORY.md`
+16. `docs/02_system/vertical_slices/01_research_execution/05_DEFERRED_REGISTER.md`
+17. `docs/02_system/vertical_slices/01_research_execution/contracts/01_EXECUTION_SPINE.md`
+18. `docs/02_system/vertical_slices/01_research_execution/contracts/04_EXECUTION_RECORD.md`
 
 The upstream package guide is:
 `docs/02_system/vertical_slices/01_research_execution/00_READ_ME_FIRST.md`.
@@ -978,11 +993,23 @@ Architecture V0.2, or the 9 Required Contracts.
 Current completed stage:
 System Detailed Contract Design = COMPLETE / CONSISTENCY REVIEWED
 
+Current Major Phase:
+Minimal Software Architecture
+
 Current next:
-Minimum Scrape Creators Endpoint Selection
+Minimal Software Architecture
+
+Minimum Endpoint Selection:
+CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
+
+Minimum Endpoint Subset:
+{TT-17 Search by Keyword}
+
+TT-17 Admission:
+PASS_WITH_LIMITATIONS
 
 Do not write code.
-Do not design Software Architecture yet.
+Do not begin Walking Implementation before Minimal Software Architecture review passes.
 
 First report your understanding of:
 - current project state;
@@ -1044,8 +1071,20 @@ Walking Implementation
 Detailed Contract Design Package
     = COMPLETE / CONSISTENCY REVIEWED
 
-Minimum Scrape Creators Endpoint Selection
-    = AUTHORIZED NEXT
+Minimum Endpoint Candidate Screening
+    = COMPLETE
+
+TT-17 Endpoint Admission Review
+    = PASS_WITH_LIMITATIONS
+
+Minimum Endpoint Subset
+    = {TT-17 Search by Keyword}
+
+Minimum Endpoint Selection
+    = CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
+
+Current Major Phase / Current Next
+    = Minimal Software Architecture
 ```
 
 ## 21. Authority Boundary

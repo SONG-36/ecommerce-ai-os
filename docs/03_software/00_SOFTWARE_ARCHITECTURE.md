@@ -54,9 +54,11 @@ Code / Schema / Tests
 
 - Product Architecture 已有工作基线；
 - System Architecture V0.2 已完成当前 Candidate 边界收敛，但仍不是 Approved；
-- System Detailed Contracts 尚未设计；
-- Capability / Provider / Skill Contract 尚未设计；
-- 选定 Vertical Slice 所需的 Minimal Software Architecture 尚未设计；
+- First Slice Planning = COMPLETE；
+- System Detailed Contract Design = COMPLETE / CONSISTENCY REVIEWED；
+- Minimum Endpoint Selection = CLOSED；
+- 选定 Vertical Slice 所需的 Minimal Software Architecture 已 AUTHORIZED NEXT FOR FIRST SLICE；
+- Global / final Ecommerce AI OS Software Architecture = still NOT YET DESIGNED；
 - 现在过早冻结软件架构会反过来污染 System Architecture。
 
 ---

@@ -3,7 +3,7 @@
 - **项目（Project）**：Ecommerce AI OS
 - **垂直切片（Vertical Slice）**：First Research Execution
 - **业务场景（Business Scenario）**：US / Car Vacuum / TikTok Content Research
-- **阶段（Phase）**：System Detailed Contract Design
+- **阶段（Phase）**：Minimal Software Architecture
 - **状态（Status）**：Working Navigation / Design Index
 - **架构权威（Architecture Authority）**：No
 
@@ -11,11 +11,7 @@
 
 # 0. 文档目的（Document Purpose）
 
-本文件是 First Research Vertical Slice 进入：
-
-# **System Detailed Contract Design**
-
-之后的阶段导航入口。
+本文件是 First Research Vertical Slice 在 Detailed Contract Design 完成后，进入 Minimal Software Architecture 的阶段导航入口。
 
 它只负责：
 
@@ -111,7 +107,7 @@ COMPLETE
 
 当前阶段：
 
-# **System Detailed Contract Design**
+# **Minimal Software Architecture**
 
 Round 6 已经确认：
 
@@ -120,6 +116,21 @@ First Vertical Slice Planning
 = COMPLETE
 
 System Detailed Contract Design
+= COMPLETE / CONSISTENCY REVIEWED
+
+Minimum Endpoint Candidate Screening
+= COMPLETE
+
+TT-17 Endpoint Admission Review
+= PASS_WITH_LIMITATIONS
+
+Minimum Endpoint Subset
+= {TT-17 Search by Keyword}
+
+Minimum Endpoint Selection
+= CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
+
+Minimal Software Architecture
 = AUTHORIZED NEXT PHASE
 
 Software Architecture
@@ -164,7 +175,7 @@ First Vertical Slice Planning
 
 ↓
 
-System Detailed Contract Design
+Minimal Software Architecture
 ← CURRENT
 
 ↓
@@ -386,7 +397,7 @@ flowchart TD
 
     REVIEW["Detailed Contract 全包一致性审核<br/>（Consistency Review）"]
 
-    ENDPOINTS["Minimum Scrape Creators<br/>Endpoint Selection"]
+    ENDPOINTS["Minimum Endpoint Selection<br/>CLOSED"]
 
     SW["Minimal Software Architecture"]
 
@@ -890,17 +901,19 @@ Search Capability
 
 # 14. 最小 Endpoint 选择（Minimum Endpoint Selection）
 
-当前：
+当前 closure：
 
 ```text
-Minimum Scrape Creators Endpoint Selection
-=
-NOT YET DESIGNED
+Minimum Endpoint Candidate Screening
+= COMPLETE
+
+Minimum Endpoint Selection
+= CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
 ```
 
-但它不是现在立即开始的工作。
+此处记录 downstream phase decision / status，不创建 standalone Endpoint Selection document。
 
-必须等：
+该 closure 记录的依据包括：
 
 ```text
 Detailed Search Contract
@@ -914,7 +927,7 @@ Detailed Evidence Requirements
 Adapter Obligations
 ```
 
-足够明确以后，再根据 Provider Lab Facts 选择最小 endpoint subset。
+这些边界已足够明确，并已结合 Provider Lab Facts 形成最小 endpoint subset。
 
 正确顺序：
 
@@ -1528,15 +1541,45 @@ Detailed Semantics Covered
 
 当前下一步：
 
-# **Minimum Scrape Creators Endpoint Selection**
+# **Minimal Software Architecture**
 
-状态：
+阶段状态：
 
 ```text
-AUTHORIZED NEXT
+Minimum Endpoint Candidate Screening
+= COMPLETE
+
+TT-17 Endpoint Admission Review
+= PASS_WITH_LIMITATIONS
+
+Minimum Endpoint Subset
+= {TT-17 Search by Keyword}
+
+Minimum Endpoint Selection
+= CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
+
+Current Next
+= Minimal Software Architecture
+
+Walking Implementation
+= NOT YET AUTHORIZED
 ```
 
-不要创建 Endpoint Selection 文件。
+TT-17 minimum closure summary：
+
+```text
+query = admitted
+region = bounded
+pagination = verified
+duplicates = known
+missingness = known
+hard cap = unknown
+date_posted = unverified optional semantic
+sort_by = unverified optional semantic
+global completeness = not guaranteed
+```
+
+NO standalone Endpoint Selection document is created. This Endpoint Selection outcome is recorded here as a downstream phase decision / status record; it does not modify C3/C4a/C4b/C5 semantics.
 
 ---
 
@@ -1667,7 +1710,7 @@ PASS
 
 Current Next
 =
-Minimum Scrape Creators Endpoint Selection
+Minimal Software Architecture
 ```
 
 下一阶段仍然不直接进入 Software Architecture 或 Walking Implementation：
