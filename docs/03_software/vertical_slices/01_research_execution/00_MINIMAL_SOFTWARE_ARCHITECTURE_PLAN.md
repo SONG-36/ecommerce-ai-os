@@ -3,9 +3,8 @@
 - Phase: Minimal Software Architecture
 - Slice: US / Car Vacuum / TikTok Content Research
 - Status: Active Planning
-- Step 1–5: CANDIDATE COMPLETE
-- Step 6: NEXT
-- Step 7: PLANNED
+- Step 1–6: CANDIDATE COMPLETE
+- Step 7: NEXT
 - Architecture Authority: No
 - Walking Implementation: NOT YET AUTHORIZED
 - Upstream:
@@ -366,7 +365,7 @@ Step 5 freezes retention / referenceability requirements. Step 6 chooses the min
 
 ## Step 6 — Minimal Software Architecture Assembly + Representation Closure
 
-Status: NEXT
+Status: CANDIDATE COMPLETE
 
 Inputs:
 
@@ -398,17 +397,45 @@ Step 6
 for the First Slice only
 ```
 
-Step 6 must be based on Step 5 retention requirements, not reopen retention semantics. Candidate concrete representations may be compared, including retained memory、local file、JSON representation、SQLite or another minimal representation；this Plan does not select one。
+Step 6 is based on Step 5 retention requirements and does not reopen retention semantics. The selected First-Slice representation is the minimum implementation-ready shape recorded in the Step 6 assembly document.
 
-此时才允许审查当前 `src` scaffold 是否保留或调整。
+The empty current `src` scaffold is not Architecture Authority and does not constrain the selected target shape.
 
-Output: Not Yet Created
+### Step 6 Closure Summary
+
+```text
+Package Boundaries = CLOSED FOR FIRST SLICE
+Module Boundaries = CLOSED FOR FIRST SLICE
+Callable / Interface Representation = CLOSED
+Dependency Direction = CLOSED
+Dependency Injection = CLOSED → manual constructor injection
+Sync / Async = CLOSED → SYNC
+Application Transport = CLOSED → THIN CLI
+Provider Access = CLOSED → SYNC STDLIB HTTP
+Stable Model Strategy = CLOSED → DATACLASS
+Retention Representation = CLOSED → LOCAL JSON EXECUTION BUNDLE
+
+Database = NOT REQUIRED
+Framework = NOT REQUIRED
+Repository / Recorder / Resolver = NOT REQUIRED
+Event Bus / Async Architecture = NOT REQUIRED
+New Contract = NO
+System Architecture Reopen = NO
+Current empty src scaffold ≠ Architecture Authority
+Walking Implementation = STILL NOT YET AUTHORIZED
+```
+
+Step 6 is complete as a Minimal Software Architecture Candidate. It does not perform the Step 7 Review Gate and does not authorize Walking Implementation.
+
+Output:
+
+`06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
 
 ---
 
 ## Step 7 — Minimal Software Architecture Review Gate
 
-Status: PLANNED
+Status: NEXT
 
 Goal:
 
@@ -465,6 +492,8 @@ Only PASS / accepted refinements may authorize:
 Walking Implementation
 ```
 
+Step 7 remains a Human Review Gate for the assembled Steps 1–6 candidate. It is not executed in this plan update, and its document is not created until Step 7 begins.
+
 ---
 
 # 4. Documentation Progress Rule
@@ -480,9 +509,10 @@ Current created set:
 03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md
 04_RESEARCH_EVIDENCE_SOFTWARE_DESIGN.md
 05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md
+06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
 ```
 
-Step 6–7 documents are not created until those Steps begin.
+The Step 7 document is not created until Step 7 begins.
 
 ---
 
@@ -490,7 +520,7 @@ Step 6–7 documents are not created until those Steps begin.
 
 Current Step:
 
-Step 6 — Minimal Software Architecture Assembly + Representation Closure
+Step 7 — Minimal Software Architecture Review Gate
 
 Status:
 
@@ -504,11 +534,12 @@ Step 2 — CANDIDATE COMPLETE
 Step 3 — CANDIDATE COMPLETE
 Step 4 — CANDIDATE COMPLETE
 Step 5 — CANDIDATE COMPLETE
+Step 6 — CANDIDATE COMPLETE
 ```
 
 Next Action:
 
-Begin Step 6 only after the current Step 1–5 candidate outputs remain aligned
+Begin Step 7 only after the assembled Step 1–6 candidate remains aligned
 with the existing Contract and scope guardrails.
 
 ---
@@ -544,17 +575,15 @@ D1–D5
 TT-17 semantics
 ```
 
-本计划更新不引入：
+本计划同步不独立引入：
 
 ```text
 new Contracts
 new Services
-frameworks
-DB choices
-package/module choices
-sync/async choices
 implementation code
 ```
+
+Step 6 的 package/module、callable、dependency、sync/async、transport、provider-access、model、retention representation decisions 以 `06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md` 为准；本计划只同步其状态与导航。
 
 当前状态仍为：
 
@@ -574,8 +603,8 @@ Walking Implementation = NOT YET AUTHORIZED
 | 3 | Search / Provider Spine Software Design | **CANDIDATE COMPLETE** | `03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md` |
 | 4 | Research / Evidence Software Design | **CANDIDATE COMPLETE** | `04_RESEARCH_EVIDENCE_SOFTWARE_DESIGN.md` |
 | 5 | Execution Record / Referenceability | **CANDIDATE COMPLETE** | `05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md` |
-| 6 | Minimal Software Architecture Assembly + Representation Closure | **NEXT** | Not Yet Created |
-| 7 | Minimal Software Architecture Review Gate | **PLANNED** | Not Yet Created |
+| 6 | Minimal Software Architecture Assembly + Representation Closure | **CANDIDATE COMPLETE** | `06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md` |
+| 7 | Minimal Software Architecture Review Gate | **NEXT** | Not Yet Created |
 
 ---
 
@@ -583,7 +612,7 @@ Walking Implementation = NOT YET AUTHORIZED
 
 ```text
 Minimal Software Architecture
-= ACTIVE DESIGN PHASE
+= ACTIVE DESIGN / REVIEW PHASE
 
 Step 1
 = CANDIDATE COMPLETE
@@ -611,10 +640,12 @@ Output
 = 05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md
 
 Step 6
-= NEXT
+= CANDIDATE COMPLETE
+Output
+= 06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
 
 Step 7
-= PLANNED
+= NEXT
 
 Architecture Authority
 = No
@@ -630,10 +661,10 @@ Walking Implementation
 本阶段完成条件：
 
 ```text
-Step 1–5
+Step 1–6
 → Reviewed
 
-Step 6
+Step 1–6
 → Minimal Software Architecture Candidate
 
 Step 7
