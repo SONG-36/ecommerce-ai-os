@@ -2,11 +2,14 @@
 
 - Phase: Minimal Software Architecture
 - Slice: US / Car Vacuum / TikTok Content Research
-- Status: Active Planning
-- Step 1–6: CANDIDATE COMPLETE
-- Step 7: NEXT
+- Status: REVIEW COMPLETE
+- Step 1–5: CANDIDATE COMPLETE
+- Step 6: CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW
+- Step 7: PASS
+- Minimal Software Architecture: REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 - Architecture Authority: No
 - Walking Implementation: NOT YET AUTHORIZED
+- Current Next: Walking Implementation Authorization Decision
 - Upstream:
   - `01_MINIMAL_SOFTWARE_ARCHITECTURE_PHASE_HANDOFF.md`
   - `06_ARCHITECTURE_REVIEW.md`
@@ -404,6 +407,29 @@ The empty current `src` scaffold is not Architecture Authority and does not cons
 ### Step 6 Closure Summary
 
 ```text
+First Slice software shape = implementation-ready Candidate
+Python stdlib-first
+
+C1 → TaskRuntime.execute(...)
+C2a → ResearchSkill Protocol
+C2a ↔ C2b → ResearchExecutionPort
+C3 → SearchCapability Protocol
+C4a → composition-time static binding
+C4b → ScrapeCreatorsAdapter
+Provider access → ScrapeCreatorsAccess → synchronous stdlib HTTP
+
+Dataclass
+Manual DI
+Composition Root
+Sync
+Thin CLI
+AppConfig
+Local JSON Execution Bundle
+STAGING → FINALIZED/PUBLISHED
+No DB
+No Repository
+No Service expansion
+
 Package Boundaries = CLOSED FOR FIRST SLICE
 Module Boundaries = CLOSED FOR FIRST SLICE
 Callable / Interface Representation = CLOSED
@@ -431,11 +457,38 @@ Output:
 
 `06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
 
+### Step 7 Refinement Sync Summary
+
+```text
+S7-R1 ~ S7-R10 = RESOLVED
+
+SkillDeclaration
+ResearchCompletion
+PreExecutionRejection | TerminalReturn
+SearchInvocationContext
+runtime-private ExecutionAbort
+actual Provider provenance
+runtime bundle Git / credential safety invariant
+bounded SearchResult
+owner-local component version refs
+RawProviderResultRef ownership
+
+Representation Refinement Sync = COMPLETE
+Package Tree Change = NO
+New Contract = NO
+New Service = NO
+Architecture Reopen = NO
+```
+
+Detailed record:
+
+`06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
+
 ---
 
 ## Step 7 — Minimal Software Architecture Review Gate
 
-Status: NEXT
+Status: PASS
 
 Goal:
 
@@ -476,7 +529,9 @@ Application
 → C1
 ```
 
-Output: Not Yet Created
+Output:
+
+`07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md`
 
 Possible Verdict:
 
@@ -492,7 +547,52 @@ Only PASS / accepted refinements may authorize:
 Walking Implementation
 ```
 
-Step 7 remains a Human Review Gate for the assembled Steps 1–6 candidate. It is not executed in this plan update, and its document is not created until Step 7 begins.
+Step 7 is a Human Review Gate for the assembled Steps 1–6 candidate. Step 7 PASS does not automatically authorize Walking Implementation; authorization remains a separate explicit human decision.
+
+### Step 7 Closure Summary
+
+```text
+Initial Review Verdict = PASS_WITH_REFINEMENTS_REQUIRED
+Refinement Set = S7-R1 ~ S7-R10
+Step 6 Refinement Sync = COMPLETE
+Final Consistency Re-check = PASS
+G1 ~ G15 = PASS
+
+Architecture Reopen = NO
+Product Architecture Reopen = NO
+System Architecture Reopen = NO
+Contract Inventory Reopen = NO
+New Contract Required = NO
+New Service Required = NO
+Step 6 Structural Redesign = NO
+Minimal Software Architecture = REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
+```
+
+Detailed Review Record:
+
+`07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md`
+
+### Review Gate Summary
+
+```text
+G1 First Slice Scope Integrity = PASS
+G2 Product / System Architecture Preservation = PASS
+G3 D1–D5 Contract Preservation = PASS
+G4 Responsibility → Software Representation Consistency = PASS
+G5 Runtime / Call Graph Closure = PASS
+G6 Failure Path Closure = PASS
+G7 Provider Isolation = PASS
+G8 Research / Evidence Semantic Integrity = PASS
+G9 Execution Record / Retention Integrity = PASS
+G10 Dependency DAG Integrity = PASS
+G11 No Contract → Service Mechanical Expansion = PASS
+G12 Representation Closure Sufficiency = PASS
+G13 Walking Implementation Readiness = PASS
+G14 Deferred / Not Yet Proven Guardrail Preservation = PASS
+G15 TT-17 Bounded Semantics Preservation = PASS
+```
+
+`G13 Implementation Readiness = PASS` does not mean `Walking Implementation = AUTHORIZED`.
 
 ---
 
@@ -510,21 +610,22 @@ Current created set:
 04_RESEARCH_EVIDENCE_SOFTWARE_DESIGN.md
 05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md
 06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
+07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md
 ```
 
-The Step 7 document is not created until Step 7 begins.
+Step documents were created incrementally under the “讨论到哪，文件建到哪” principle.
 
 ---
 
 # 5. Current Progress
 
-Current Step:
+Current Next:
 
-Step 7 — Minimal Software Architecture Review Gate
+Walking Implementation Authorization Decision
 
 Status:
 
-NEXT
+REVIEW COMPLETE
 
 Completed candidate steps:
 
@@ -534,13 +635,13 @@ Step 2 — CANDIDATE COMPLETE
 Step 3 — CANDIDATE COMPLETE
 Step 4 — CANDIDATE COMPLETE
 Step 5 — CANDIDATE COMPLETE
-Step 6 — CANDIDATE COMPLETE
+Step 6 — CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW
+Step 7 — PASS
 ```
 
 Next Action:
 
-Begin Step 7 only after the assembled Step 1–6 candidate remains aligned
-with the existing Contract and scope guardrails.
+Make a separate explicit Walking Implementation Authorization decision.
 
 ---
 
@@ -603,8 +704,8 @@ Walking Implementation = NOT YET AUTHORIZED
 | 3 | Search / Provider Spine Software Design | **CANDIDATE COMPLETE** | `03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md` |
 | 4 | Research / Evidence Software Design | **CANDIDATE COMPLETE** | `04_RESEARCH_EVIDENCE_SOFTWARE_DESIGN.md` |
 | 5 | Execution Record / Referenceability | **CANDIDATE COMPLETE** | `05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md` |
-| 6 | Minimal Software Architecture Assembly + Representation Closure | **CANDIDATE COMPLETE** | `06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md` |
-| 7 | Minimal Software Architecture Review Gate | **NEXT** | Not Yet Created |
+| 6 | Minimal Software Architecture Assembly + Representation Closure | **CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW** | `06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md` |
+| 7 | Minimal Software Architecture Review Gate | **PASS** | `07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md` |
 
 ---
 
@@ -612,7 +713,7 @@ Walking Implementation = NOT YET AUTHORIZED
 
 ```text
 Minimal Software Architecture
-= ACTIVE DESIGN / REVIEW PHASE
+= REVIEW COMPLETE
 
 Step 1
 = CANDIDATE COMPLETE
@@ -640,18 +741,30 @@ Output
 = 05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md
 
 Step 6
-= CANDIDATE COMPLETE
+= CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW
 Output
 = 06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
 
 Step 7
-= NEXT
+= PASS
+
+Final Consistency Re-check
+= PASS
+
+Output
+= 07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md
+
+Minimal Software Architecture
+= REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 
 Architecture Authority
 = No
 
 Walking Implementation
 = NOT YET AUTHORIZED
+
+Current Next
+= Walking Implementation Authorization Decision
 ```
 
 ---
@@ -661,14 +774,20 @@ Walking Implementation
 本阶段完成条件：
 
 ```text
-Step 1–6
+Step 1–5
 → Reviewed
 
-Step 1–6
+Step 6
 → Minimal Software Architecture Candidate
 
 Step 7
 → Review PASS
+
+Final Consistency Re-check
+→ PASS
+
+Walking Implementation Authorization
+→ Separate explicit human decision
 ```
 
 之后才允许：

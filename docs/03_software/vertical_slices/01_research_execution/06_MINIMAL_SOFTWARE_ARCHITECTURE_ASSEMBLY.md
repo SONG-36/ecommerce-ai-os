@@ -3,11 +3,30 @@
 - **Project**: Ecommerce AI OS
 - **Phase**: Minimal Software Architecture
 - **Step**: 6 — Minimal Software Architecture Assembly + Representation Closure
-- **Status**: Candidate / Step 6 Complete
+- **Status**: Candidate / Step 6 Complete / Refined after Step 7 Review
 - **Architecture Authority**: No
 - **Slice**: US / Car Vacuum / TikTok Content Research
 - **Walking Implementation**: NOT YET AUTHORIZED
-- **Current Next**: Step 7 — Minimal Software Architecture Review Gate
+- **Current Next**: Step 7 — Consistency Re-check
+
+Initial Step 7 Review Verdict: `PASS_WITH_REFINEMENTS_REQUIRED`
+
+Step 7 Refinement Set: `S7-R1 ~ S7-R10`
+
+Step 6 Representation Refinement Sync: `COMPLETE`
+
+Current Review State: `AWAITING STEP 7 CONSISTENCY RE-CHECK`
+
+```text
+Architecture Reopen = NO
+Product Architecture Reopen = NO
+System Architecture Reopen = NO
+Contract Inventory Reopen = NO
+New Contract Required = NO
+Step 6 Structural Redesign = NO
+Step 6 Representation Refinement Sync = COMPLETE
+Walking Implementation = NOT YET AUTHORIZED
+```
 
 ---
 
@@ -126,8 +145,8 @@ The First Slice uses six cohesive package families:
 | **Runtime** | Execution establishment, coordination, terminalization, C6 facts/finalization, retention | C1/C2b/C6 runtime-facing behavior | Not a generic workflow engine or provider registry |
 | **Research** | Research Skill, research-owned seams, evidence/result semantics, car-vacuum TikTok method | C2a/C5a/C5b | Not a second runtime or provider access layer |
 | **Search** | Provider-neutral Search request, outcomes, seam, and codecs | C3 | Not a SearchService runtime object |
-| **Provider Integration** | Scrape Creators adapter, access seam, HTTP client, TT-17 translation | C4a/C4b/provider access | Not a generic transport platform |
-| **Composition / Configuration** | `AppConfig` and static concrete wiring | Composition root | Not runtime orchestration or a service locator |
+| **Provider Integration** | C4b `ScrapeCreatorsAdapter`, Provider Access / Integration implementation, HTTP client, TT-17 translation | C4b/provider access | Not a generic transport platform |
+| **Composition / Configuration** | C4a static Search → Scrape Creators binding, `AppConfig`, and concrete wiring | Composition root | Not runtime orchestration or a service locator |
 
 Package families are not runtime services. They are not one-to-one copies of System Architecture layers and are not one-to-one copies of Contract IDs. One package family may carry several related responsibilities without merging their semantics; a Contract may be represented by a Protocol, a callable owner, a binding, a stable value, or bounded behavior without creating a new package or class.
 
@@ -221,17 +240,25 @@ ScrapeCreatorsAdapter = current concrete implementation behind the C3 seam
 Only the following conceptual signatures are needed to explain the selected representation; they are not implementation code:
 
 ```python
+class ResearchSkill(Protocol):
+    declaration: SkillDeclaration
+    def run(self, port: ResearchExecutionPort) -> ResearchCompletion: ...
+
 class SearchCapability(Protocol):
-    def search(self, request: SearchRequest) -> SearchResult | SearchFailure: ...
+    def search(
+        self,
+        request: SearchRequest,
+        context: SearchInvocationContext,
+    ) -> SearchResult | SearchFailure: ...
 
 class ResearchExecutionPort(Protocol):
     def search(self, request: SearchRequest) -> SearchResult | SearchFailure: ...
 
 class TaskRuntime:
-    def execute(self, work_request: BusinessWorkRequest) -> TerminalReturn: ...
+    def execute(self, work_request: BusinessWorkRequest) -> TaskExecutionResponse: ...
 ```
 
-The concrete `ScrapeCreatorsAdapter` satisfies `SearchCapability` by shape. There is no `SearchCapability` instance forwarding to a `SearchService`, then to an adapter.
+The concrete `ScrapeCreatorsAdapter` satisfies `SearchCapability` by shape. There is no `SearchCapability` instance forwarding to a `SearchService`, then to an adapter. `ResearchSkill.run(...)` returns the C2a Business Completion handoff described below; it does not create a second completion abstraction.
 
 ---
 
@@ -245,6 +272,7 @@ CLI
 → TaskRuntime creates ExecutionContext
 → TaskRuntime creates execution-scoped RuntimeResearchExecutionPort
 → concrete Research Skill                           C2a
+→ TaskRuntime validates SkillDeclaration
 → ResearchExecutionPort.search(...)                C2a ↔ C2b seam
 → TaskRuntime-controlled capability invocation     C2b
 → dependency typed as SearchCapability             C3
@@ -294,8 +322,7 @@ sequenceDiagram
     participant CTX as ExecutionContext
     participant PORT as RuntimeResearchExecutionPort
     participant SKILL as Concrete Research Skill (C2a)
-    participant SEARCH as SearchCapability seam (C3)
-    participant ADAPTER as ScrapeCreatorsAdapter (C4b)
+    participant ADAPTER as ScrapeCreatorsAdapter (C4b / C3 implementation)
     participant ACCESS as ScrapeCreatorsAccess
     participant HTTP as ScrapeCreatorsHttpClient
     participant TT17 as TT-17
@@ -307,26 +334,26 @@ sequenceDiagram
     RT->>SKILL: invoke research method(port)
     SKILL->>PORT: search(request)
     PORT->>RT: request capability invocation
-    RT->>SEARCH: invoke typed SearchCapability
-    SEARCH->>ADAPTER: concrete implementation call
+    RT->>ADAPTER: invoke through dependency typed as SearchCapability
     ADAPTER->>ACCESS: provider-specific access
     ACCESS->>HTTP: synchronous HTTP operation
     HTTP->>TT17: admitted TT-17 request
     TT17-->>HTTP: raw response
     HTTP-->>ACCESS: raw provider response
     ACCESS-->>ADAPTER: raw access result
-    ADAPTER-->>SEARCH: SearchResult or SearchFailure
-    SEARCH-->>RT: typed outcome
+    ADAPTER-->>RT: SearchResult or SearchFailure
     RT-->>PORT: return to same Execution
     PORT-->>SKILL: outcome
     SKILL->>SKILL: sampling, Evidence, Finding, Hypothesis, Research Result
-    SKILL-->>RT: Business Completion or business outcome
+    SKILL-->>RT: ResearchCompletion
+    RT->>RT: recognize Business Completion
+    RT->>RT: serialize separately owned Research facts
     RT->>C6: terminalize and finalize C6
     C6-->>RT: published Record Ref or closure failure
-    RT-->>CLI: TerminalReturn
+    RT-->>CLI: TaskExecutionResponse
 ```
 
-The sequence is a responsibility/call view. It does not imply that a Protocol is an object in the chain or that C3, C4a, and C4b are three runtime services.
+The sequence is a responsibility/call view. `C3 SearchCapability` is a typed software seam, not a runtime hop. It does not imply that a Protocol is an object in the chain or that C3, C4a, and C4b are three runtime services.
 
 ---
 
@@ -346,6 +373,8 @@ The sequence is a responsibility/call view. It does not imply that a Protocol is
 10. `runtime` must not import the concrete car-vacuum skill or concrete provider implementation.
 11. Provider implementation must not import `runtime` or `research`.
 12. Only `composition.py` may know both concrete skill and concrete provider implementation.
+
+The refinement representations remain within the same DAG: `research` consumes provider-neutral `search.models`, `runtime` consumes the Research and Search seams/models, and provider integration remains below the Search boundary. `SearchInvocationContext` and its opaque capture capability do not create a reverse provider-to-runtime import. The added representations therefore introduce no import cycle.
 
 ### 7.2 Mermaid DAG
 
@@ -396,13 +425,21 @@ Frozen values are preferred for completed Search outcomes, Evidence, Findings, H
 |---|---|---|
 | `BusinessWorkRequest` | Runtime execution seam | Typed input admitted at C1; not an `Execution` |
 | `ExecutionContext` | Runtime | Execution-scoped mutable coordination context |
+| `PreExecutionRejection` | Runtime / C1 | Returned before the Execution Establishment Commit Boundary; no Execution or C6 record exists |
 | `TerminalReturn` | Runtime / C1 | Transport-neutral terminal return containing business outcome and execution outcome/reference |
+| `TaskExecutionResponse` | Runtime / C1 | `PreExecutionRejection \| TerminalReturn`; preserves pre-execution vs established-Execution distinction |
+| `ExecutionAbort` | Runtime-private C2b control | Private non-continuable failure unwind mechanism; not a Contract or public error |
+| `SkillDeclaration` | Research | Stable Research-owned `skill_id`, `skill_version`, and declared capabilities |
 | `ResearchSkill` Protocol | Research | C2a replacement/isolation seam |
+| `ResearchCompletion` | Research | In-memory C2a Business Completion handoff containing Research Result, Actual Sample Boundary, and admitted Evidence |
 | `ResearchExecutionPort` Protocol | Research | Small C2a↔C2b seam; not a new Contract |
 | `RuntimeResearchExecutionPort` | Runtime | Concrete execution-scoped port instance per Execution |
 | `SearchCapability` Protocol | Search | Provider-neutral C3 seam |
+| `SearchInvocationContext` | Search | Narrow execution-scoped C3 invocation context with opaque raw-capture capability |
+| `SearchInvocationProvenance` | Search | Provider-neutral actual invocation / resolution / result reference facts |
+| `RawProviderResultRef` | Search | Search-owned provider-neutral reference representation in `search/models.py` |
 | `SearchRequest` | Search | Provider-neutral request value |
-| `SearchResult` / `SearchFailure` | Search | Explicit typed C3 outcomes |
+| `SearchResult` / `SearchFailure` | Search | Explicit typed C3 outcomes with bounded retrieval semantics and invocation provenance |
 | `ActualSampleBoundary` | Research | Stable fact marking the actual selected research sample boundary |
 | `Evidence` / `EvidenceInadmissible` | Research | Local evidence outcome; semantic rejection is not malfunction |
 | `Finding` | Research | Evidence-backed interpretation owned by C2a research method |
@@ -426,6 +463,106 @@ SearchResult | SearchFailure
 
 A valid empty `SearchResult` is success. It is not converted to failure merely because zero results were found. Provider-specific exceptions terminate at C4b translation and become `SearchFailure` where the semantics call for a provider/search outcome. Unexpected programming or software defects may remain exceptions and are handled by C2b closure; no universal error taxonomy is invented.
 
+### 8.3.1 Bounded SearchResult representation
+
+`SearchResult` is not represented as only `list[SearchItem]`. Its stable Search-owned representation must be able to express these semantic categories without freezing unnecessary exact field names:
+
+1. Result identity.
+2. Ordered returned item occurrences, with duplicates preserved at the C3 retrieval level.
+3. Requested retrieval bound.
+4. Actual returned-set boundary, including returned occurrence count, observed/fetched pages, or actual traversal extent where known.
+5. Stopping reason.
+6. Provider-neutral continuation state.
+7. Known completeness / incompleteness semantics.
+8. Known missingness.
+9. Collection / observation context.
+10. Invocation provenance.
+
+```text
+duplicate occurrence != automatic noise
+C3 does not research-dedupe
+Research Skill owns research sampling / dedupe decisions
+```
+
+Provider cursor/token syntax remains below provider translation. The Research Skill receives no Scrape Creators cursor syntax. Provider traversal exhaustion is not global TikTok completeness; `has_more = false` does not prove that all relevant TikTok content was discovered. A `region = US` request does not prove the exact US population, and the current TT-17 observations preserve the following bounded limitations:
+
+```text
+two successful pages observed
+cross-page duplicates observed
+pagination termination = unverified
+hard cap = unknown
+exact region effect = unverified
+date_posted = unverified
+sort_by = unverified
+ranking semantics = unverified
+```
+
+These limitations remain expressible through SearchResult bounded-retrieval semantics and are available to the Research Skill without leaking provider-specific traversal syntax.
+
+### 8.3.2 Search invocation context and provenance
+
+The concrete C3 callable has the following semantics:
+
+```text
+SearchCapability.search(
+    SearchRequest,
+    SearchInvocationContext,
+)
+→ SearchResult | SearchFailure
+```
+
+`SearchInvocationContext` is an execution-scoped Search-owned context created by the Task Runtime / Runtime-controlled invocation path. It contains only narrowed values or callables that the current Search invocation genuinely requires. For the First Slice, this includes an opaque raw-result capture capability for bounded provenance.
+
+It is not a `GlobalContext`, `UniversalContextEnvelope`, `RuntimeContext` dump, `RetentionService`, `Repository`, or `Event Sink`.
+
+The invocation path is:
+
+```text
+TaskRuntime
+→ creates SearchInvocationContext
+→ SearchCapability
+→ ScrapeCreatorsAdapter
+→ TT-17 raw response
+→ opaque raw capture
+→ current Execution staging bundle
+→ RawProviderResultRef
+→ normalized SearchResult / SearchFailure
+```
+
+`RawProviderResultRef` is a Search-owned provider-neutral reference representation in `search/models.py`. It represents the stable reference fact created after C4b has made a bounded Raw Provider Result referenceable.
+
+```text
+RawProviderResultRef != raw payload
+RawProviderResultRef != storage path exposed as business semantics
+RawProviderResultRef != UniversalReference
+
+Runtime-provided opaque raw capture callable:
+input  → bounded raw provider response
+output → RawProviderResultRef
+```
+
+The raw-capture callable is provided by Runtime for the current Execution, while the resulting reference value is owned by Search. This preserves:
+
+```text
+providers.scrape_creators → search.models
+providers.scrape_creators ↛ runtime
+```
+
+This ownership refinement does not create an import cycle.
+
+`SearchInvocationProvenance` is provider-neutral and must carry enough actual invocation facts for C2b to record, where present:
+
+- actually resolved provider reference;
+- actually used provider reference when invocation occurred;
+- capability result reference when one exists;
+- raw result references when they exist.
+
+```text
+Configured Provider Binding != Resolved Provider != Actually Used Provider
+```
+
+C4a composition-time binding represents the configured/current legal binding only. Runtime must not infer the actual provider from `type(adapter)` or composition configuration. Provider resolution failure may have no actual used provider; provider invocation failure and successful Search have an actual provider when invocation occurred. Provider implementation does not import Runtime.
+
 ### 8.4 Evidence formalization outcome
 
 The local research outcome is:
@@ -447,7 +584,54 @@ while Execution Closure is failed because C6 finalization or publication failed.
 
 The Execution Outcome is required. A `Record Ref` may be absent on failed closure. C6 finalization failure is not silently reported as a clean successful execution, but it is not retroactively mislabeled as Research Business Failure when the business method already completed.
 
-### 8.6 Time representation
+The C1-facing callable returns one of two transport-neutral response representations:
+
+```text
+TaskRuntime.execute(...)
+→ TaskExecutionResponse
+
+TaskExecutionResponse
+= PreExecutionRejection | TerminalReturn
+```
+
+`PreExecutionRejection` is returned before the Execution Establishment Commit Boundary:
+
+```text
+Execution Establishment Commit Boundary not reached
+no Execution exists
+no execution_id
+no C6 Execution Record
+no record_ref
+```
+
+`TerminalReturn` is valid only after an Execution was established. It carries the Execution Outcome, may carry a Business Result, and may carry a Record Ref when finalization succeeded.
+
+```text
+Pre-execution rejection != Execution failure
+```
+
+There is no `TaskExecutionService`, `RejectionService`, or `GlobalResponseEnvelope`.
+
+### 8.6 Runtime-local execution abort
+
+After a `SearchFailure` enters C2b, C2b decides whether the failure is continuable:
+
+```text
+Continuable SearchFailure
+→ returned to the same Research Skill
+→ Skill may continue or choose a legal business alternative
+
+Non-continuable SearchFailure
+→ RuntimeResearchExecutionPort triggers private ExecutionAbort
+→ current Skill call unwinds
+→ TaskRuntime catches ExecutionAbort
+→ terminal failure
+→ C6 finalization
+```
+
+`ExecutionAbort` is a C2b-private control mechanism. It is not a Contract, SearchFailure, global error taxonomy, retry mechanism, or public Application error. It is not exposed to C3, C4b, Research Skill business semantics, or Application. Unexpected software defects may remain exceptions and are captured by TaskRuntime's execution-closure handling.
+
+### 8.7 Time representation
 
 - Internal times use timezone-aware `datetime`.
 - Canonical internal time is normalized to UTC.
@@ -455,17 +639,45 @@ The Execution Outcome is required. A `Record Ref` may be absent on failed closur
 - Publication Time, Observation Time, and Collection Time remain distinct.
 - A generic undifferentiated `timestamp` must not collapse their meanings.
 
-### 8.7 Missingness representation
+### 8.8 Missingness representation
 
 Known missingness remains explicit wherever the semantics require it. `None` alone must not erase known missingness semantics. The First Slice does not introduce a universal missingness framework or ontology; each owner preserves the missingness meaning relevant to its boundary.
 
-### 8.8 Internal and provider IDs
+### 8.9 Internal and provider IDs
 
 - Target-specific typed string IDs use `NewType` or an equivalent low-level typing convention where the distinction prevents accidental mixing.
 - Generated internal IDs are UUID4-backed opaque strings.
 - Provider IDs remain exact opaque provider strings.
 - Provider IDs are never converted to fake global IDs or numeric canonical forms.
 - No `UniversalReference` model or registry is introduced.
+
+### 8.10 Owner-local identity and version references
+
+The following stable owner-local identity/version references are explicit:
+
+```text
+Research Skill
+→ skill_id
+→ skill_version
+
+Search Capability
+→ capability_id
+→ capability_version
+
+Scrape Creators Adapter
+→ adapter_id
+→ adapter_version
+```
+
+These refs are stable, explicit, and owned by their respective semantic owner. C6 must record the actually used version refs, not every configured possible version. No Version Registry, Compatibility Service, Migration Framework, or Semantic Versioning Framework is introduced.
+
+```text
+schema_version != skill_version
+schema_version != capability_version
+schema_version != adapter_version
+```
+
+`schema_version` represents only the retained JSON representation version.
 
 ---
 
@@ -485,7 +697,7 @@ The composition root performs static wiring and configuration assembly only. It 
 
 ### 9.2 Static binding
 
-C4a is represented by the composition-time fact that the C3 `SearchCapability` seam is satisfied by the concrete `ScrapeCreatorsAdapter`. Skill extension is likewise static composition/registration for this slice. There is no hot-reload plugin runtime, provider resolver, or dynamic selection platform.
+C4a is represented by the composition-time fact that the C3 `SearchCapability` seam is satisfied by the concrete `ScrapeCreatorsAdapter`. Skill extension is likewise static composition/registration for this slice, with a bound `SkillDeclaration` checked before invocation. There is no `SkillRegistry`, hot-reload plugin runtime, provider resolver, or dynamic selection platform.
 
 ---
 
@@ -506,7 +718,7 @@ Each call to `TaskRuntime.execute(...)` receives its own `ExecutionContext` and 
 - C1 is a local Python callable on `TaskRuntime`.
 - The First Walking-Implementation Application is a thin CLI adapter.
 - The CLI uses stdlib `argparse`.
-- The CLI maps operator input to `BusinessWorkRequest`, calls the C1-facing runtime callable, and presents `TerminalReturn`.
+- The CLI maps operator input to `BusinessWorkRequest`, calls the C1-facing runtime callable, and presents `TaskExecutionResponse` (`PreExecutionRejection` or `TerminalReturn`).
 - The CLI does not know Scrape Creators, TT-17, provider internals, or research implementation details.
 - No HTTP, Web, Desktop, Chat, or application framework is selected.
 
@@ -564,6 +776,7 @@ The adapter may use an execution-scoped opaque raw-capture mechanism for bounded
 The Research Skill owns business method judgment:
 
 ```text
+SkillDeclaration representation
 relevance
 sampling
 deduplication
@@ -575,6 +788,115 @@ answerability / limitations
 Research Result formation
 Business Completion declaration
 ```
+
+### 14.1 SkillDeclaration
+
+`SkillDeclaration` is a stable Research-owned representation with the minimum semantic content:
+
+```text
+skill_id
+skill_version
+declared_capabilities
+```
+
+For the First Slice:
+
+```text
+declared_capabilities = {Search}
+```
+
+The `ResearchSkill` Protocol explicitly has both:
+
+```text
+declaration
+business execution method: run(...)
+```
+
+Before a real capability invocation, TaskRuntime verifies:
+
+```text
+requested capability ∈ bound Skill declared capabilities
+```
+
+```text
+Declared Capability Dependency
+!= Runtime Capability Need
+!= Actual Capability Invocation Fact
+```
+
+`SkillDeclaration` is representation only. It is not a `SkillRegistry`, Plugin Registry, Extension Runtime, Marketplace, or Dynamic Discovery mechanism.
+
+### 14.2 ResearchCompletion and Business Completion
+
+`ResearchSkill.run(...)` returns `ResearchCompletion`. This is the in-memory C2a Business Completion handoff and is the single completion representation for S7-R2 and S7-R7; no second Completion abstraction is introduced.
+
+Its minimum semantic content is:
+
+```text
+ResearchResult
+ActualSampleBoundary
+admitted Evidence
+```
+
+`ResearchCompletion` is not a new Contract, persistent business envelope, Artifact, Execution Record, or Research Service result wrapper. It does not require an independent JSON file. It hands C2a-owned stable Research facts to C2b for execution closure:
+
+```text
+Research Skill
+→ ResearchCompletion
+→ Task Runtime recognizes Business Completion
+→ research-owned stable values serialized separately
+→ C6 stores references
+→ Execution terminalization
+```
+
+Business Completion is the receipt of a valid `ResearchCompletion` containing a C5b-valid `ResearchResult`. `ResearchResult` references Evidence; it is not a full Evidence payload copy. Business Completion precedes Execution Completion.
+
+### 14.3 Module responsibility refinement
+
+The existing package tree is unchanged. The refined responsibilities are placed in the existing modules:
+
+```text
+research/ports.py
+→ ResearchSkill Protocol
+→ ResearchExecutionPort Protocol
+
+research/models.py
+→ SkillDeclaration
+→ ResearchCompletion
+→ ActualSampleBoundary
+→ Evidence / EvidenceInadmissible
+→ Finding / Hypothesis / ResearchResult
+
+search/port.py
+→ SearchCapability Protocol
+
+search/models.py
+→ SearchInvocationContext
+→ SearchInvocationProvenance
+→ SearchRequest
+→ SearchResult / SearchFailure
+→ bounded retrieval semantics
+
+runtime/execution.py
+→ BusinessWorkRequest
+→ ExecutionContext
+→ PreExecutionRejection
+→ TerminalReturn
+→ TaskExecutionResponse
+
+runtime/task_runtime.py
+→ TaskRuntime
+→ RuntimeResearchExecutionPort
+→ private ExecutionAbort
+
+runtime/retention.py
+→ staging bundle lifecycle
+→ local JSON physical placement
+→ execution-scoped raw capture
+→ publish / finalization support
+```
+
+No new package family is created by these refinements.
 
 `ActualSampleBoundary` is a stable Research execution fact. `Evidence`, `Finding`, `Hypothesis`, and `ResearchResult` remain distinct semantic representations even when they share the Research package family. No EvidenceService, ResearchService, AnalyzeService, FindingService, HypothesisService, or TraceabilityService is introduced.
 
@@ -635,6 +957,21 @@ Execution Establishment
 
 Raw TT-17 pages contributing to retained SearchResults may be captured below C4b into staging through an opaque execution-scoped retention callback/mechanism. The raw payload never enters Runtime business state or the Research Skill. The `execution_record.json` is finalized and written last. A Record Ref is not externally visible before successful publication.
 
+`SearchResult` and `SearchFailure` carry provider-neutral invocation provenance where known. C6 actual-participation facts are derived from the actual Search invocation outcome:
+
+```text
+configured binding
+→ does not prove actual provider participation
+
+actual invocation outcome
+→ may establish resolved provider ref
+→ may establish used provider ref
+→ may establish capability result ref
+→ may establish RawProviderResultRef
+```
+
+Runtime records actually used provider / capability / adapter version refs when those invocation facts exist. It does not infer actual provider participation from `type(adapter)` or composition configuration.
+
 This is not crash recovery, durable workflow, or a transactional outbox. A process failure may leave staging material; no recovery subsystem is introduced in the First Slice.
 
 ### 15.4 Raw Provider retention rule
@@ -656,6 +993,34 @@ runtime/execution_record.py or runtime-owned C6 serialization
 ```
 
 Retention owns physical bundle placement, not foreign semantic serialization. Each retained stable JSON representation carries a simple owner-local `schema_version = 1` or semantically equivalent version marker. There is no schema registry or migration framework.
+
+### 15.7 Runtime bundle source-control and credential safety
+
+The selected runtime root is:
+
+```text
+var/executions/
+```
+
+Walking Implementation invariant: `var/executions/` MUST be source-control excluded / gitignored. This refinement does not modify `.gitignore`.
+
+Raw Provider capture may retain only provider response payload required for bounded provenance. It must never retain:
+
+```text
+SCRAPE_CREATORS_API_KEY
+Authorization header
+Cookie
+Secret
+credential
+authenticated request headers
+sensitive authentication material
+```
+
+```text
+Runtime provenance artifact != repository documentation artifact
+Runtime raw data != Git-tracked source file
+provider_raw/ != general Provider archive
+```
 
 ---
 
@@ -1062,10 +1427,44 @@ The gate passes only for the First Slice. It does not claim final Ecommerce AI O
 
 ---
 
-## 22. Final Step 6 Verdict
+## 22. Step 7 Review Refinement Sync
+
+The Step 7 review findings are synchronized as representation refinements only. They do not redesign the Step 6 structure or reopen any upstream architecture or Contract semantics.
+
+| Finding | Resolution | Architecture Impact |
+|---|---|---|
+| S7-R1 SkillDeclaration | **RESOLVED** | Representation refinement only |
+| S7-R2 Business Completion representation | **RESOLVED BY S7-R7** | Representation refinement only |
+| S7-R3 PreExecutionRejection \| TerminalReturn | **RESOLVED** | Representation refinement only |
+| S7-R4 SearchInvocationContext / raw capture | **RESOLVED** | Representation refinement only |
+| S7-R5 Runtime-private ExecutionAbort | **RESOLVED** | Representation refinement only |
+| S7-R6 Actual Provider provenance | **RESOLVED** | Representation refinement only |
+| S7-R7 ResearchCompletion | **RESOLVED** | Representation refinement only |
+| S7-R8 Runtime bundle source-control / credential safety | **RESOLVED** | Representation refinement only |
+| S7-R9 Bounded SearchResult semantics | **RESOLVED** | Representation refinement only |
+| S7-R10 Owner-local component identity/version refs | **RESOLVED** | Representation refinement only |
 
 ```text
-Step 6 — Minimal Software Architecture Assembly + Representation Closure = CANDIDATE COMPLETE
+Architecture Reopen = NO
+Product Architecture Reopen = NO
+System Architecture Reopen = NO
+Contract Inventory Reopen = NO
+New Contract = NO
+New Service = NO
+Package Tree Change = NO
+Step 6 Structural Redesign = NO
+Representation Refinement Sync = COMPLETE
+```
+
+The refinement sync does not mark Step 7 as PASS and does not authorize Walking Implementation.
+
+---
+
+## 23. Final Step 6 Verdict
+
+```text
+Step 6 — Minimal Software Architecture Assembly + Representation Closure
+= CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW
 
 Package Boundaries = CLOSED FOR FIRST SLICE
 Module Boundaries = CLOSED FOR FIRST SLICE
@@ -1077,13 +1476,19 @@ Application Transport = CLOSED → THIN CLI
 Provider Access = CLOSED → SYNC STDLIB HTTP
 Stable Model Strategy = CLOSED → DATACLASS
 Retention Representation = CLOSED → LOCAL JSON EXECUTION BUNDLE
+Step 6 Refinement Sync = COMPLETE
 Database = NOT REQUIRED
 Framework = NOT REQUIRED
 New Contract = NO
+New Service = NO
 System Architecture Reopen = NO
 Walking Implementation = STILL NOT YET AUTHORIZED
 ```
 
-**Current Next:** Step 7 — Minimal Software Architecture Review Gate.
+**Current Next:** Step 7 — Consistency Re-check.
 
-Step 6 converts Steps 1–5 into an implementation-ready First-Slice Python shape with explicit seams, dependencies, local JSON retention, provider isolation, and tests, without introducing unnecessary services/frameworks/DBs.
+```text
+Step 7 = CONSISTENCY RE-CHECK READY
+```
+
+Step 6 remains the implementation-ready First-Slice Python shape with explicit seams, dependencies, local JSON retention, provider isolation, and tests. The Step 7 findings are complete as representation refinement only; Step 7 consistency re-check remains next, and Walking Implementation remains not yet authorized.
