@@ -8,8 +8,10 @@
 - Step 7: PASS
 - Minimal Software Architecture: REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 - Architecture Authority: No
-- Walking Implementation: NOT YET AUTHORIZED
-- Current Next: Walking Implementation Authorization Decision
+- Current Phase: Walking Implementation
+- Walking Implementation: AUTHORIZED
+- Authorization Scope: US / Car Vacuum / TikTok Content Research First Slice ONLY
+- Current Next: Walking Implementation — First Executable Vertical Slice
 - Upstream:
   - `01_MINIMAL_SOFTWARE_ARCHITECTURE_PHASE_HANDOFF.md`
   - `06_ARCHITECTURE_REVIEW.md`
@@ -619,11 +621,23 @@ Step documents were created incrementally under the “讨论到哪，文件建�
 
 # 5. 当前进度（Current Progress）
 
+Current Phase:
+
+Walking Implementation
+
+Walking Implementation:
+
+AUTHORIZED
+
+Authorized Scope:
+
+US / Car Vacuum / TikTok Content Research First Slice ONLY
+
 Current Next:
 
-Walking Implementation Authorization Decision
+Walking Implementation — First Executable Vertical Slice
 
-Status:
+Architecture Status:
 
 REVIEW COMPLETE
 
@@ -641,7 +655,68 @@ Step 7 — PASS
 
 Next Action:
 
-Make a separate explicit Walking Implementation Authorization decision.
+Begin the First Executable Vertical Slice within the authorized scope.
+
+### Walking Implementation Authorization Decision
+
+```text
+Human Decision
+= APPROVED
+
+Walking Implementation
+= AUTHORIZED
+
+Authorization Date
+= 2026-08-19
+
+Authorization Basis
+= Step 7 PASS
+  + G1 ~ G15 PASS
+  + Minimal Software Architecture
+    REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
+
+Authorized Scope
+= US / Car Vacuum / TikTok Content Research First Slice ONLY
+
+Architecture Expansion
+= NOT AUTHORIZED
+```
+
+Authorization permits implementation of the reviewed First-Slice Minimal
+Software Architecture.
+
+Authorization does NOT permit automatic promotion of Deferred / Not Yet
+Proven / Rejected architecture items.
+
+Implementation Change Rule:
+
+```text
+Runtime / Code Evidence
+→ Record the contradiction
+→ Classify whether an implementation fix or architecture change is needed
+→ Explicit review
+→ Modify architecture only if approved
+```
+
+Implementation must not silently redesign architecture. Evidence first.
+Architecture change second.
+
+Walking Implementation
+= implementation of reviewed architecture
+
+NOT
+
+= permission to redesign architecture while coding
+
+The authorization does not automatically add Agent as Top-level Layer, Tool
+as Top-level Layer, Standalone Orchestration Layer, Independent Analyze
+Capability, Full Evidence Service, Independent Research Service, Knowledge
+Integration, Artifact Integration, Retry Engine, Checkpoint, Crash Recovery,
+Durable Execution, Event / Message Architecture, Dedicated Persistence
+Service, Database, Vector DB / RAG, Provider Router, Multi-provider Fallback,
+Async Architecture, SearchService, EvidenceService, ResearchService,
+RecorderService, Repository Layer, GlobalContext, UniversalReference Registry,
+or 97 API Full Integration.
 
 ---
 
@@ -690,7 +765,8 @@ Step 6 的 package/module、callable、dependency、sync/async、transport、pro
 
 ```text
 Architecture Authority = No
-Walking Implementation = NOT YET AUTHORIZED
+Walking Implementation = AUTHORIZED
+Authorization Scope = US / Car Vacuum / TikTok Content Research First Slice ONLY
 ```
 
 ---
@@ -760,11 +836,17 @@ Minimal Software Architecture
 Architecture Authority
 = No
 
+Current Phase
+= Walking Implementation
+
 Walking Implementation
-= NOT YET AUTHORIZED
+= AUTHORIZED
+
+Authorized Scope
+= US / Car Vacuum / TikTok Content Research First Slice ONLY
 
 Current Next
-= Walking Implementation Authorization Decision
+= Walking Implementation — First Executable Vertical Slice
 ```
 
 ---
