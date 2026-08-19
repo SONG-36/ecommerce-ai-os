@@ -12,16 +12,22 @@ Current Phase:
 Walking Implementation
 
 Round Status:
-ROUND PLANNING
+IN PROGRESS
 
 Implementation:
-NOT STARTED
+IN PROGRESS
+
+Current Internal Checkpoint:
+P1 - COMPLETE / HUMAN APPROVED
+
+P2:
+NEXT / NOT STARTED
 
 Actual Code Evidence:
-NOT YET ESTABLISHED
+ESTABLISHED FOR P1
 
 Test Evidence:
-NOT YET ESTABLISHED
+ESTABLISHED FOR P1
 
 Runtime Evidence:
 NOT YET ESTABLISHED
@@ -30,7 +36,7 @@ Architecture Deviation:
 NONE OBSERVED
 
 本文档不是 Architecture Authority、不是新的 Architecture Specification、不是新的
-Contract、不是 implementation evidence、不是 code inventory，也不是
+Contract、不是 code inventory，也不是
 Walking Implementation Master Plan 或 Architecture-Code Traceability index 的替代品。
 
 ## 2. 已验证的仓库进入事实（Verified Repository Entry Facts）
@@ -57,8 +63,8 @@ Walking Implementation Master Plan 或 Architecture-Code Traceability index 的�
 - `00_WALKING_IMPLEMENTATION_PLAN.md`
 - `01_ARCHITECTURE_CODE_TRACEABILITY.md`
 
-目前还不存在 WI-1 implementation code、test evidence、runtime evidence，或
-Traceability status upgrade。
+在本 Round Record 建立时，还不存在 WI-1 implementation code、test evidence、runtime evidence，
+或 Traceability status upgrade。当前状态已由后续 P1 evidence sync 更新。
 
 ## 3. 目标（Goal）
 
@@ -352,7 +358,7 @@ has been reviewed by Human.
 #### P0 - Pre-Code Learning
 
 Current Status:
-IN PROGRESS
+COMPLETE / HUMAN REVIEWED
 
 Goal:
 先建立 WI-1 的整体 mental model，知道当前代码将解决哪些 architecture questions，但不要求
@@ -380,7 +386,7 @@ implementation 中把它们作为 observation questions 使用。
 #### P1 - Boundary Skeleton
 
 Status:
-PLANNED
+COMPLETE FOR CHECKPOINT / HUMAN APPROVED
 
 Goal:
 只建立第一批最小 software boundaries / stable representations，让 Human 第一次看到 Architecture
@@ -419,10 +425,142 @@ P1 不追求完整运行 WI-1，并明确不实现：
 P1 完成后必须暂停，进行 Code Review、Architecture -> Code Mapping 和 Human Learning Review。
 Human Review 后才能进入 P2。
 
+P1 Runtime Evidence:
+
+```text
+N/A / NOT REQUIRED AS FULL E2E FOR THIS CHECKPOINT
+```
+
+这不将任何 Traceability concept 升级为 `RUNTIME VERIFIED`。
+
+##### P1 Actual Evidence
+
+**P1 Actual Files**
+
+```text
+src/ecommerce_ai_os/runtime/execution.py
+
+src/ecommerce_ai_os/research/models.py
+src/ecommerce_ai_os/research/ports.py
+
+src/ecommerce_ai_os/search/models.py
+src/ecommerce_ai_os/search/port.py
+
+tests/unit/runtime/test_execution.py
+tests/unit/research/test_boundaries.py
+tests/unit/search/test_boundaries.py
+```
+
+相应 package `__init__.py` 也已建立。
+
+**P1 Actual Symbols**
+
+```text
+BusinessWorkRequest
+SkillDeclaration
+ResearchSkill
+ResearchExecutionPort
+SearchRequest
+SearchResult
+SearchCapability
+```
+
+`BusinessWorkRequest` 的 `business_goal` 缺失曾是 implementation defect；该 correction 已闭合，
+不是 Architecture Assumption Conflict。
+
+**P1 Actual Architecture Mapping**
+
+```text
+A02 -> BusinessWorkRequest
+A06 -> ResearchSkill
+A07 -> SkillDeclaration
+A08 -> ResearchExecutionPort
+
+B01 -> SearchCapability
+B02 -> SearchRequest
+B03 -> SearchResult
+```
+
+**P1 Tests**
+
+```text
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+-> 8 tests PASS
+
+python -m compileall -q src tests
+-> PASS / exit code 0
+
+git diff --check
+-> PASS / exit code 0
+```
+
+最初未设置 `PYTHONPATH=src` 执行 unittest 时，由于当前 `src/` layout package 未安装到
+interpreter environment，出现 `ModuleNotFoundError: No module named 'ecommerce_ai_os'`。这是
+Test / local execution environment fact，不是 Architecture Deviation、Architecture Assumption
+Conflict 或 Business Failure；P1 不因此修改 `pyproject.toml`。
+
+**P1 Human Learning Review**
+
+```text
+BusinessWorkRequest
+= structured business request, not Execution
+
+dataclass
+= stable typed value representation
+
+ResearchSkill
+= Business Method seam
+
+ResearchExecutionPort
+= Business -> Runtime authority boundary
+
+SearchCapability
+= Runtime -> concrete Search dependency boundary
+
+SkillDeclaration
+= Declared dependency
+
+Declared
+!= Runtime Need
+!= Actual Invocation
+
+SearchRequest
+= one Search need
+
+SearchResult
+= bounded typed Search outcome
+!= Evidence
+!= list[Video]
+```
+
+**P1 Human Delete Test**
+
+```text
+Delete ResearchExecutionPort
+-> code may still run
+-> C2a / C2b authority boundary weakens
+-> Research may depend directly on Runtime / Capability
+
+Delete SearchCapability
+-> code may still run
+-> Runtime becomes coupled to concrete Search implementation
+
+Replace stable dataclasses with dict
+-> code may still run
+-> typed / stable cross-boundary semantics weaken
+
+Delete SkillDeclaration
+-> code may still run
+-> declared capability dependency becomes implicit
+
+Can run
+!= Architecture boundary preserved
+```
+
 #### P2 - Core Execution Loop
 
 Status:
-PLANNED
+NEXT / NOT STARTED
 
 Goal:
 第一次真正证明 C2a / C2b / C3 fake path 的核心控制关系。
@@ -453,11 +591,47 @@ Implementation Boundary:
 ResearchSkill
 -> ResearchExecutionPort.search(...)
 -> TaskRuntime-controlled capability invocation
+-> minimal SearchInvocationContext
 -> SearchCapability seam
 -> Fake Search concrete implementation
 -> SearchResult
 -> same ResearchSkill
 ```
+
+P2 Entry Sequencing Refinement:
+
+```text
+B04 SearchInvocationContext
+= minimal implementation allowed / required in P2
+
+Reason:
+the reviewed SearchCapability callable already requires
+SearchInvocationContext,
+therefore the Fake executable path cannot legally invoke C3
+without a minimal representation.
+
+WI-3
+= SearchInvocationContext full C3 semantics / main verification
+
+Implementation Sequencing Refinement
+= APPROVED
+
+Architecture Reopen
+= NO
+
+Contract Change
+= NO
+```
+
+P2 只实现 Fake executable path 所需的最小合法 `SearchInvocationContext`。P2 不提前实现：
+
+- full invocation provenance
+- provider raw capture semantics
+- full missingness semantics
+- full time semantics
+- full bounded retrieval context
+- real Provider provenance
+- TT-17 specific context
 
 必须保持：
 
@@ -695,7 +869,7 @@ Planned WI-1 coverage:
 WI-1 明确不实现：
 
 - A09
-- B04
+- B04 full C3 semantics（P2 只允许 / 要求 minimal representation）
 - B05
 - B06
 - B07
@@ -704,8 +878,9 @@ WI-1 明确不实现：
 - C03
 - C04
 
-本 planning task 不升级任何 Traceability status。所有 actual code、test 和 runtime evidence
-都保持 NOT YET ESTABLISHED，直到 implementation 真实发生并经过 review。
+P1 Human Review 已建立 A02、A06、A07、A08、B01、B02、B03 的实际 code/test evidence；
+其余 planned WI-1 coverage 不因 Round planning coverage 而提前升级。WI-1 executable-path
+runtime evidence 仍为 NOT YET ESTABLISHED。
 
 ## 12. 已知实施前置条件 / 缺口（Known Implementation Preconditions / Gaps）
 
@@ -738,16 +913,22 @@ Architecture Assumption Conflict
 
 本 planning task 不得修改 `.gitignore`。
 
-## 13. Planning 评审门（Planning Review Gate）
+## 13. Planning 评审门（Planning Review Gate / Historical Entry Gate）
 
 WI-1 Round Plan:
-CANDIDATE / READY FOR HUMAN REVIEW
+HUMAN REVIEWED / IMPLEMENTATION AUTHORIZED
 
 Implementation:
-NOT AUTHORIZED BY THIS ROUND RECORD YET
+IN PROGRESS
 
 Python Code:
-NOT STARTED
+ESTABLISHED FOR P1 ONLY
+
+Current Internal Checkpoint:
+P1 - COMPLETE / HUMAN APPROVED
+
+P2:
+NEXT / NOT STARTED
 
 Architecture Reopen:
 NO

@@ -24,15 +24,18 @@ Step 6 最终审查后决定怎样表示？
 |---|---|
 | Walking Implementation | `AUTHORIZED` |
 | Current Round | `WI-1` |
-| WI-1 | `NEXT` / `NOT STARTED` |
-| Core Concepts | `28 PLANNED` |
-| Actual Code Evidence | `NOT YET ESTABLISHED` |
-| Test Evidence | `NOT YET ESTABLISHED` |
-| Runtime Evidence | `NOT YET ESTABLISHED` |
+| WI-1 | `IN PROGRESS` |
+| Current Internal Checkpoint | `P1 - COMPLETE / HUMAN APPROVED` |
+| P2 | `NEXT / NOT STARTED` |
+| Core Concepts | `6 TESTED` / `1 IMPLEMENTED` / `21 PLANNED` / `0 RUNTIME VERIFIED` |
+| Actual Code Evidence | `ESTABLISHED FOR P1` |
+| Test Evidence | `ESTABLISHED FOR P1` |
+| Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
 | Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `WI-1 Round Planning` |
+| Current Next | `P2 - Core Execution Loop` |
 
-当前状态只说明 Walking Implementation 已获准进入实施规划，不宣称任何代码、测试或运行行为已经存在。
+当前状态只确认 P1 已建立并通过 Human Review 的 code/test evidence。它不宣称 WI-1 executable
+path、end-to-end runtime behavior 或任何 `RUNTIME VERIFIED` evidence 已经存在。
 
 ## 2. 本文职责与非职责
 
@@ -157,7 +160,7 @@ Traceability status 保持简单，并按证据成熟度递进：
 | B01 | **C3 Search Capability / 搜索能力** | `03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md`；`06` S6-14/S6-32；`07` G7 | `SearchCapability` Protocol；typed seam，不是 SearchService/runtime hop | `search/port.py` → `SearchCapability` | `WI-1` Fake | `WI-3` |
 | B02 | **SearchRequest / 搜索请求** | `03` provider-neutral request；`06` Search model strategy | provider-neutral stable request representation | `search/models.py` → `SearchRequest` | `WI-1` minimal | `WI-3` |
 | B03 | **SearchResult / SearchFailure / 搜索结果与失败** | `03` Search outcome semantics；`06` S6-38 + S7-R9；`07` G6/G15 | typed C3 outcomes；bounded `SearchResult`，不是 `list[Video]` | `search/models.py` | `WI-1` minimal | `WI-3` |
-| B04 | **SearchInvocationContext / 搜索调用上下文** | `03` capability context；`06` S7-R4；`07` R4/G10 | execution-scoped Search-owned narrowed context | `search/models.py` → `SearchInvocationContext` | `WI-3` | `WI-4` |
+| B04 | **SearchInvocationContext / 搜索调用上下文** | `03` capability context；`06` S7-R4；`07` R4/G10 | execution-scoped Search-owned narrowed context | `search/models.py` → `SearchInvocationContext` | `WI-1 / P2` minimal | `WI-3` full semantics / main verification |
 | B05 | **SearchInvocationProvenance / 搜索调用来源事实** | `03` provider identity/referenceability；`05` C6 actual facts；`06` S7-R6 | provider-neutral actual invocation provenance | `search/models.py` → `SearchInvocationProvenance` | `WI-3` | `WI-5` |
 | B06 | **RawProviderResultRef / 原始 Provider 结果引用** | `03` raw referenceability；`05` post-terminal refs；`06` final consistency fix；`07` R4/R6 | Search-owned provider-neutral raw-result reference | `search/models.py` → `RawProviderResultRef` | `WI-3` | `WI-5` |
 | B07 | **C4a Static Provider Binding / 静态 Provider 绑定** | `03` C4a；`06` S6-07 + final consistency fix；`07` G7 | composition-time Search → Scrape Creators binding | `composition.py` | `WI-4` | `WI-5` |
@@ -187,23 +190,24 @@ Traceability status 保持简单，并按证据成熟度递进：
 
 ## 8. Live Implementation Evidence Map
 
-以下是初始 live map。所有行都仍处于 `PLANNED`；没有任何实际代码、测试或运行证据被预先声明。
+以下 live map 按 P1 已确认的实际证据更新。未由 P1 直接建立的行继续保持 `PLANNED`；P1 unit tests、
+compileall 与 structural stub behavior 不构成 WI-1 executable-path runtime evidence。
 
 | ID | Actual Code | Test Evidence | Runtime Evidence | Current Status | Architecture Deviation |
 |---|---|---|---|---|---|
 | A01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A02 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| A02 | `src/ecommerce_ai_os/runtime/execution.py → BusinessWorkRequest`（`business_goal` correction closed / P1） | `tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_represents_the_first_slice_business_context → PASS / P1`<br>`tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_is_a_frozen_stable_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | A03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | A04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | A05 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A06 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A07 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A08 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| A06 | `src/ecommerce_ai_os/research/ports.py → ResearchSkill` | `NOT YET DIRECTLY VERIFIED` | `NOT YET VERIFIED` | `IMPLEMENTED` | `NONE` |
+| A07 | `src/ecommerce_ai_os/research/models.py → SkillDeclaration` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_skill_declaration_preserves_declared_capability_identity → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_structural_port_stub_satisfies_the_callable_seam → PASS / P1`<br>Runtime structural/callable seam behavior demonstrated; independent static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | A09 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | A10 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| B01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| B02 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| B03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| B01 | `src/ecommerce_ai_os/search/port.py → SearchCapability` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_structural_search_stub_satisfies_the_callable_seam → PASS / P1`<br>Runtime structural behavior demonstrated; static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| B02 | `src/ecommerce_ai_os/search/models.py → SearchRequest` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_request_is_a_frozen_provider_neutral_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| B03 | `src/ecommerce_ai_os/search/models.py → SearchResult`<br>P1 minimal representation; full C3 semantics deferred to `WI-3` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_has_identity_and_returned_set_boundary → PASS / P1`<br>`tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_rejects_a_negative_returned_item_count → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | B04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B05 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B06 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
@@ -220,7 +224,9 @@ Traceability status 保持简单，并按证据成熟度递进：
 | D03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | D04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 
-`PLANNED + Architecture Deviation = NONE` 只表示目前尚未观察到 implementation contradiction；它不表示 architecture conformity 已经验证。
+未升级行的 `PLANNED + Architecture Deviation = NONE` 只表示目前尚未观察到 implementation
+contradiction；它不表示 architecture conformity 已经验证。P1 的 7 个已升级行也只建立对应
+checkpoint 的部分 code/test conformity，不代表 WI-1 或整体 Architecture 已完全验证。
 
 ## 9. Cross-cutting Traceability
 
@@ -246,7 +252,7 @@ Traceability status 保持简单，并按证据成熟度递进：
 
 | Round | 主要覆盖范围 |
 |---|---|
-| `WI-1` | A01,A02,A03 `TerminalReturn` partial,A04,A05,A06,A07,A08,A10；B01 Fake；B02/B03 minimal；C01/C02/C05 minimal；D01-D04 minimal |
+| `WI-1` | A01,A02,A03 `TerminalReturn` partial,A04,A05,A06,A07,A08,A10；B01 Fake；B02/B03 minimal；B04 minimal in P2；C01/C02/C05 minimal；D01-D04 minimal |
 | `WI-2` | A03 full response family；A05 Execution Establishment；A09 ExecutionAbort；D01 failure record；D02 failure referenceability |
 | `WI-3` | B02-B06 full C3 semantics；time / missingness / bounded retrieval |
 | `WI-4` | B07 C4a；B08 C4b；B09 Access seam；Provider ID / mapping / fixture translation |
@@ -414,24 +420,34 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至当前 `WI-1`，coverage 仍是规划态：
+截至当前 `WI-1` P1 closure，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
-| Architecture baseline | `28 PLANNED` |
+| Architecture baseline | `28 core concepts` |
+| Current Status Count | `6 TESTED` / `1 IMPLEMENTED` / `21 PLANNED` / `0 RUNTIME VERIFIED` |
+| TESTED | `A02`, `A07`, `A08`, `B01`, `B02`, `B03` |
+| IMPLEMENTED | `A06` |
+| PLANNED | 其余 `21` 项 |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `NOT YET ESTABLISHED` |
-| Test Evidence | `NOT YET ESTABLISHED` |
-| Runtime Evidence | `NOT YET ESTABLISHED` |
+| Actual Code | `ESTABLISHED FOR P1` |
+| Test Evidence | `ESTABLISHED FOR P1` |
+| Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
 | Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `NOT VERIFIED` |
+| Architecture conformity | `PARTIALLY VERIFIED FOR P1 ONLY` |
 
-因此，当前 Live Map 的 28 行都保持 `Current Status = PLANNED`、`Architecture Deviation = NONE`。这代表实施尚未开始且尚未发现矛盾，不代表任何 architecture-to-code conformity 已经完成。
+P1 的 unit tests、compileall 与 structural stub behavior 不构成 WI-1 end-to-end Runtime Evidence，
+因此没有任何行升级为 `RUNTIME VERIFIED`。最初未设置 `PYTHONPATH=src` 的 unittest import failure
+是 Test / local execution environment fact，不是 Architecture Deviation；当前不因此修改
+`pyproject.toml`。
 
 ## 21. Current Next
 
 ```text
-WI-1 Round Planning
+P2 - Core Execution Loop
+NEXT / NOT STARTED
 ```
 
-WI-1 的进入条件是先形成可审查的 Round Plan，并明确本轮 scope、允许建立的最小软件表示、验证边界和 evidence locations。实施开始后，所有 actual facts 必须按第 15 节回写到本文件和对应 Round Record；在此之前，不得把任何 planned code location、planned test 或 expected runtime path 改写为 implementation evidence。
+P1 已完成 code/test evidence sync 与 Human Review。P2 尚未开始；后续仍必须先遵守当前
+Checkpoint 的 Human Review gate，且不得把 planned code、planned test 或 expected runtime path
+改写为 actual evidence。
