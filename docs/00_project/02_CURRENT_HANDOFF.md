@@ -4,7 +4,7 @@
 - Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
 - Document role: Current navigation and handoff state
 - Authority status: Navigation only; this file is not an Architecture Authority
-- Last synchronized: 2026-08-17
+- Last synchronized: 2026-08-19
 
 ## 0. How To Use This Handoff
 
@@ -53,12 +53,12 @@ inventory, a framework, or the current source-tree scaffold.
 ### Current Major Phase
 
 ```text
-Minimal Software Architecture
-= AUTHORIZED NEXT
+Walking Implementation
+= AUTHORIZED
 ```
 
-The current phase determines how the already-defined First Research Slice and
-stable Contract semantics are represented in software.
+The current phase implements the already-reviewed First-Slice Minimal
+Software Architecture within the explicitly authorized scope.
 
 ### Explicit Current Status
 
@@ -90,23 +90,48 @@ Minimum Endpoint Subset
 Minimum Endpoint Selection
 = CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
 
-Current Next
-= Minimal Software Architecture
-```
+Minimal Software Architecture
+= REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 
-Software Architecture
+Step 1–5
+= CANDIDATE COMPLETE
 
-```text
-NOT YET DESIGNED
-```
+Step 6
+= CANDIDATE COMPLETE / REFINED AFTER STEP 7 REVIEW
+
+Step 6 Refinement Sync
+= COMPLETE
+
+Step 7
+= PASS
+
+G1 ~ G15
+= PASS
+
+S7-R1 ~ S7-R10
+= RESOLVED
 
 Walking Implementation
+= AUTHORIZED
 
-```text
-NOT YET AUTHORIZED
+Authorization Scope
+= US / Car Vacuum / TikTok Content Research First Slice ONLY
+
+Architecture Expansion
+= NOT AUTHORIZED
+
+Current Round
+= WI-1
+
+WI-1 Status
+= NEXT / NOT STARTED
+
+Current Next
+= WI-1 Round Planning — Fake First Executable Vertical Slice
 ```
 
-This is design and selection work, not a code implementation phase.
+This is an implementation phase for the reviewed architecture, not a new
+Architecture Review or Software Architecture Step.
 
 ## 2. Current Architecture Authority Status
 
@@ -114,7 +139,7 @@ This is design and selection work, not a code implementation phase.
 |---|---|
 | Product Architecture | CURRENT BASELINE |
 | System Architecture V0.2 | Candidate / Human-reviewed working architecture |
-| Software Architecture | See explicit status block above |
+| Software Architecture | REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE |
 | First Research Slice Planning | COMPLETE |
 | Detailed Contract Design Package | COMPLETE / CONSISTENCY REVIEWED |
 | Product Architecture Reopen | NO |
@@ -122,6 +147,8 @@ This is design and selection work, not a code implementation phase.
 | Contract Inventory Reopen | NO |
 | New Contract Required | NO |
 | Research system placement final resolution | NOT REQUIRED NOW |
+| Walking Implementation | AUTHORIZED |
+| Architecture Expansion | NOT AUTHORIZED |
 
 Only new, concrete evidence that proves a conflict may reopen a frozen
 decision. A new chat, model change, Provider API shape, or implementation
@@ -703,7 +730,7 @@ summary is a navigation aid and is not a new backlog.
 - exact Runtime state taxonomy;
 - exact retention lifecycle and duration;
 - Application interaction and transport;
-- Software Architecture: NOT YET DESIGNED;
+- Full Ecommerce AI OS Software Architecture beyond the reviewed First-Slice scope;
 - additional Provider endpoint subsets beyond TT-17.
 
 ### 11.2 NOT YET PROVEN
@@ -866,19 +893,295 @@ Pick interesting APIs
 Design Ecommerce AI OS around them
 ```
 
-## 14. Current Next
-
-### Minimal Software Architecture
+### 13.4 TT-17 Bounded First-Slice Facts
 
 ```text
-Status
-= AUTHORIZED NEXT
+TT-17
+= GET /v1/tiktok/search/keyword
 
-Precondition
-= Minimum Endpoint Selection CLOSED
+Current admitted minimum endpoint
+= TT-17 only
 ```
 
-The decision sequence is:
+Known bounded facts include: `query` is required / observed; `region=US` is
+an accepted request fact; two successful pages and approximately 30 results
+per observed page were observed; cross-page duplicates were observed; public
+metrics, video / creator IDs and `create_time` are available.
+
+The following remain unverified or unknown:
+
+```text
+date_posted
+= unverified
+
+sort_by
+= unverified
+
+exact region effect
+= unverified
+
+pagination termination
+= unverified
+
+hard cap
+= unknown
+
+ranking semantics
+= unverified
+
+global completeness
+= not proven
+```
+
+```text
+region=US request != exact US population
+pagination exhaustion != global completeness
+duplicate occurrence != automatic noise
+```
+
+## 14. Walking Implementation Entry and Current Next
+
+### Current Next
+
+```text
+Current Phase
+= Walking Implementation
+
+Current Round
+= WI-1
+
+WI-1 Status
+= NEXT / NOT STARTED
+
+Current Next
+= WI-1 Round Planning — Fake First Executable Vertical Slice
+```
+
+### Walking Implementation Entry
+
+正式入口文档：
+
+```text
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+00_WALKING_IMPLEMENTATION_PLAN.md
+```
+
+职责：8-Round Master Plan、execution rules、learning rules、review rules 与
+Architecture Change Rule。
+
+第二入口：
+
+```text
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+01_ARCHITECTURE_CODE_TRACEABILITY.md
+```
+
+职责：
+
+```text
+Architecture
+→ Reviewed Software Representation
+→ Actual Code
+→ Test
+→ Runtime Evidence
+```
+
+当前 Traceability：
+
+```text
+28 Core Concepts
+= PLANNED
+
+Actual Implementation Evidence
+= NOT YET ESTABLISHED
+```
+
+Walking Implementation Plan 与 Traceability Map 是本阶段的执行与学习
+入口，不是新的 Architecture Authority。
+
+### WI-1 当前目标（Current WI-1 Objective）
+
+```text
+WI-1
+= Fake First Executable Vertical Slice
+
+Status
+= NEXT / NOT STARTED
+```
+
+目标是第一次证明 Reviewed Minimal Software Architecture 能形成真实可执行
+的内部纵向闭环。WI-1 只使用 Fake Search，不调用 live Scrape Creators 或
+live TT-17。
+
+目标 semantic path：
+
+```text
+CLI
+→ BusinessWorkRequest
+→ TaskRuntime.execute()
+→ ExecutionContext
+→ RuntimeResearchExecutionPort
+→ Concrete ResearchSkill
+→ ResearchExecutionPort.search(...)
+→ Fake SearchCapability
+→ SearchResult
+→ ResearchCompletion
+→ TaskRuntime
+→ C6
+→ Local JSON Execution Bundle
+→ Record Ref
+→ TerminalReturn
+→ CLI
+```
+
+WI-1 不应在 Planning 完成前直接开始写代码。
+
+下一聊天首先应：audit Git / repo / worktree，确认本 Handoff 与 Walking
+Plan，确认 current `src` scaffold 不是 Architecture Authority，然后创建并
+讨论：
+
+```text
+walking_implementation/rounds/WI_01_FAKE_VERTICAL_SLICE.md
+```
+
+Human review 后，才开始 WI-1 implementation。
+
+### WI-1 Architecture Reading Map
+
+WI-1 不需要默认重新读取所有项目文档。先读本文件、Walking Plan 与
+Traceability Map；然后按以下 map 读取：
+
+```text
+docs/03_software/vertical_slices/01_research_execution/
+00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md
+01_SOFTWARE_RESPONSIBILITY_MAPPING.md
+02_EXECUTION_SPINE_SOFTWARE_DESIGN.md
+06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
+07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md
+```
+
+只有 WI-1 问题确实需要时，才扩展到其它 upstream docs。
+
+### Round Record 规则
+
+Round Record 是单个 Walking Round 的实施档案，不是 Architecture
+Specification、Master Plan 或 Current Handoff。
+
+```text
+PLAN
+→ IMPLEMENT
+→ RUN
+→ REVIEW
+→ COMPLETE
+```
+
+Initial Round Record 至少包含 Goal、Scope、Architecture Inputs、Expected
+Call Path、Allowed Changes、Not In Scope、Acceptance Criteria、Learning
+Focus 与 Traceability Coverage。实施后追加 Actual Files、Actual Symbols、
+Actual Call Path、Tests、Runtime Evidence、Architecture Mapping、
+Discovered Contradictions、Learning Review 与 Final Verdict。
+
+本轮尚未进入 WI-1 Planning，因此不要提前创建 Round Record、Python
+implementation、fixtures、runtime JSON 或 live TT-17 请求。
+
+### Architecture–Code Learning Method
+
+每个核心概念按照以下路径学习：
+
+```text
+Architecture
+→ Reviewed Representation
+→ Actual Code
+→ Test
+→ Runtime Evidence
+```
+
+`01_ARCHITECTURE_CODE_TRACEABILITY.md` 是长期索引；Codex 每个 Round 提供
+Implementation Evidence Report；Round Record 保存本轮历史事实；Human
+Learning Review 负责理解代码与 Architecture 的关系。
+
+```text
+Architecture intention
+!= Implementation fact
+
+Planned code location
+!= Actual code evidence
+
+Planned test
+!= Executed test
+
+Expected runtime path
+!= Observed runtime evidence
+
+Tests pass
+!= Architecture preserved
+
+Can run
+!= Architecture is correct
+```
+
+### Implementation Change Rule
+
+Walking Implementation 不授权静默 Architecture redesign。如果真实代码或
+Runtime Evidence 发现 architecture assumption 无法实现、real TT-17
+behavior 与 bounded semantics 冲突、existing responsibility 无法承载需求，
+或 representation 存在 blocking contradiction，必须遵循：
+
+```text
+Code / Runtime Evidence
+→ Record Contradiction
+→ classify:
+   Implementation Defect
+   or Architecture Assumption Conflict
+→ explicit review
+→ architecture change only if approved
+```
+
+```text
+Evidence first.
+Architecture change second.
+```
+
+### Explicit Non-Goals / Guardrails
+
+下一聊天不得自动引入：
+
+```text
+Agent as Top-level Layer
+Tool as Top-level Layer
+Standalone Orchestration Layer
+Independent Analyze Capability
+Full Evidence Service
+Independent Research Service
+Knowledge Integration
+Artifact Integration
+Retry Engine
+Checkpoint
+Crash Recovery
+Durable Execution
+Event / Message Architecture
+Dedicated Persistence Service
+Database
+Vector DB / RAG
+Provider Router
+Multi-provider Fallback
+Async Architecture
+SearchService
+EvidenceService
+ResearchService
+RecorderService
+Repository Layer
+GlobalContext
+UniversalReference Registry
+97 API Full Integration
+```
+
+```text
+Deferred != backlog commitment
+Not Yet Proven must earn promotion
+```
+
+The completed architecture selection sequence was:
 
 ```text
 Business Question
@@ -944,39 +1247,33 @@ obligations.
 
 ## 17. Recommended Reading Order For A New Chat
 
-Use these real repository paths. The order is intentionally staged.
+Use these real repository paths. The order is intentionally staged and keeps
+the Current Handoff as the single new-chat entry.
 
-### Tier 1 — Mandatory Orientation
+### Tier 1 — Walking Implementation Orientation
 
 1. `docs/00_project/02_CURRENT_HANDOFF.md`
-2. `docs/00_project/00_PROJECT_BASELINE_V0.1.md`
-3. `docs/00_project/01_PRODUCT_ORIGIN_AND_REQUIREMENTS.md`
-4. `docs/01_product/00_PRODUCT_ARCHITECTURE.md`
-5. `docs/02_system/00_SYSTEM_ARCHITECTURE.md`
-6. `docs/04_governance/00_ARCHITECTURE_GOVERNANCE.md`
-7. `docs/03_software/01_MINIMAL_SOFTWARE_ARCHITECTURE_PHASE_HANDOFF.md`
-8. `docs/02_system/vertical_slices/01_research_execution/contracts/00_CONTRACT_DESIGN_INDEX.md`
-9. `docs/02_system/vertical_slices/01_research_execution/contracts/06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md`
-10. `docs/05_references/provider_lab/03_PROVIDER_LAB_ASSET_HANDOFF.md`
+2. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md`
+3. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/01_ARCHITECTURE_CODE_TRACEABILITY.md`
 
-### Tier 2 — Required For TT-17 Closure Context
+### Tier 2 — WI-1 Architecture Reading Map
 
-11. `docs/02_system/vertical_slices/01_research_execution/contracts/02_SEARCH_INVOCATION.md`
-12. `docs/02_system/vertical_slices/01_research_execution/contracts/03_RESEARCH_SEMANTICS.md`
-13. `docs/02_system/vertical_slices/01_research_execution/contracts/05_PROVIDER_MAPPING.md`
+4. `docs/03_software/vertical_slices/01_research_execution/00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md`
+5. `docs/03_software/vertical_slices/01_research_execution/01_SOFTWARE_RESPONSIBILITY_MAPPING.md`
+6. `docs/03_software/vertical_slices/01_research_execution/02_EXECUTION_SPINE_SOFTWARE_DESIGN.md`
+7. `docs/03_software/vertical_slices/01_research_execution/06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
+8. `docs/03_software/vertical_slices/01_research_execution/07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md`
 
 ### Tier 3 — Read On Demand
 
-14. `docs/02_system/vertical_slices/01_research_execution/01_SLICE_BUSINESS_BOUNDARY.md`
-15. `docs/02_system/vertical_slices/01_research_execution/04_CONTRACT_INVENTORY.md`
-16. `docs/02_system/vertical_slices/01_research_execution/05_DEFERRED_REGISTER.md`
-17. `docs/02_system/vertical_slices/01_research_execution/contracts/01_EXECUTION_SPINE.md`
-18. `docs/02_system/vertical_slices/01_research_execution/contracts/04_EXECUTION_RECORD.md`
+Upstream Product Architecture, System Architecture, D1–D5, Deferred Register,
+Provider Lab facts and other Contract docs are read only when the WI-1 question
+genuinely requires them.
 
 The upstream package guide is:
 `docs/02_system/vertical_slices/01_research_execution/00_READ_ME_FIRST.md`.
 
-## 18. Suggested New Chat Starter
+## 18. New Chat Bootstrap
 
 ```text
 Continue Ecommerce AI OS.
@@ -984,20 +1281,57 @@ Continue Ecommerce AI OS.
 Repository:
 /Volumes/projects/andy/0813/ecommerce-ai-os
 
-Read docs/00_project/02_CURRENT_HANDOFF.md first, then follow its
-Recommended Reading Order For A New Chat.
+Read docs/00_project/02_CURRENT_HANDOFF.md first.
 
 Do not redesign Documentation Architecture, Product Architecture, System
 Architecture V0.2, or the 9 Required Contracts.
 
-Current completed stage:
-System Detailed Contract Design = COMPLETE / CONSISTENCY REVIEWED
+Current Phase:
+Walking Implementation
 
-Current Major Phase:
-Minimal Software Architecture
+Walking Implementation:
+AUTHORIZED
 
-Current next:
-Minimal Software Architecture
+Authorized Scope:
+US / Car Vacuum / TikTok Content Research First Slice ONLY
+
+Current Round:
+WI-1 — Fake First Executable Vertical Slice
+
+Status:
+NEXT / NOT STARTED
+
+Then read:
+
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+00_WALKING_IMPLEMENTATION_PLAN.md
+
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+01_ARCHITECTURE_CODE_TRACEABILITY.md
+
+For WI-1 additionally read:
+
+00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md
+01_SOFTWARE_RESPONSIBILITY_MAPPING.md
+02_EXECUTION_SPINE_SOFTWARE_DESIGN.md
+06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
+07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md
+
+Do not write code immediately.
+
+First:
+
+1. audit repository / worktree;
+2. confirm Current Handoff;
+3. confirm Walking Implementation Plan;
+4. create `rounds/WI_01_FAKE_VERTICAL_SLICE.md`;
+5. discuss and freeze WI-1 scope, allowed files, forbidden files, expected call
+   path, acceptance criteria, learning focus and traceability coverage;
+6. only then begin implementation.
+
+Do not redesign Steps 1–7.
+Do not add a 10th Contract.
+Do not start live TT-17 in WI-1.
 
 Minimum Endpoint Selection:
 CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
@@ -1008,19 +1342,8 @@ Minimum Endpoint Subset:
 TT-17 Admission:
 PASS_WITH_LIMITATIONS
 
-Do not write code.
-Do not begin Walking Implementation before Minimal Software Architecture review passes.
-
-First report your understanding of:
-- current project state;
-- architecture authority;
-- First Research Slice;
-- 9 Contract status;
-- consistency review result;
-- deferred / NYD / NYP boundaries;
-- endpoint-selection decision process.
-
-Do not modify the repository until alignment is confirmed.
+Architecture Expansion:
+NOT AUTHORIZED
 ```
 
 ## 19. Recent Milestone Commits
@@ -1062,11 +1385,17 @@ authority documents:
 System Architecture V0.2
     = Candidate / Human-reviewed working architecture
 
-Software Architecture
-    = NOT YET DESIGNED
+Minimal Software Architecture
+    = REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 
 Walking Implementation
-    = NOT YET AUTHORIZED
+    = AUTHORIZED
+
+Current Round
+    = WI-1
+
+WI-1
+    = NEXT / NOT STARTED
 
 Detailed Contract Design Package
     = COMPLETE / CONSISTENCY REVIEWED
@@ -1083,8 +1412,8 @@ Minimum Endpoint Subset
 Minimum Endpoint Selection
     = CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
 
-Current Major Phase / Current Next
-    = Minimal Software Architecture
+Current Phase / Current Next
+    = Walking Implementation / WI-1 Round Planning
 ```
 
 ## 21. Authority Boundary
