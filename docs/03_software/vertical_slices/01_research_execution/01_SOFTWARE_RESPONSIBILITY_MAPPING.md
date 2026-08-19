@@ -7,9 +7,11 @@
 - **Slice**: US / Car Vacuum / TikTok Content Research
 - **Walking Implementation**: NOT YET AUTHORIZED
 
+> 中文阅读导语：本文把已冻结的 System Responsibility 与 Contract Boundary 映射到最小的软件责任。重点不是为每个 Contract 创建一个 Service，而是说明每项责任在软件中由谁承担、为什么需要该表示，以及为什么不应机械扩展基础设施。
+
 ---
 
-## 0. Document Purpose and Boundary
+## 0. 文档目的与边界（Document Purpose and Boundary）
 
 本文件只负责将 First Research Slice 已确认的 System Responsibility / Contract semantics 映射为最小 software responsibility candidate，并判断每项责任需要哪一种软件承载：
 
@@ -57,11 +59,11 @@ Task Runtime = Execution Coordination
 
 ---
 
-## 1. Inherited Inputs and Stable Boundary
+## 1. 继承输入与稳定边界（Inherited Inputs and Stable Boundary）
 
 本 Step 不重新设计上游语义，只继承 First Research Slice 已确认的责任与边界。
 
-### 1.1 First Slice Responsibility Set
+### 1.1 First Slice 责任集合（First Slice Responsibility Set）
 
 本文件完整覆盖以下 14 项责任映射：
 
@@ -80,7 +82,7 @@ Task Runtime = Execution Coordination
 13. Scrape Creators Provider
 14. TT-17 Provider Endpoint / Access Surface
 
-### 1.2 Stable Conclusions Carried Forward
+### 1.2 继续继承的稳定结论（Stable Conclusions Carried Forward）
 
 ```text
 C1
@@ -128,33 +130,33 @@ TT-17
 
 ---
 
-## 2. Mapping Rules
+## 2. 映射规则（Mapping Rules）
 
-### 2.1 Software Presence Is Not Automatically Componentization
+### 2.1 软件存在不等于自动组件化（Software Presence Is Not Automatically Componentization）
 
 每项上游责任都必须在软件中有合适的承载，但软件承载不自动意味着独立 Service、Runtime、Router、Repository 或其他独立组件。
 
-### 2.2 Contract Is Not a Call-Graph Node
+### 2.2 Contract 不是调用图节点（Contract Is Not a Call-Graph Node）
 
 Contract 可以规定稳定 obligations、输入输出边界、错误语义、context 约束和 invocation seam，但不因此产生一个额外的 runtime hop。
 
-### 2.3 Executable Does Not Mean Runtime Engine
+### 2.3 可执行不等于运行时引擎（Executable Does Not Mean Runtime Engine）
 
 Research Skill 与 Search Capability 都需要可执行的承载，但它们分别是 business method 与 capability boundary；只有 C2b Task Runtime 拥有当前 Execution 的 coordination authority。
 
-### 2.4 Boundary Must Survive Provider Replacement
+### 2.4 边界必须能经受 Provider 替换（Boundary Must Survive Provider Replacement）
 
 Provider-specific behavior 必须被 C4b Adapter 吸收，不能反向污染 C3 Search Capability 或 C2a Research Skill。
 
-### 2.5 Representation Must Preserve Stable Meaning
+### 2.5 软件表示必须保留稳定语义（Representation Must Preserve Stable Meaning）
 
 C5a、C5b、C6 的软件存在感不能因为暂不创建独立 Service 而被删除。必须保留相应的 stable representation、formalization、traceability 与 finalization responsibility。
 
 ---
 
-## 3. Master Software Responsibility Mapping Matrix
+## 3. 软件责任总映射矩阵（Master Software Responsibility Mapping Matrix）
 
-| # | Upstream responsibility / contract | Minimum software form | Executable? | Independent component? | Stable seam? | Category | Must-not-become |
+| # | 上游责任 / Contract | 最小软件形态 | 是否可执行 | 是否独立组件 | 是否为稳定 seam | 类别 | 不得演变为 |
 |---:|---|---|---|---|---|---|---|
 | 1 | Application Boundary | Thin interaction / transport-facing entry and return responsibility | No lifecycle authority | No dedicated service required | Yes | Thin boundary | Web App, Chat UI, or transport framework as architecture |
 | 2 | C1 Task Execution Boundary | Transport-neutral execution admission, rejection, and terminal return seam | No execution owner | No dedicated service required | Yes | Thin seam | `TaskExecutionService`, runtime replacement, or pre-execution failure conflation |
@@ -171,7 +173,7 @@ C5a、C5b、C6 的软件存在感不能因为暂不创建独立 Service 而被�
 | 13 | Scrape Creators Provider | External concrete provider reality | External execution | N/A — outside OS ownership | Accessed through adapter seam | External reality | Internal OS component, adapter, or capability boundary |
 | 14 | TT-17 Provider Endpoint / Access Surface | Provider access surface used by the Adapter for the admitted Search operation | External operation | N/A — not an OS component | Reached through C4b | External access surface | Search Capability itself, provider abstraction, or general endpoint platform |
 
-### 3.1 Matrix Reading Rules
+### 3.1 矩阵阅读规则（Matrix Reading Rules）
 
 #### `Executable?`
 
@@ -189,7 +191,7 @@ C5a、C5b、C6 的软件存在感不能因为暂不创建独立 Service 而被�
 
 ---
 
-## 4. Overall Software Responsibility Map
+## 4. 总体软件责任图（Overall Software Responsibility Map）
 
 The diagram distinguishes:
 
@@ -248,7 +250,7 @@ flowchart TD
     class OP,P,TT17 external;
 ```
 
-### 4.1 Diagram Interpretation
+### 4.1 图示解读（Diagram Interpretation）
 
 ```text
 Task Runtime
@@ -277,7 +279,7 @@ The diagram is a responsibility map, not a package layout, object graph, or impl
 
 ---
 
-## 5. Responsibility Mappings
+## 5. 责任映射（Responsibility Mappings）
 
 ### 5.1 Application Boundary
 
@@ -664,7 +666,7 @@ general endpoint platform
 
 ---
 
-## 6. Required Software Presence ≠ Independent Software Component
+## 6. 必须存在的软件表示 ≠ 独立软件组件（Required Software Presence ≠ Independent Software Component）
 
 This is a governing Step 1 principle:
 
@@ -750,7 +752,7 @@ This rule prevents mechanical conversion of every Contract or Responsibility int
 
 ---
 
-## 7. Delete Tests
+## 7. 删除测试（Delete Tests）
 
 The following tests distinguish a removable independent component from a non-removable seam, representation, or finalization responsibility.
 
@@ -921,7 +923,7 @@ Removing the independent Recorder Runtime is a component reduction. Removing sta
 
 ---
 
-## 8. Ownership and Boundary Summary
+## 8. 所有权与边界摘要（Ownership and Boundary Summary）
 
 | Responsibility type | First Slice software owner / carrier | Boundary that must remain explicit |
 |---|---|---|
@@ -958,7 +960,7 @@ C6 stable facts and finalization
 
 ---
 
-## 9. Explicitly Not Introduced by Step 1
+## 9. Step 1 明确不引入的内容（Explicitly Not Introduced by Step 1）
 
 The following are not introduced merely because the responsibility map contains a related semantic term:
 
@@ -989,7 +991,7 @@ This is not a claim that no future design can ever contain such software. It is 
 
 ---
 
-## 10. Deferred Questions and Scope Guard
+## 10. Deferred 问题与范围护栏（Deferred Questions and Scope Guard）
 
 The following remain deferred to later software-design steps and are not silently decided here:
 
@@ -1013,7 +1015,7 @@ These are deferred design questions, not missing responsibility mappings.
 
 ---
 
-## 11. Step 1 Review / Sufficiency Gate
+## 11. Step 1 评审 / 充分性门（Step 1 Review / Sufficiency Gate）
 
 ### 11.1 Gate Criteria
 
@@ -1043,7 +1045,7 @@ This sufficiency result does not authorize package design, implementation, or a 
 
 ---
 
-## 12. Final Step 1 Verdict
+## 12. Step 1 最终结论（Final Step 1 Verdict）
 
 ```text
 Responsibility → Software Responsibility Mapping

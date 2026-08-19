@@ -8,9 +8,11 @@
 - **Upstream Contract Package**: D1 = C1 + C2b + C2a
 - **Walking Implementation**: NOT YET AUTHORIZED
 
+> 中文阅读导语：本文描述一次 Research Execution 的最小执行主干。C2b Task Runtime 拥有 Execution Authority，C2a Research Skill 拥有 Business Method Authority；Capability invocation 必须由 C2b 协调，并在同一 Execution 中完成返回与终止化。
+
 ---
 
-## 0. Document Purpose and Boundary
+## 0. 文档目的与边界（Document Purpose and Boundary）
 
 本文件只负责：
 
@@ -79,7 +81,7 @@ Task Runtime = Execution Coordination
 
 ---
 
-## 1. Inherited Inputs
+## 1. 继承输入（Inherited Inputs）
 
 本 Step 不重新设计上游语义。主要继承：
 
@@ -108,7 +110,7 @@ Business Completion precedes Execution Completion
 
 ---
 
-## 2. Core Software Execution Model Candidate
+## 2. 核心软件执行模型候选（Core Software Execution Model Candidate）
 
 First Slice 当前采用：
 
@@ -186,7 +188,7 @@ state machine library
 
 ---
 
-## 3. Execution Authority vs Business Method Authority
+## 3. Execution Authority 与 Business Method Authority
 
 ### 3.1 C2b Task Runtime owns Execution Authority
 
@@ -265,7 +267,7 @@ and decides business conclusions
 
 ---
 
-## 4. C1 Admission and Execution Establishment
+## 4. C1 接纳与 Execution 建立（C1 Admission and Execution Establishment）
 
 ### 4.1 Business Work Request is not yet an Execution
 
@@ -312,7 +314,7 @@ Pre-execution Rejection ≠ Execution Failure
 
 ---
 
-## 5. Execution Establishment Commit Boundary
+## 5. Execution Establishment Commit Boundary（Execution 建立提交边界）
 
 Step 2 引入一个 software-level candidate concept：
 
@@ -384,7 +386,7 @@ CommitService
 
 ---
 
-## 6. Execution Context Ownership
+## 6. Execution Context 所有权（Execution Context Ownership）
 
 ### 6.1 C2b owns Canonical Execution Context
 
@@ -423,7 +425,7 @@ research interpretation notes
 
 ---
 
-## 7. Skill Working State
+## 7. Skill 工作状态（Skill Working State）
 
 Research Skill 可以拥有 execution 内部的 business-method working state。例如：
 
@@ -449,7 +451,7 @@ Skill Working State
 
 ---
 
-## 8. Cross-boundary Stable Facts
+## 8. 跨边界稳定事实（Cross-boundary Stable Facts）
 
 除了 Execution Context 和 Skill Working State，还存在第三类信息：
 
@@ -481,7 +483,7 @@ Terminal Outcome
 
 ---
 
-## 9. Actual Sample Boundary Example
+## 9. Actual Sample Boundary 示例
 
 Sampling decision 属于 C2a Research Skill。但一旦真实样本范围被确定，Actual Sample Boundary 就不再只是 Skill-private temporary variable，而成为 stable Research Execution fact。
 
@@ -502,7 +504,7 @@ Execution closure
 
 ---
 
-## 10. Skill Binding Model
+## 10. Skill 绑定模型（Skill Binding Model）
 
 First Slice 当前只有一个明确 Research Skill path。因此当前需要：
 
@@ -550,7 +552,7 @@ Task Runtime
 
 ---
 
-## 11. C2a ↔ C2b Control Transfer
+## 11. C2a ↔ C2b 控制转移（Control Transfer）
 
 Turn-based cooperative execution 中，C2a 每一轮根据当前 business state 形成下一步业务语义。当前至少存在两种重要 logical outcome：
 
@@ -571,7 +573,7 @@ ToolCallContract
 
 ---
 
-## 12. Provider-neutral Capability Need
+## 12. Provider-neutral Capability Need（Provider 中立的能力需求）
 
 当 Research Skill 认为需要 Search：
 
@@ -602,7 +604,7 @@ C2a Capability Need = provider-neutral
 
 ---
 
-## 13. Dependency Declaration vs Runtime Capability Need
+## 13. Dependency Declaration 与 Runtime Capability Need
 
 必须继续保持：
 
@@ -634,7 +636,7 @@ Search was actually invoked
 
 ---
 
-## 14. Runtime Coordination of Capability Invocation
+## 14. Runtime 对 Capability Invocation 的协调
 
 当 C2b 收到 Capability Need：
 
@@ -667,7 +669,7 @@ Finding formation
 
 ---
 
-## 15. Same Execution Continuity
+## 15. 同一 Execution 的连续性（Same Execution Continuity）
 
 一条 Research Execution 可以发生多次 Capability Invocation。例如：
 
@@ -687,7 +689,7 @@ Task ≠ Capability Invocation
 
 ---
 
-## 16. Capability Invocation Is Not a Child Execution
+## 16. Capability Invocation 不是子 Execution
 
 当前明确：
 
@@ -719,7 +721,7 @@ Cancellation Tree
 
 ---
 
-## 17. Invocation Identity vs Execution Identity
+## 17. Invocation Identity 与 Execution Identity
 
 Capability Invocation 后续可以具有足够的 identity / referenceability，用于：
 
@@ -742,7 +744,7 @@ Execution Identity
 
 ---
 
-## 18. Logical Ordering and Concurrency
+## 18. 逻辑顺序与并发（Logical Ordering and Concurrency）
 
 First Slice 当前冻结：
 
@@ -833,7 +835,7 @@ Parallel Task Graph
 
 ---
 
-## 19. Capability Outcome Model
+## 19. Capability 结果模型（Capability Outcome Model）
 
 当前软件语义区分：
 
@@ -847,7 +849,7 @@ Capability Invocation Outcome
 
 ---
 
-## 20. Contract-valid Bounded Result
+## 20. Contract 有效的有界结果（Contract-valid Bounded Result）
 
 Capability Result 不要求数据完美。以下情况仍可能属于合法 Result：
 
@@ -884,7 +886,7 @@ Evidence 是否足够？
 
 ---
 
-## 21. Capability Failure
+## 21. Capability 失败（Capability Failure）
 
 如果 provider / adapter / capability chain 无法形成合法 C3 Result：
 
@@ -902,7 +904,7 @@ Task Runtime 负责 execution-level handling。
 
 ---
 
-## 22. Continuable Failure vs Terminal Failure
+## 22. 可继续失败与终止失败（Continuable Failure vs Terminal Failure）
 
 当前不建立 comprehensive error taxonomy。但 Step 2 允许最小区分：
 
@@ -950,7 +952,7 @@ Terminal Failure Outcome
 
 ---
 
-## 23. Retry Boundary
+## 23. Retry 边界（Retry Boundary）
 
 必须保持：
 
@@ -976,7 +978,7 @@ Retry Engine = NOT REQUIRED / NOT PROVEN
 
 ---
 
-## 24. Insufficient Evidence Is Not Failure
+## 24. Insufficient Evidence 不是失败
 
 必须长期保持：
 
@@ -1012,7 +1014,7 @@ No strong conclusion ≠ Task Failure
 
 ---
 
-## 25. Business Completion
+## 25. Business Completion（业务完成）
 
 C2a Research Skill 形成合法 C5b Research Result，随后表达 C2a Business Completion。
 
@@ -1036,7 +1038,7 @@ later attempt to construct Research Result
 
 ---
 
-## 26. Single Accepted Business Completion
+## 26. 单一被接受的 Business Completion
 
 Step 2 当前采用：
 
@@ -1061,7 +1063,7 @@ Candidate Result ≠ Accepted Business Completion
 
 ---
 
-## 27. Execution Terminalization
+## 27. Execution Terminalization（Execution 终止化）
 
 C2b 在确认 Business Completion 之后进入 Execution Terminalization。
 
@@ -1083,7 +1085,7 @@ C1 Terminal Return
 
 ---
 
-## 28. At-most-once Terminal Transition
+## 28. 至多一次终止转换（At-most-once Terminal Transition）
 
 当前 software semantic 要求：
 
@@ -1118,7 +1120,7 @@ At-most-once terminal semantics
 
 ---
 
-## 29. Lifecycle Candidate
+## 29. 生命周期候选（Lifecycle Candidate）
 
 Step 2 当前最小 lifecycle 可以概念上理解为：
 
@@ -1154,7 +1156,7 @@ workflow graph
 
 ---
 
-## 30. Stable Execution Facts During Execution
+## 30. Execution 期间的 Stable Execution Facts
 
 Execution 运行过程中，一些 stable facts 会逐步成为已知事实。例如：
 
@@ -1184,7 +1186,7 @@ execution-scoped availability / reference
 
 ---
 
-## 31. C2b and Stable Fact Responsibility
+## 31. C2b 与稳定事实责任
 
 Step 2 当前只冻结：
 
@@ -1214,7 +1216,7 @@ Step 5 — Execution Record / Referenceability
 
 ---
 
-## 32. Transient State vs Stable Facts vs C6
+## 32. 瞬时状态、稳定事实与 C6
 
 必须长期保持：
 
@@ -1237,7 +1239,7 @@ current in-memory working object
 
 ---
 
-## 33. Failure Closure and Partial Facts
+## 33. 失败闭环与部分事实（Failure Closure and Partial Facts）
 
 一个失败 Execution 不要求拥有完整 business path。例如：
 
@@ -1281,7 +1283,7 @@ Business Output Ref
 
 ---
 
-## 34. Partial Facts Are Not Missing Architecture
+## 34. 部分事实不代表架构缺失
 
 必须避免：
 
@@ -1311,7 +1313,7 @@ Current Provider Binding
 
 ---
 
-## 35. Application Return Boundary
+## 35. Application 返回边界（Application Return Boundary）
 
 Application 最终消费：
 
@@ -1337,7 +1339,7 @@ Application transport representation 仍未决定。
 
 ---
 
-## 36. Main Execution Sequence Candidate
+## 36. 主 Execution 序列候选（Main Execution Sequence Candidate）
 
 ```mermaid
 sequenceDiagram
@@ -1377,7 +1379,7 @@ sequenceDiagram
 
 ---
 
-## 37. Candidate Boundary Summary
+## 37. 候选边界摘要（Candidate Boundary Summary）
 
 Step 2 当前形成以下 software-level candidate：
 
@@ -1417,7 +1419,7 @@ Execution Terminalization
 
 ---
 
-## 38. Explicit Non-decisions
+## 38. 明确未作出的决定（Explicit Non-decisions）
 
 本 Step 不决定：
 
@@ -1453,7 +1455,7 @@ Child C6
 
 ---
 
-## 39. Step 2 Candidate Status
+## 39. Step 2 候选状态（Step 2 Candidate Status）
 
 ```text
 Status
@@ -1493,4 +1495,3 @@ Transient runtime state
 ```
 
 这些结论只作为 Minimal Software Architecture 的下一步输入，不直接授权 implementation。
-

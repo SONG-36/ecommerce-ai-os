@@ -8,17 +8,19 @@
 - **Walking Implementation**: NOT YET AUTHORIZED
 - **Current Next**: Step 5 — Execution Record / Referenceability
 
+> 中文阅读导语：本文说明 Search Result 如何经过 sampling、Evidence formalization、Finding 与 Hypothesis，形成 human-reviewable Research Result。Search Result 不是 Evidence，Observed Fact 不是 Interpretation，Insufficient Evidence 可以是合法的 Research Result outcome，而不是 Execution Failure。
+
 ---
 
-## 0. Document Purpose, Scope, and Non-Scope
+## 0. 文档目的、范围与非目标（Document Purpose, Scope, and Non-Scope）
 
-This document records the Step 4 software design candidate for the First Research Slice.
+本文记录 First Research Slice 的 Step 4 软件设计候选。
 
-Its purpose is to translate the already-established research and evidence semantics into the minimum software responsibilities needed to carry a human-reviewable research result from Search Result through Evidence, Finding, Hypothesis, and Research Result.
+本文的目的，是把已经确认的 research 与 evidence semantics 转译为最小软件责任，使 human-reviewable research result 能够从 Search Result 经过 Evidence、Finding、Hypothesis，最终形成 Research Result。
 
-This document is a candidate design record. It is not Architecture Authority, does not reopen Product Architecture or System Architecture, and does not authorize Walking Implementation.
+本文是 candidate design record。它不是 Architecture Authority，不重新打开 Product Architecture 或 System Architecture，也不授权 Walking Implementation。
 
-### 0.1 This document answers
+### 0.1 本文回答的问题（This Document Answers）
 
 ```text
 How does a C3 Search Result become research evidence?
@@ -42,7 +44,7 @@ How are business-result validity and C2b execution terminalization kept separate
 Which references must resolve during the active Research Execution?
 ```
 
-### 0.2 Scope
+### 0.2 范围（Scope）
 
 This Step covers:
 
@@ -58,7 +60,7 @@ This Step covers:
 - Business Completion eligibility versus C2b Execution Completion.
 - Active-execution referenceability and the handoff of post-terminal representation questions to Step 5.
 
-### 0.3 Non-scope
+### 0.3 非目标（Non-scope）
 
 This document does not:
 
@@ -81,9 +83,22 @@ Required Software Presence
 Independent Runtime Component
 ```
 
+### 中文阅读要点
+
+```text
+Search Result 只是 provider-neutral discovery result，不自动等于 Evidence。
+C2a Research Skill 负责 relevance、sampling、dedupe、evidence-worthiness 与 interpretation。
+C5a 负责 Evidence 的稳定表示与 bounded formalization。
+C5b 负责 Research Result 边界与有限的 validity/formalization。
+Actual Sample Boundary 是实际研究样本的稳定事实，不等于 Search Retrieval Boundary。
+Finding 与 Hypothesis 必须能够追溯到 supporting Evidence。
+Insufficient Evidence 可以形成合法的 Research Result outcome。
+Business Completion 先于 Execution Completion；C2b 负责 terminalization。
+```
+
 ---
 
-## 1. Inherited Inputs and Invariants
+## 1. 继承输入与不变量（Inherited Inputs and Invariants）
 
 Step 4 inherits, rather than redesigns, the following context:
 
@@ -99,7 +114,7 @@ Prior Step 3 Search / Provider boundaries
 
 The names above identify the inherited design context. This document freezes only the Step 4 software candidate that follows from that context.
 
-### 1.1 D3 / C5a / C5b inherited responsibilities
+### 1.1 D3 / C5a / C5b 继承责任
 
 ```text
 C2a Research Skill
@@ -124,7 +139,7 @@ C2b Task Runtime
   Business Completion recognition, and terminalization.
 ```
 
-### 1.2 Inherited Step 1–3 software invariants
+### 1.2 继承自 Step 1–3 的软件不变量
 
 ```text
 Responsibility ≠ Contract ≠ Software Component
@@ -151,7 +166,7 @@ C5b does not own execution lifecycle transition.
 Insufficient Evidence is not an execution failure.
 ```
 
-### 1.3 First Slice research boundary
+### 1.3 First Slice 研究边界
 
 The working slice remains:
 
@@ -163,7 +178,9 @@ The result is a human-reviewable Research Result. It is not a validated business
 
 ---
 
-## 2. Core Software Responsibility Flow
+## 2. 核心软件责任流程
+
+中文说明：Step 4 的主流程从 C3 Search Result 开始，经过 C2a 的 relevance、sampling、dedupe 与 evidence-worthiness 判断，再由 C5a 形成 Evidence，最后由 C2a 形成 Finding、Hypothesis 与 Research Result，并把 Business Completion 交给 C2b。
 
 The minimum Step 4 flow is:
 
@@ -220,7 +237,9 @@ The flow deliberately does not insert an EvidenceService, AnalyzeService, Findin
 
 ---
 
-## 3. Search Result Is Not Evidence
+## 3. Search Result 不是 Evidence
+
+中文说明：Search Result 是 provider-neutral 的发现结果，只是研究候选来源；它必须经过研究方法判断，才能成为可审阅的 Evidence。
 
 ```text
 Search Result
@@ -251,7 +270,7 @@ C3 Search Result Item
 
 It also prevents a provider payload from silently becoming a research conclusion. Search discovery, evidence admission, observation formalization, and interpretation remain distinct semantics.
 
-### 3.1 Evidence is selected and reviewable
+### 3.1 Evidence 必须被选择且可审阅
 
 Evidence is:
 
@@ -282,7 +301,9 @@ E3: product demonstrated in a seat-gap scenario
 
 ---
 
-## 4. Evidence Admission Versus Evidence Formalization
+## 4. Evidence Admission 与 Evidence Formalization 的区别
+
+中文说明：Evidence admission 回答“这个观察是否值得作为证据使用”；Evidence formalization 回答“如何把已接纳的观察表示为稳定、可追溯的 Evidence”。前者属于 C2a，后者属于 C5a。
 
 The two responsibilities must remain separate.
 
@@ -292,7 +313,7 @@ C2a decides WHY an observation is worth studying.
 C5a defines WHAT must be preserved when it becomes Evidence.
 ```
 
-### 4.1 C2a Evidence admission
+### 4.1 C2a Evidence admission（证据接纳）
 
 C2a owns the research-method decision that an observation is relevant and evidence-worthy within the current Research Boundary and Actual Sample Boundary.
 
@@ -309,7 +330,7 @@ conclude that available evidence is insufficient.
 
 C5a must not decide relevance by itself. A formalizer must not silently contain business rules such as `useful(item)` or `should_sample(item)` unless that responsibility is explicitly returned to C2a.
 
-### 4.2 C5a Evidence formalization
+### 4.2 C5a Evidence formalization（证据形式化）
 
 C5a owns the stable representation/formalization boundary for an observation already admitted by C2a.
 
@@ -337,7 +358,9 @@ This is a software responsibility, not an approved independent service.
 
 ---
 
-## 5. Evidence Minimum Stable Semantic Categories
+## 5. Evidence 最小稳定语义类别
+
+中文说明：Evidence 的最小语义必须保留观察事实、来源、时间、样本边界、缺失性与 provenance 等信息，但不要求复制完整 Provider object。
 
 The Evidence representation must preserve the following semantic categories:
 
@@ -364,7 +387,7 @@ These are semantic categories, not a frozen field list:
 
 The exact software shape, names, nesting, and reference encoding remain deliberately deferred.
 
-### 5.1 Evidence nature
+### 5.1 Evidence 的性质
 
 The software semantics must preserve the distinction:
 
@@ -385,7 +408,7 @@ Public Performance Signal
 → Causal Business Truth
 ```
 
-### 5.2 Observed Fact versus Interpretation
+### 5.2 Observed Fact 与 Interpretation 的区别
 
 ```text
 Observed Fact
@@ -408,7 +431,9 @@ The first belongs to the Evidence boundary. The second belongs to C2a interpreta
 
 ---
 
-## 6. Actual Sample Boundary
+## 6. Actual Sample Boundary（实际样本边界）
+
+中文说明：Actual Sample Boundary 记录实际进入研究判断的样本边界。它不同于 Search Retrieval Boundary，也不由 C5a 单独拥有。
 
 Actual Sample Boundary is a stable Research Execution Fact.
 
@@ -443,14 +468,16 @@ Research Result
 = references / exposes it
 ```
 
-### 6.1 Multiple Evidence items do not imply EvidenceSet
+### 6.1 多个 Evidence 不等于 EvidenceSet
 
 Multiple Evidence items are a required reality. They may be held as a collection of supporting references in Skill Working State or in a Research Result.
 
 That does not establish an independent `EvidenceSet` entity or service. An EvidenceSet would require its own identity, version, approval, lifecycle, reuse semantics, or other responsibility that is not currently proven.
 
 ---
-## 7. Finding Software Semantics
+## 7. Finding 软件语义
+
+中文说明：Finding 是基于 Evidence 的研究解释，由 C2a 形成；它不是任意自由文本，也不需要独立 FindingService。
 
 Finding is a stable research-interpretation representation, not an independent runtime.
 
@@ -488,7 +515,9 @@ Finding Runtime
 
 ---
 
-## 8. Hypothesis Software Semantics
+## 8. Hypothesis 软件语义
+
+中文说明：Hypothesis 是明确可测试、可追溯且仍标记为未验证的命题。它不等于事实，也不需要 Hypothesis Engine。
 
 Hypothesis is a stable testable-proposition representation formed by C2a from a Finding and/or supporting Evidence.
 
@@ -519,7 +548,9 @@ The Step 4 candidate does not require priority score, confidence score, experime
 
 ---
 
-## 9. Interpretation, Finding, and Hypothesis Ownership
+## 9. Interpretation、Finding 与 Hypothesis 的所有权
+
+中文说明：Evidence 保留 Observed Fact；Interpretation、Finding 与 Hypothesis 的形成责任留在 C2a Research Skill 内。
 
 An independent AnalyzeService or Analyze Capability is not required for the First Slice.
 
@@ -539,7 +570,9 @@ Creating an AnalyzeService would split an already-established C2a Business Metho
 
 ---
 
-## 10. Claim-Level Traceability
+## 10. Claim 级 Traceability（可追溯性）
+
+中文说明：每个重要 claim 都应能回到支持它的 Evidence 与 Actual Sample Boundary；Traceability 是语义关系，不是自动引入 TraceabilityService。
 
 Claim-level traceability is required. The minimum First Slice direction is:
 
@@ -576,9 +609,11 @@ Exact reference direction and software representation remain open except for the
 
 ---
 
-## 11. Research Result and C5b Boundary
+## 11. Research Result 与 C5b 边界
 
-### 11.1 Formation ownership
+中文说明：Research Result 是 human-reviewable business result，包含 answerability 与 limitations。它引用 Evidence，但不复制完整 Evidence payload。
+
+### 11.1 形成责任
 
 C2a Research Skill owns Research Result formation. C2a forms the business content that may include:
 
@@ -595,7 +630,7 @@ Traceability / provenance
 
 C5b does not perform research interpretation and does not generate Findings or Hypotheses by reading Evidence. C5b defines the stable human-reviewable Result boundary and the bounded validity/formalization semantics needed to determine whether the business result is eligible for C2a Business Completion.
 
-### 11.2 C5b minimum stable semantic categories
+### 11.2 C5b 最小稳定语义类别
 
 The Research Result must preserve these semantic categories:
 
@@ -621,7 +656,7 @@ validated business truth
 automatic Knowledge update
 ```
 
-### 11.3 References, not full Evidence copies
+### 11.3 References，而不是完整 Evidence 副本
 
 C5b references Evidence. It does not redefine or fully copy the Evidence payload.
 
@@ -632,7 +667,7 @@ Research Result
 
 Inline versus referenced representation remains open. The semantic requirement is that a reviewer can follow the Result’s claims to the supporting Evidence within the applicable reference boundary.
 
-### 11.4 Answerability and Limitations
+### 11.4 Answerability 与 Limitations
 
 ```text
 Answerability
@@ -644,7 +679,7 @@ Answerability describes what the current research can answer. Limitations descri
 
 The First Slice does not require a confidence score, confidence level, confidence taxonomy, or Answerability taxonomy.
 
-### 11.5 Finding and Hypothesis outcomes may be empty
+### 11.5 Finding 与 Hypothesis 结果可以为空
 
 Finding and Hypothesis outcomes are required semantic surfaces, but positive non-empty claims are not required.
 
@@ -668,7 +703,9 @@ generate a Finding anyway
 
 ---
 
-## 12. Insufficient Evidence and Completion Boundaries
+## 12. Insufficient Evidence 与完成边界
+
+中文说明：Insufficient Evidence 可以形成合法的 Research Result outcome；Research Result 有效不代表 Execution 已完成，Business Completion 仍由 C2a 明确声明。
 
 Insufficient Evidence is a valid Research Result outcome.
 
@@ -700,7 +737,7 @@ C2a declares Business Completion
 C2b terminalizes successfully
 ```
 
-### 12.1 Result validity is not Execution Completion
+### 12.1 Result 有效不等于 Execution Completion
 
 ```text
 C5b
@@ -725,7 +762,9 @@ Creation or validation of a Result must not mark the Execution successful by its
 
 ---
 
-## 13. Evidence Formalization Failure Split
+## 13. Evidence Formalization 失败分流
+
+中文说明：证据语义不合格是 EvidenceInadmissible；软件或 formalizer malfunction 则是 failure/exception。两者不能混为一谈。
 
 This section is a Step 4 software Candidate refinement. It is not presented as a new upstream Contract quote.
 
@@ -777,7 +816,9 @@ No `EvidenceRejectionContract` or `EvidenceFailureContract` is introduced. The e
 
 ---
 
-## 14. Referenceability and Step 5 Boundary
+## 14. Referenceability 与 Step 5 边界
+
+中文说明：Step 4 只定义 Evidence / Result 的引用关系；post-terminal resolvability 与 retention representation 由 Step 5 接续处理。
 
 Evidence, Finding, Hypothesis, and Research Result references must be resolvable during the active Research Execution.
 
@@ -818,7 +859,7 @@ If a reference becomes necessary for finalized Execution explanation or provenan
 
 ---
 
-## 15. Software Responsibility Flow
+## 15. 软件责任流程
 
 ```mermaid
 flowchart TD
@@ -885,11 +926,11 @@ They are not approved services named `EvidenceFormalizationService` or `Research
 
 ---
 
-## 16. Full Step 4 Stress-Test Summary
+## 16. Step 4 完整压力测试摘要
 
 The following records all 26 pressure tests from the three Step 4 rounds.
 
-| Test | Pressure point | Step 4 conclusion |
+| 测试（Test） | 压力点（Pressure Point） | Step 4 结论（Conclusion） |
 |---:|---|---|
 | 1 | Search Result directly becomes Evidence | Search Result is not Evidence; C2a must select an evidence-worthy observation under the Actual Sample Boundary. **PASS** |
 | 2 | Who creates Evidence? | C2a owns admission/evidence-worthiness; C5a owns formalization. Bounded construction/validation may exist without EvidenceService. **PASS** |
@@ -920,7 +961,7 @@ The following records all 26 pressure tests from the three Step 4 rounds.
 
 ---
 
-## 17. Candidate Decisions S4-01 through S4-35
+## 17. 候选决策 S4-01 through S4-35
 
 These are the final Step 4 Candidate decisions, preserving the established substance and order.
 
@@ -964,7 +1005,7 @@ These are the final Step 4 Candidate decisions, preserving the established subst
 
 ---
 
-## 18. Explicitly Non-Introduced Items
+## 18. 明确不引入的内容
 
 The following are explicitly not introduced by Step 4:
 
@@ -1003,7 +1044,7 @@ The absence of these items does not remove the corresponding required semantics.
 
 ---
 
-## 19. Representation Questions Deliberately Deferred
+## 19. 有意延后的软件表示问题
 
 Step 4 intentionally does not choose:
 
@@ -1041,7 +1082,7 @@ deployment
 
 ---
 
-## 20. Delete Test Matrix
+## 20. 删除测试矩阵
 
 The following matrix reflects the Step 4 delete test exactly at the responsibility level.
 
@@ -1081,7 +1122,7 @@ Deleting an unproven service is safe. Deleting a necessary semantic boundary is 
 
 ---
 
-## 21. Step 4 Sufficiency Gate
+## 21. Step 4 充分性门
 
 | Gate | Result |
 |---|---|
@@ -1114,7 +1155,7 @@ Deleting an unproven service is safe. Deleting a necessary semantic boundary is 
 
 ---
 
-## 22. Step 4 Verdict
+## 22. Step 4 结论
 
 ```text
 Step 4 Research / Evidence Software Design
@@ -1151,7 +1192,7 @@ Walking Implementation
 = NOT YET AUTHORIZED
 ```
 
-### Current Next
+### 当前下一步（Current Next）
 
 ```text
 Step 5 — Execution Record / Referenceability
@@ -1161,7 +1202,6 @@ Step 5 may decide how required execution facts accumulate, finalize, and remain 
 
 ---
 
-## 23. Final One-Line Conclusion
+## 23. 最终一句话结论
 
 **Step 4 freezes the minimum Evidence, Finding, Hypothesis, and Research Result software semantics and their active-execution traceability boundaries, while keeping interpretation in C2a, lifecycle in C2b, formalization in C5a/C5b responsibilities, and all independent research services and persistence architecture out of scope.**
-

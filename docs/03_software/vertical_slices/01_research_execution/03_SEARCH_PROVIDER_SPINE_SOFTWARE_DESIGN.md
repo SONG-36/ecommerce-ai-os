@@ -8,9 +8,11 @@
 - **Minimum Endpoint**: {TT-17 Search by Keyword}
 - **Walking Implementation**: NOT YET AUTHORIZED
 
+> 中文阅读导语：本文说明 provider-neutral Search 与具体 Provider integration 的软件边界。C3 保持 Search 语义中立，C4a 是 Composition-time static binding，C4b 负责 Scrape Creators translation；Adapter 与 Access Mechanism 分离，TT-17 的有界事实不得被夸大为全局完整性。
+
 ---
 
-## 0. Purpose, Scope, and Boundary
+## 0. 文档目的、范围与边界（Purpose, Scope, and Boundary）
 
 本文件只负责：
 
@@ -70,7 +72,7 @@ C3 Search Result ≠ Evidence
 
 ---
 
-## 1. Inherited Inputs
+## 1. 继承输入（Inherited Inputs）
 
 本 Step 不重新设计上游语义。主要继承：
 
@@ -127,7 +129,7 @@ metric freshness = bounded observation semantics
 
 ---
 
-## 2. Core Search / Provider Spine Candidate
+## 2. 核心 Search / Provider 主干候选（Core Search / Provider Spine Candidate）
 
 First Slice 的最小软件责任关系是：
 
@@ -169,7 +171,7 @@ C2b Task Runtime
 C2a Research Skill
 ~~~
 
-### Mermaid responsibility / dependency view
+### Mermaid 责任 / 依赖视图
 
 ~~~mermaid
 flowchart TD
@@ -208,9 +210,9 @@ C4b concrete implementation behind C3 ≠ C3 becomes Provider-specific
 
 ---
 
-## 3. Search Need vs Search Request
+## 3. Search Need 与 Search Request 的区别
 
-### 3.1 Search Need
+### 3.1 Search Need（搜索需求）
 
 Search Need 是 C2a Research Skill 在当前 business method turn 中作出的业务控制判断：
 
@@ -231,7 +233,7 @@ provider-specific parameter names
 
 Search Need 不要求单独引入 generic Need object。
 
-### 3.2 Search Request
+### 3.2 Search Request（搜索请求）
 
 Search Request 是把当前 Search Need 表达为一次 C3 provider-neutral Search invocation 所需的语义边界。
 
@@ -275,7 +277,7 @@ C2a 的 business decision、C3 的 Search Request semantics、C2b 的 invocation
 
 ---
 
-## 4. C2b → C3 Dependency Rule
+## 4. C2b → C3 依赖规则（Dependency Rule）
 
 C2b Task Runtime 是 Capability invocation coordinator。它依赖：
 
@@ -325,7 +327,7 @@ research interpretation
 
 ---
 
-## 5. C3 Callable Seam — No Required SearchService
+## 5. C3 可调用边界 — 不需要独立 SearchService
 
 C3 必须有明确的可调用软件边界：
 
@@ -363,9 +365,9 @@ C4b = concrete Provider translation implementation
 
 ---
 
-## 6. C4a Static Binding Semantics
+## 6. C4a 静态绑定语义（Static Binding Semantics）
 
-### 6.1 Current binding
+### 6.1 当前绑定（Current Binding）
 
 First Slice 当前是：
 
@@ -405,7 +407,7 @@ provider resolved ≠ access invocation necessarily succeeded
 invocation succeeded → may establish actually-used Provider fact
 ~~~
 
-### 6.3 C4a is not a runtime resolver component
+### 6.3 C4a 不是运行时 Resolver 组件
 
 当前不引入：
 
@@ -422,9 +424,9 @@ C4a 的语义可以由 static wiring / composition fact 承载。C4a 是 semanti
 
 ---
 
-## 7. C4b Adapter vs Concrete Scrape Creators Access Mechanism
+## 7. C4b Adapter 与具体 Scrape Creators Access Mechanism 的区别
 
-### 7.1 C4b Adapter
+### 7.1 C4b Adapter（适配器）
 
 C4b 是 Provider translation / quirk absorption boundary。当前 admitted TT-17 slice 中，C4b owns：
 
@@ -441,7 +443,7 @@ Provider limitation → explicit limitation / unknown
 
 C4b 必须受 C3 / D5 semantics 驱动，而不能让 Provider response shape 反向定义 OS boundary。
 
-### 7.2 Access Mechanism
+### 7.2 Access Mechanism（访问机制）
 
 Scrape Creators Access Mechanism owns the concrete act of reaching the current Provider, including only the Provider-specific access responsibility needed by this slice。
 
@@ -455,7 +457,7 @@ Provider response receipt
 
 但它不拥有 C3 business semantics，也不拥有 Research Method judgment。
 
-### 7.3 Separation rule
+### 7.3 分离规则（Separation Rule）
 
 不能把所有责任压成一个不可区分的对象：
 
@@ -481,7 +483,7 @@ Access Mechanism ≠ Endpoint
 
 ---
 
-## 8. TT-17 Mapping Is Internal to C4b
+## 8. TT-17 Mapping 属于 C4b 内部责任
 
 Minimum Endpoint 已收口为：
 
@@ -522,9 +524,9 @@ explicitly unsupported / unverified semantics
 
 ---
 
-## 9. Pagination Ownership and Bounded Traversal
+## 9. 分页所有权与有界遍历（Pagination Ownership and Bounded Traversal）
 
-### 9.1 Logical Search invocation may contain multiple Provider requests
+### 9.1 一次逻辑 Search invocation 可以包含多个 Provider requests
 
 必须保持：
 
@@ -534,7 +536,7 @@ explicitly unsupported / unverified semantics
 
 一个有界的 C3 Search invocation 可以内部包含多个 TT-17 page requests。C2b 协调的是 one logical C3 Capability invocation，不是每一页独立产生一个 Task、Execution 或 Capability invocation。
 
-### 9.2 Responsibility split
+### 9.2 责任分工（Responsibility Split）
 
 ~~~text
 C2a Research Skill
@@ -561,7 +563,7 @@ Research Skill does not see provider cursor.
 
 Provider cursor is a Provider mechanism, not stable C3 semantics.
 
-### 9.3 No default infinite traversal
+### 9.3 不默认进行无限遍历
 
 错误方案：
 
@@ -588,7 +590,7 @@ provider exhaustion, only if actually known
 
 不得默认翻到世界尽头。
 
-### 9.4 Retrieval bound vs research sample bound
+### 9.4 Retrieval bound 与 research sample bound 的区别
 
 ~~~text
 C3 Search retrieval bound
@@ -612,7 +614,7 @@ C3 不负责 sampling judgment；C2a 不负责 Provider cursor mechanics。
 
 ---
 
-## 10. Search Completion vs Provider Exhaustion vs Global Completeness
+## 10. Search Completion、Provider Exhaustion 与 Global Completeness 的区别
 
 这三个概念必须保持独立：
 
@@ -653,7 +655,7 @@ Provider Lab 的 reconnaissance test cap 也不能升级为 Provider hard cap。
 
 ---
 
-## 11. Duplicates Are Preserved; Research Layer Owns Dedupe
+## 11. 保留重复项；Research 层负责 Dedupe
 
 TT-17 实测已发现跨页重复。当前 software semantics 必须把返回结果表示为 returned occurrences，而不是提前唯一化的 unique items only。
 
@@ -679,7 +681,7 @@ Provider duplicate occurrence 不是自动的 Search Failure，也不是自动�
 
 ---
 
-## 12. Missingness Normalization
+## 12. Missingness 规范化（Missingness Normalization）
 
 C4b 必须把 Provider-side missingness 归一为 provider-neutral missingness，同时不伪造值。
 
@@ -721,7 +723,7 @@ C2a = interpret research impact of missingness
 
 ---
 
-## 13. Provider Identity vs Global / Source Identity
+## 13. Provider Identity 与 Global / Source Identity 的区别
 
 TT-17 的 aweme_id 可以作为 Provider-side item identity candidate，但必须保持：
 
@@ -757,7 +759,7 @@ GlobalCreatorId
 
 ---
 
-## 14. Source Reference vs Media Locator
+## 14. Source Reference 与 Media Locator 的区别
 
 ~~~text
 Original Source Reference
@@ -785,7 +787,7 @@ media locator = observation-time access information
 
 ---
 
-## 15. Publication Time vs Observation / Metric Snapshot Time
+## 15. Publication Time 与 Observation / Metric Snapshot Time 的区别
 
 TT-17 的 create_time 只能承载其已观察到的 publication-time semantics：
 
@@ -811,7 +813,7 @@ metric snapshot observation context
 
 ---
 
-## 16. Bounded Region Semantics
+## 16. 有界 Region 语义（Bounded Region Semantics）
 
 First Slice 请求上下文是：
 
@@ -838,7 +840,7 @@ all returned videos are definitively representative of the complete US TikTok po
 
 ---
 
-## 17. date_posted / sort_by Observed-but-Unverified Rule
+## 17. date_posted / sort_by 已观察但未验证规则
 
 Provider surface 观察到 date_posted 与 sort_by，但当前：
 
@@ -866,7 +868,7 @@ sort_by = unverified optional behavior
 
 ---
 
-## 18. Raw Provider Payload Boundary and Referenceability
+## 18. Raw Provider Payload 边界与 Referenceability
 
 Raw Provider payload 不以 C3 semantics 形式一路上返：
 
@@ -903,7 +905,7 @@ Raw-result referenceability ≠ raw payload repository
 
 ---
 
-## 19. Minimum C3 Search Result Semantic Categories
+## 19. C3 Search Result 最小语义类别
 
 C3 Search Result 不能只是 list[Item]，也不能变成 TT17Response wrapper。
 
@@ -920,7 +922,7 @@ C3 Search Result 不能只是 list[Item]，也不能变成 TT17Response wrapper�
 
 ---
 
-## 20. Search Result vs Search Failure
+## 20. Search Result 与 Search Failure 的区别
 
 当前最小逻辑 outcome：
 
@@ -965,11 +967,11 @@ Raw Provider error ≠ C3 outcome
 
 ---
 
-## 21. Full Step 3 Stress-Test Summary
+## 21. Step 3 完整压力测试摘要
 
 本 Step 通过 20 个压力测试，覆盖 S3-01 至 S3-30。每个压力测试可以包含一个或多个 Candidate Decision。
 
-| Pressure Test | Focus | Candidate Decisions | Result |
+| 压力测试（Pressure Test） | 关注点（Focus） | 候选决策（Candidate Decisions） | 结果（Result） |
 |---|---|---|---|
 | 1 | Search Need 是否需要独立通用对象 | S3-01, S3-02 | PASS |
 | 2 | Search Request 是否被 Provider 参数反向定义 | S3-03, S3-04 | PASS |
@@ -1008,7 +1010,7 @@ Search Result ≠ Search Failure
 
 ---
 
-## 22. Delete Tests
+## 22. 删除测试（Delete Tests）
 
 ### Delete Test A — 删除独立 SearchService
 
@@ -1117,7 +1119,7 @@ Raw Payload Repository = NOT REQUIRED
 
 ---
 
-## 23. Sufficiency Gate
+## 23. 充分性门（Sufficiency Gate）
 
 | Gate | Result |
 |---|---|
@@ -1159,7 +1161,7 @@ Exact representation and implementation choices remain deferred.
 
 ---
 
-## 24. Candidate Decisions S3-01 … S3-30
+## 24. 候选决策 S3-01 … S3-30
 
 ~~~text
 S3-01
@@ -1255,7 +1257,7 @@ Raw Provider errors do not cross the C4b / C3 boundary.
 
 ---
 
-## 25. Explicitly Non-Introduced Items
+## 25. 明确不引入的内容
 
 This Step deliberately does not introduce:
 
@@ -1294,7 +1296,7 @@ Walking Implementation
 
 ---
 
-## 26. Representation Questions Deferred
+## 26. 延后的软件表示问题
 
 本 Step 只冻结 semantic categories 和 responsibility boundaries，不冻结以下表示问题：
 
@@ -1331,7 +1333,7 @@ Deferred 不等于 backlog，也不等于下一步自动必须决定。它们必
 
 ---
 
-## 27. Step 3 Verdict
+## 27. Step 3 结论
 
 ~~~text
 Step 3 — Search / Provider Spine Software Design
@@ -1369,7 +1371,7 @@ The Candidate is sufficient to proceed to the next design step without inventing
 
 ---
 
-## 28. Current Next
+## 28. 当前下一步（Current Next）
 
 ~~~text
 Step 4 — Research / Evidence Software Design
@@ -1398,7 +1400,7 @@ Missingness ≠ evidence interpretation
 
 ---
 
-## Final One-line Conclusion
+## 最终一句话结论
 
 ~~~text
 Step 3 is complete as a minimal Candidate Search / Provider software spine: C2b depends on a provider-neutral C3 Search seam, C4a remains static binding, C4b owns bounded TT-17 translation behind that seam, Provider mechanics stay below the boundary, and no Walking Implementation is authorized.

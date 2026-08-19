@@ -9,13 +9,15 @@
 - **Walking Implementation**: NOT YET AUTHORIZED
 - **Current Next**: Step 6 — Minimal Software Architecture Assembly + Representation Closure
 
+> 中文阅读导语：本文冻结 C6 Finalized Execution Record 所需的最小软件语义，以及 Execution terminalization 之后仍必须可解析的 references。Runtime State、Stable Execution Facts 与 Finalized Execution Record 必须分离；Referenceability 是语义义务，但不自动推出 Repository、Database 或 Persistence Service。
+
 ---
 
-## 0. Purpose, Scope, and Non-Scope
+## 0. 文档目的、范围与非目标（Purpose, Scope, and Non-Scope）
 
-### 0.1 Purpose
+### 0.1 文档目的（Purpose）
 
-This document freezes the minimum software semantics required for a finalized C6 Execution Record and for the references needed to explain an Execution after terminalization. It converts the Step 5 pressure-test conclusions into implementation-constraining requirements for Step 6.
+本文冻结 finalized C6 Execution Record 所需的最小软件语义，以及 Execution terminalization 之后解释该 Execution 所需的 references。它把 Step 5 压力测试结论转换为约束 Step 6 的实现要求。
 
 The central boundary is:
 
@@ -29,7 +31,7 @@ Finalized Execution Record
 
 Step 5 establishes what must be preserved and resolvable. It does not choose the concrete representation or storage medium.
 
-### 0.2 Scope
+### 0.2 范围（Scope）
 
 This document covers:
 
@@ -45,7 +47,7 @@ This document covers:
 - Step 5 pressure tests, Candidate Decisions, Delete Test, and Sufficiency Gate;
 - implementation constraints handed to Step 6.
 
-### 0.3 Non-scope
+### 0.3 非目标（Non-scope）
 
 This document does not:
 
@@ -59,13 +61,25 @@ This document does not:
 - define restart, cross-process, or long-term durability requirements;
 - authorize Walking Implementation.
 
+### 中文阅读要点
+
+```text
+Runtime State 是实时协调状态，不等于 Stable Execution Facts。
+Stable Execution Facts 是 Execution 中实际形成、且后续解释闭环所需的事实。
+Finalized Execution Record 是 C6 的终止表示，不是 trace、logs 或 foreign payload 的完整副本。
+C2b 拥有 Execution lifecycle；C6 负责 terminal finalization semantics。
+Post-terminal Referenceability 是必需语义义务，但不自动推出 Repository、Database 或 Persistence Architecture。
+Success 与 Failure 可以拥有不同的合法 reference sets。
+Partial terminal facts 是合法结果，不等于架构缺口。
+```
+
 ---
 
-## 1. Inherited Inputs, Invariants, and Authority Boundary
+## 1. 继承输入、不变量与 Authority 边界
 
 Step 5 inherits the established conclusions from the authoritative C6 / D4 material, the runtime path, Step 1–4 candidate documents, the Deferred Register, and the detailed Contract Consistency Review.
 
-### 1.1 Authoritative input set
+### 1.1 权威输入集合（Authoritative Input Set）
 
 The relevant software-design inputs are:
 
@@ -82,7 +96,7 @@ Detailed Contract Consistency Review
 
 The inputs remain authoritative for their own boundaries. This document adds no upstream semantic redesign.
 
-### 1.2 Inherited responsibility map
+### 1.2 继承的责任映射
 
 ```text
 C1
@@ -113,7 +127,7 @@ C6 / D4
 = stable Execution facts, referenceability, and terminal finalization responsibility
 ```
 
-### 1.3 Inherited runtime invariants
+### 1.3 继承的运行时不变量
 
 The following invariants remain closed and are not reopened by Step 5:
 
@@ -130,7 +144,7 @@ The following invariants remain closed and are not reopened by Step 5:
 11. Provider-specific payloads and mechanics stay below the C3 / C4b boundary, with only necessary provenance references exposed upward.
 12. Walking Implementation remains unauthorized.
 
-### 1.4 Deferred Register and Contract Review inheritance
+### 1.4 继承 Deferred Register 与 Contract Review 结论
 
 The following remain deferred rather than missing:
 
@@ -147,9 +161,11 @@ The detailed Contract Consistency Review found no need to reopen the Contract In
 
 ---
 
-## 2. Core Lifecycle Candidate
+## 2. 核心生命周期候选（Core Lifecycle Candidate）
 
-### 2.1 Lifecycle sequence
+中文说明：C2b 建立并拥有 Execution lifecycle，稳定事实在运行过程中逐步形成，终止时由 C6 完成 Finalized Execution Record。
+
+### 2.1 生命周期序列（Lifecycle Sequence）
 
 The minimal lifecycle is:
 
@@ -173,21 +189,21 @@ Execution Outcome / Record Reference returned to C1 / Application
 
 The sequence does not imply a service graph, an event graph, a database transaction, or a separate Recorder Runtime.
 
-### 2.2 Three-state separation
+### 2.2 三种状态的分离
 
-#### Runtime State
+#### Runtime State（运行时状态）
 
 Runtime State is live coordination state owned by C2b. It may include current control flow, temporary working objects, provisional values, active Capability calls, and Skill Working State references. It is disposable unless a specific fact has been promoted to stable execution semantics.
 
-#### Stable Execution Facts
+#### Stable Execution Facts（稳定执行事实）
 
 Stable Execution Facts are facts that became actually known during the Execution and are necessary for later Execution explanation, terminal closure, required provenance, or business-output traceability. They become known progressively. They are not the complete runtime history and are not automatically every object observed during execution.
 
-#### Finalized Execution Record
+#### Finalized Execution Record（最终执行记录）
 
 The Finalized Execution Record is the terminal C6 representation of the stable facts and references valid for that terminal outcome. It is not a live pointer to Runtime State, not a trace stream, and not a full copy of all foreign-owned payloads.
 
-### 2.3 Finalization boundary
+### 2.3 Finalization 边界
 
 C6 finalization occurs at terminalization, after C2b has determined that the Execution is entering a terminal state. C6 must support the facts available for the actual terminal path, including partial success and terminal failure.
 
@@ -203,7 +219,7 @@ SnapshotService
 
 Step 6 may choose an implementation shape only if needed to satisfy the frozen semantics.
 
-### 2.4 Application return boundary
+### 2.4 Application 返回边界
 
 The Application receives:
 
@@ -217,15 +233,17 @@ It does not receive the complete C6 payload by default. The application-facing `
 
 ---
 
-## 3. Ownership and Fact Accumulation
+## 3. 所有权与事实累积（Ownership and Fact Accumulation）
 
-### 3.1 C2b remains lifecycle owner
+中文说明：各局部责任拥有自己的 domain meaning；C2b 只保留完成 Execution closure 所需的实际 facts/references，C6 负责 terminal finalization。
+
+### 3.1 C2b 仍是生命周期所有者
 
 C2b remains the lifecycle owner for execution-scoped stable fact accumulation. It establishes the Execution, coordinates the runtime path, recognizes terminalization, and coordinates the handoff to C6 finalization.
 
 This does not make C2b the owner of every domain fact. Other responsibilities retain local ownership of the facts they form and expose the stable facts or references required for Execution closure.
 
-### 3.2 Local ownership with execution-level closure
+### 3.2 局部所有权与 Execution 级闭环
 
 The ownership rule is:
 
@@ -249,7 +267,7 @@ C2b retains the actual participation and execution-level references needed for C
 
 There is no direct multi-writer ownership of a finalized C6 Record. Local responsibilities expose facts; C2b coordinates execution-level collection and C6 owns terminal finalization semantics.
 
-### 3.3 No RecorderService / Fact Sink / Event Bus / Record Runtime
+### 3.3 不引入 RecorderService / Fact Sink / Event Bus / Record Runtime
 
 The requirement for stable facts and finalization does not justify:
 
@@ -266,11 +284,13 @@ The lifecycle can close through C2b-owned coordination plus C6 finalization resp
 
 ---
 
-## 4. C6 Minimum Semantic Categories
+## 4. C6 最小语义类别
+
+中文说明：这里冻结的是 C6 的语义类别与义务，不冻结字段名、字段类型或具体存储方式；这些表示问题留给 Step 6。
 
 The following are semantic categories, not an exact field list. Step 5 freezes the categories and obligations; Step 6 may decide their concrete representation.
 
-### 4.1 Record identity and referenceability
+### 4.1 Record identity 与 Referenceability
 
 C6 must provide the identity semantics needed to identify the finalized Execution Record and resolve the Application-facing Record Reference within its declared required lifecycle.
 
@@ -278,11 +298,11 @@ C6 must provide the identity semantics needed to identify the finalized Executio
 
 C6 must identify which Execution occurred and which Task / Business Work Request it served, using the minimum references needed to explain the relationship.
 
-### 4.3 Input references
+### 4.3 输入引用（Input References）
 
 C6 must preserve references to the inputs needed to explain what the Execution acted on. This does not require copying complete Product Briefs, Research Contexts, or foreign-owned input payloads into C6.
 
-### 4.4 Actual participation facts
+### 4.4 实际参与事实（Actual Participation Facts）
 
 C6 records facts about what actually participated:
 
@@ -294,11 +314,11 @@ Actually resolved / used Provider reference
 
 These are facts of the actual Execution, not merely configured possibilities.
 
-### 4.5 Version and reproducibility facts
+### 4.5 版本与可复现事实
 
 Where relevant, C6 preserves the version or reproducibility facts needed to explain the actual Execution, such as applicable Skill, Capability, Adapter, or Contract-related version references. Exact version formats are deferred.
 
-### 4.6 Relevant produced and provenance references
+### 4.6 相关产物与 provenance 引用
 
 C6 may preserve references to relevant produced or provenance-bearing outputs:
 
@@ -312,11 +332,11 @@ Raw Provider Result reference, only when required for provenance
 
 “Relevant” means necessary for finalized Execution explanation, required provenance, or business-output traceability. It does not mean every Search occurrence, temporary object, intermediate result, log line, or payload ever produced.
 
-### 4.7 Terminal outcome and failure facts
+### 4.7 终止结果与失败事实
 
 C6 preserves the terminal outcome and, when applicable, stable Failure Facts sufficient to explain why the Execution reached its terminal failure state. Success and failure records may contain different valid reference sets.
 
-### 4.8 Semantic categories are not exact fields
+### 4.8 语义类别不等于固定字段
 
 Step 5 does not freeze:
 
@@ -332,9 +352,11 @@ The categories are implementation constraints, not a new C6 Contract and not per
 
 ---
 
-## 5. Actual Facts, Declared Dependencies, and Provider Reality
+## 5. 实际事实、Declared Dependencies 与 Provider Reality
 
-### 5.1 Declared Dependency is not Actual Invocation Fact
+中文说明：C6 只记录实际发生的 Invocation 与 Provider participation，不能用 declared dependency 或 configured binding 代替实际事实。
+
+### 5.1 Declared Dependency 不是 Actual Invocation Fact
 
 ```text
 Declared Dependency
@@ -344,7 +366,7 @@ Actual Invocation Fact
 
 A Skill may declare a Capability dependency. That declaration does not prove that the Capability was invoked in a specific Execution. C6 records the actual invocation fact only when the invocation actually occurred and the fact is known.
 
-### 5.2 Configured Provider Binding is not Actually Used Provider
+### 5.2 Configured Provider Binding 不是 Actually Used Provider
 
 ```text
 Configured Provider Binding
@@ -356,7 +378,7 @@ Actually Used Provider
 
 The current static binding is Search → Scrape Creators. Nevertheless, the finalized Execution Record must not infer actual Provider use from configuration alone. C6 may record the Provider that was actually resolved and used for the relevant invocation.
 
-### 5.3 No declared possibility inflation
+### 5.3 不放大声明层面的可能性
 
 C6 must not record:
 
@@ -371,9 +393,11 @@ Each fact must reflect what actually happened in the Execution.
 
 ---
 
-## 6. Partial Terminal Facts and Failure Semantics
+## 6. 部分终止事实与失败语义
 
-### 6.1 Partial terminal facts are valid
+中文说明：不同 terminal path 可以形成不同的合法 reference set。失败记录不需要伪装成完整成功记录，部分事实也不表示架构缺失。
+
+### 6.1 部分终止事实是有效的
 
 C6 supports partial terminal facts. A terminal record may contain only the facts that were actually established before terminalization.
 
@@ -389,7 +413,7 @@ Research Result formed and Business Completion declared, but C6 finalization fai
 
 The absence of a reference in a valid terminal record is not automatically an architecture gap. It may be the correct semantic result of that path.
 
-### 6.2 Success and failure reference sets differ
+### 6.2 成功与失败的引用集合不同
 
 Success and failure records may have different valid reference sets:
 
@@ -400,7 +424,7 @@ Failure may include only Execution identity, input refs, actual participation fa
 
 Evidence, Research Result, and Business Output references are not always required.
 
-### 6.3 Failure Facts are bounded
+### 6.3 Failure Facts 必须有界
 
 Failure Facts explain the terminal failure at the C6 semantic level. They are not:
 
@@ -415,7 +439,7 @@ observability payloads
 
 C6 must not become a Trace system or Observability backend. Provider-specific raw errors remain below the established C4b / C3 normalization boundary unless a stable, execution-level failure fact is required for closure.
 
-### 6.4 C6 finalization failure
+### 6.4 C6 Finalization Failure
 
 C6 finalization failure may occur after Business Completion. It is:
 
@@ -438,9 +462,11 @@ Those are separate architecture decisions and remain outside Step 5.
 
 ---
 
-## 7. Reference Semantics
+## 7. Reference 语义
 
-### 7.1 Narrow definition
+中文说明：Reference 必须能在声明的生命周期内解析到所需语义；一次性的 live pointer 不能满足 post-terminal explanation。
+
+### 7.1 窄定义（Narrow Definition）
 
 For Step 5:
 
@@ -463,7 +489,7 @@ storage technology
 
 Any of those could be a future representation choice for a target-specific reference, but none is frozen here.
 
-### 7.2 Target-specific semantics
+### 7.2 面向目标的语义（Target-specific Semantics）
 
 Reference semantics remain local to the referent and its owning responsibility:
 
@@ -489,13 +515,13 @@ Original Source reference
 
 These references may share a low-level representation convention later, but they do not become one universal semantic model.
 
-### 7.3 Internal versus external references
+### 7.3 Internal 与 external references 的区别
 
-#### System-controlled internal references
+#### System-controlled internal references（系统控制的内部引用）
 
 An OS-controlled internal reference is a reference whose referent and resolution responsibility are within the software representations controlled by the Ecommerce AI OS or its declared local retention capability. If the reference is necessary for finalized Execution explanation, required provenance, or business-output traceability, it inherits the post-terminal resolvability obligation for its declared lifecycle.
 
-#### External / original-source references
+#### External / original-source references（外部 / 原始来源引用）
 
 An external reference preserves the identity and provenance of an object in the external source world, such as a TikTok source item or Provider-side identity. The OS must preserve the source identity needed for provenance, but external availability is not guaranteed.
 
@@ -507,7 +533,7 @@ Internal reference integrity failure
 
 It becomes an internal integrity failure only when a required OS-controlled internal reference is broken during its required lifecycle, not merely because an external website or source object later becomes unavailable.
 
-### 7.4 Required references versus all runtime objects
+### 7.4 Required references 不等于所有 Runtime objects
 
 Not every runtime object or produced result requires post-terminal retention. The obligation applies only to references necessary for:
 
@@ -519,7 +545,7 @@ business-output traceability
 
 Observed during execution is not the same as referenced by the finalized Execution, and neither is the same as a required post-terminal referent.
 
-### 7.5 Disposable pointers are insufficient
+### 7.5 一次性指针不足以满足要求
 
 Plain disposable runtime object pointers are insufficient when the referent must remain resolvable after the Execution Context is destroyed:
 
@@ -537,7 +563,7 @@ That fails the application-facing referenceability obligation.
 
 Retained process memory may be a candidate for bounded process-lifetime resolvability. It does not prove restart durability, cross-process durability, or long-term retention, none of which is currently required or proven.
 
-### 7.6 Resolution ownership
+### 7.6 Resolution 所有权
 
 There is no central `ReferenceResolverService`. Resolution remains locally owned by the representation that owns the referent:
 
@@ -554,7 +580,7 @@ Execution Record reference
 
 Referenceability obligation does not imply a global resolver, object registry, or resource locator.
 
-### 7.7 UniversalReference is not introduced
+### 7.7 不引入 UniversalReference
 
 Step 5 does not introduce:
 
@@ -568,9 +594,11 @@ Step 6 may choose a shared low-level coding convention if it helps the First Sli
 
 ---
 
-## 8. Minimum Retention Capability
+## 8. 最小 Retention 能力
 
-### 8.1 Freeze requirements, not a medium
+中文说明：Step 5 冻结“必须保留并可解析什么”，但不选择 memory/file/JSON/SQLite 等具体 medium，也不因此引入 Persistence Architecture。
+
+### 8.1 冻结需求，而不是具体介质
 
 Step 5 freezes the following `Minimum Retention Representation Requirements`:
 
@@ -582,7 +610,7 @@ Step 5 freezes the following `Minimum Retention Representation Requirements`:
 
 This is an implementation-constraining capability requirement, not a decision to create a `RetentionService` or `PersistenceService`.
 
-### 8.2 Candidate retention observations
+### 8.2 Retention 候选观察
 
 The following observations are recorded without selecting a medium:
 
@@ -602,7 +630,7 @@ SQLite / database
 
 No candidate is approved by Step 5. Step 6 must test the concrete candidate against the requirements in Section 18.
 
-### 8.3 Dedicated persistence remains unproven
+### 8.3 Dedicated Persistence 仍未被证明必要
 
 The existence of a finalized Execution Record does not imply:
 
@@ -619,7 +647,7 @@ Dedicated Persistence Subsystem
 
 The semantic requirement is Minimum Retention Capability. The concrete retention representation is deferred to Step 6.
 
-### 8.4 Mixed inline and reference semantics
+### 8.4 Inline 与 Reference 的混合语义
 
 C6 uses mixed semantics:
 
@@ -633,7 +661,7 @@ Foreign-owned / domain-owned / provider-owned / business-owned objects
 
 This allows C6 to be explanatory without becoming a payload warehouse.
 
-### 8.5 No durability-by-duplication shortcut
+### 8.5 不用重复复制来绕过 durability 问题
 
 C6 must not solve reference durability by duplicating full:
 
@@ -658,19 +686,21 @@ not full foreign-payload duplication.
 
 ---
 
-## 9. Finalized C6 Immutability and Integrity
+## 9. Finalized C6 的不可变性与完整性
 
-### 9.1 Logical immutability
+中文说明：Finalized C6 在语义上应保持不可变；如果必需的 internal reference 损坏，必须视为 closure/integrity 问题，而不是静默成功。
+
+### 9.1 逻辑不可变性（Logical Immutability）
 
 Finalized C6 is logically immutable. Once terminal finalization succeeds, the finalized record represents the terminal facts for that Execution and is not a live accumulation surface.
 
 The exact immutability mechanism is deferred. Step 5 does not choose frozen dataclasses, copy-on-write, serialization boundaries, database constraints, or any other mechanism.
 
-### 9.2 Correction and supersession remain open
+### 9.2 Correction 与 supersession 仍待后续决定
 
 Correction, amendment, replacement, and supersession semantics are NOT YET DESIGNED. Logical immutability does not answer how a future correction would be represented.
 
-### 9.3 Broken required internal references
+### 9.3 必需内部引用损坏
 
 ```text
 Broken required internal reference
@@ -684,7 +714,9 @@ The integrity rule does not prescribe an automatic recovery component, retry pat
 
 ---
 
-## 10. Research Result, Business Output, and Execution Record
+## 10. Research Result、Business Output 与 Execution Record
+
+中文说明：Research Result 是 business output，Execution Record 是 C6 execution closure；两者相互关联但不相互替代。
 
 ```text
 Research Result
@@ -706,7 +738,7 @@ The Application does not receive the full C6 payload by default. C6 may referenc
 
 ---
 
-## 11. Software Responsibility / Lifecycle View
+## 11. 软件责任 / 生命周期视图
 
 ```mermaid
 flowchart LR
@@ -741,13 +773,13 @@ The diagram does not authorize `RecorderService`, `Record Runtime`, `RetentionSe
 
 ---
 
-## 12. Full Three-Round Pressure-Test Summary
+## 12. 三轮完整压力测试摘要
 
 The following summary records all 27 Step 5 pressure tests and their conclusions.
 
-### Round 1 — Lifecycle, ownership, and minimum C6 semantics
+### Round 1 — 生命周期、所有权与 C6 最小语义
 
-| # | Pressure test | Conclusion | Result |
+| # | 压力测试（Pressure Test） | 结论（Conclusion） | 结果（Result） |
 |---:|---|---|---|
 | 1 | Is the Execution Record the live Runtime State? | No. Runtime State, Stable Execution Facts, and Finalized Execution Record remain separate. | **PASS** |
 | 2 | Are stable facts known only at the end? | No. Stable facts and references become known progressively; C6 finalizes at terminalization. | **PASS** |
@@ -762,7 +794,7 @@ The following summary records all 27 Step 5 pressure tests and their conclusions
 | 11 | What does the Application receive? | Business Result plus Execution Outcome / Record Reference, not full C6 payload by default. | **PASS** |
 | 12 | Can C6 record facts that never actually occurred? | No. C6 records actual, established facts only and does not inflate declared/configured possibilities. | **PASS** |
 
-### Round 2 — Reference semantics, lifecycle, and retention obligation
+### Round 2 — Reference 语义、生命周期与 Retention obligation
 
 | # | Pressure test | Conclusion | Result |
 |---:|---|---|---|
@@ -773,7 +805,7 @@ The following summary records all 27 Step 5 pressure tests and their conclusions
 | 17 | Are plain runtime object pointers sufficient for required post-terminal references? | No. Disposable pointers die with the Execution Context and cannot satisfy the required Record Reference obligation. | **PASS** |
 | 18 | Does retained process memory prove restart/cross-process durability? | No. It is a possible bounded process-lifetime candidate only; restart, cross-process, and long-term durability are not currently required or proven. | **PASS** |
 
-### Round 3 — Representation choice, duplication, and closure sufficiency
+### Round 3 — 表示选择、复制与闭环充分性
 
 | # | Pressure test | Conclusion | Result |
 |---:|---|---|---|
@@ -789,7 +821,7 @@ The following summary records all 27 Step 5 pressure tests and their conclusions
 
 ---
 
-## 13. Candidate Decisions S5-01 through S5-29
+## 13. 候选决策 S5-01 through S5-29
 
 | ID | Candidate decision |
 |---|---|
@@ -825,7 +857,7 @@ The following summary records all 27 Step 5 pressure tests and their conclusions
 
 ---
 
-## 14. Delete Test Matrix
+## 14. 删除测试矩阵
 
 | Candidate component / mechanism | Delete? | Step 5 conclusion |
 |---|---:|---|
@@ -859,7 +891,7 @@ Independent Runtime Component
 
 ---
 
-## 15. Step 5 Sufficiency Gate
+## 15. Step 5 充分性门
 
 | Gate | Result |
 |---|---|
@@ -900,7 +932,7 @@ Independent Runtime Component
 
 ---
 
-## 16. Explicitly Non-Introduced Items
+## 16. 明确不引入的内容
 
 Step 5 does not introduce any of the following:
 
@@ -935,7 +967,7 @@ The absence of these items does not remove the required semantics. C6 stable fac
 
 ---
 
-## 17. Deliberately Deferred Representation Questions
+## 17. 有意延后的软件表示问题
 
 The following questions are deliberately deferred to Step 6:
 
@@ -958,7 +990,7 @@ Deferred does not mean that the semantics are vague. Step 5 freezes the constrai
 
 ---
 
-## 18. Step 6 Implementation-Constraint Handoff
+## 18. 向 Step 6 移交的实现约束
 
 Step 6 must test each candidate retention representation against the following requirements:
 
@@ -992,7 +1024,7 @@ It must not reopen the retention semantics merely because it chooses a concrete 
 
 ---
 
-## 19. Final Verdict
+## 19. 最终结论（Final Verdict）
 
 ```text
 Step 5 — Execution Record / Referenceability
@@ -1035,12 +1067,12 @@ Walking Implementation
 = NOT YET AUTHORIZED
 ```
 
-### Current Next
+### 当前下一步（Current Next）
 
 ```text
 Step 6 — Minimal Software Architecture Assembly + Representation Closure
 ```
 
-### Final one-line conclusion
+### 最终一句话结论
 
 Step 5 freezes what stable execution facts and references must survive terminalization and remain resolvable, without prematurely choosing a repository, resolver, recorder, or database.

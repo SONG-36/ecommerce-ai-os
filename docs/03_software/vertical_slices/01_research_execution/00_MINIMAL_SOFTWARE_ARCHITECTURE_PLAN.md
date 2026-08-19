@@ -18,7 +18,7 @@
 
 ---
 
-# 0. Purpose
+# 0. 文档目的（Purpose）
 
 本文件只负责：
 
@@ -37,7 +37,7 @@
 
 ---
 
-# 1. Governing Principle
+# 1. 总体原则（Governing Principle）
 
 Minimal Software Architecture 不是从零设计。
 
@@ -82,7 +82,7 @@ Current src scaffold ≠ Approved Software Architecture
 
 ---
 
-# 2. Anchor Runtime / Contract Flow
+# 2. 锚定运行时 / Contract 流程（Anchor Runtime / Contract Flow）
 
 ```text
 Business Work Request
@@ -125,9 +125,9 @@ Software Component Diagram
 
 ---
 
-# 3. Work Plan
+# 3. 工作计划（Work Plan）
 
-## Step 1 — Responsibility → Software Responsibility Mapping
+## Step 1 — 责任 → 软件责任映射（Responsibility → Software Responsibility Mapping）
 
 Status: CANDIDATE COMPLETE
 
@@ -153,7 +153,7 @@ Output:
 
 ---
 
-## Step 2 — Execution Spine Software Design
+## Step 2 — Execution 主干软件设计（Execution Spine Software Design）
 
 Status: CANDIDATE COMPLETE
 
@@ -182,7 +182,7 @@ Output:
 
 ---
 
-## Step 3 — Search / Provider Spine Software Design
+## Step 3 — Search / Provider 主干软件设计（Search / Provider Spine Software Design）
 
 Status: CANDIDATE COMPLETE
 
@@ -234,7 +234,7 @@ Output:
 
 ---
 
-## Step 4 — Research / Evidence Software Design
+## Step 4 — Research / Evidence 软件设计（Research / Evidence Software Design）
 
 Status: CANDIDATE COMPLETE
 
@@ -297,7 +297,7 @@ Output:
 
 ---
 
-## Step 5 — Execution Record / Referenceability
+## Step 5 — Execution Record / Referenceability（执行记录 / 引用可解析性）
 
 Status: CANDIDATE COMPLETE
 
@@ -366,7 +366,7 @@ Step 5 freezes retention / referenceability requirements. Step 6 chooses the min
 
 ---
 
-## Step 6 — Minimal Software Architecture Assembly + Representation Closure
+## Step 6 — Minimal Software Architecture Assembly + Representation Closure（最小软件架构组装 + 表示闭环）
 
 Status: CANDIDATE COMPLETE
 
@@ -486,7 +486,7 @@ Detailed record:
 
 ---
 
-## Step 7 — Minimal Software Architecture Review Gate
+## Step 7 — Minimal Software Architecture Review Gate（最小软件架构评审门）
 
 Status: PASS
 
@@ -596,7 +596,7 @@ G15 TT-17 Bounded Semantics Preservation = PASS
 
 ---
 
-# 4. Documentation Progress Rule
+# 4. 文档推进规则（Documentation Progress Rule）
 
 Step documents are created incrementally under the
 “讨论到哪，文件建到哪” principle.
@@ -617,7 +617,7 @@ Step documents were created incrementally under the “讨论到哪，文件建�
 
 ---
 
-# 5. Current Progress
+# 5. 当前进度（Current Progress）
 
 Current Next:
 
@@ -645,7 +645,7 @@ Make a separate explicit Walking Implementation Authorization decision.
 
 ---
 
-# 6. Scope Guardrails
+# 6. 范围护栏（Scope Guardrails）
 
 继续继承：
 
@@ -695,9 +695,9 @@ Walking Implementation = NOT YET AUTHORIZED
 
 ---
 
-# 7. Seven-step Internal Work Plan
+# 7. 七步内部工作计划（Seven-step Internal Work Plan）
 
-| Step | Work package | Status | Output |
+| Step | 工作包（Work package） | 状态（Status） | 输出（Output） |
 |---|---|---|---|
 | 1 | Responsibility → Software Responsibility Mapping | **CANDIDATE COMPLETE** | `01_SOFTWARE_RESPONSIBILITY_MAPPING.md` |
 | 2 | Execution Spine Software Design | **CANDIDATE COMPLETE** | `02_EXECUTION_SPINE_SOFTWARE_DESIGN.md` |
@@ -709,7 +709,7 @@ Walking Implementation = NOT YET AUTHORIZED
 
 ---
 
-# 8. Current Status Summary
+# 8. 当前状态摘要（Current Status Summary）
 
 ```text
 Minimal Software Architecture
@@ -769,7 +769,7 @@ Current Next
 
 ---
 
-# 9. Completion Boundary
+# 9. 完成边界（Completion Boundary）
 
 本阶段完成条件：
 

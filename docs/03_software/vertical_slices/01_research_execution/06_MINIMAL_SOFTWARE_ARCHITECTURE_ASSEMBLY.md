@@ -17,6 +17,8 @@ Step 6 Representation Refinement Sync: `COMPLETE`
 
 Current Review State: `AWAITING STEP 7 CONSISTENCY RE-CHECK`
 
+> 中文阅读导语：本文记录 First Slice 的最小实现就绪软件形态。它选择 package/module、callable、依赖方向、手动 Dependency Injection、同步执行、薄 CLI、stdlib HTTP、dataclass 与 Local JSON Execution Bundle 的表示，但不重新设计 Product/System Architecture、D1–D5 或 Contract inventory。
+
 ```text
 Architecture Reopen = NO
 Product Architecture Reopen = NO
@@ -30,18 +32,18 @@ Walking Implementation = NOT YET AUTHORIZED
 
 ---
 
-## 0. Document Status and Governing Boundary
+## 0. 文档状态与总体边界（Document Status and Governing Boundary）
 
-This document assembles the minimum implementation-ready software shape for the First Slice from the conclusions of Steps 1–5. It closes software representation questions that were intentionally left open while responsibility, execution, provider, research/evidence, and referenceability semantics were being established.
+本文根据 Steps 1–5 的结论，组装 First Slice 的最小 implementation-ready software shape。它关闭了此前在责任、Execution、Provider、Research/Evidence 与 Referenceability 语义建立过程中有意保留的软件表示问题。
 
 ```text
 Step 6 != Final Ecommerce AI OS Software Architecture
 Step 6 = minimum implementation-ready software shape for the First Slice only
 ```
 
-This is a candidate architecture record. It is not Architecture Authority, does not reopen Product Architecture, System Architecture, D1–D5, TT-17 semantics, or the 9-contract inventory, and does not authorize Walking Implementation.
+本文是 candidate architecture record。它不是 Architecture Authority，不重新打开 Product Architecture、System Architecture、D1–D5、TT-17 semantics 或 9-contract inventory，也不授权 Walking Implementation。
 
-The live empty `src/ecommerce_ai_os/` scaffold is not Architecture Authority. Its current directories are scaffold facts only. Walking Implementation may replace, remove, or reorganize unused empty packages to realize this target shape. No compatibility layer is required for empty scaffold packages.
+当前空的 `src/ecommerce_ai_os/` scaffold 不是 Architecture Authority；其中的目录只是 scaffold facts。Walking Implementation 可以为了实现目标形态而替换、删除或重组未使用的空 package。空 scaffold package 不需要 compatibility layer。
 
 The terms below remain distinct:
 
@@ -53,13 +55,27 @@ Package != System Architecture Layer
 Contract != Class Count
 ```
 
+### 中文阅读要点
+
+```text
+Step 6 只选择 First Slice 的最小软件表示，不是最终 Ecommerce AI OS 软件架构。
+Responsibility ≠ Contract ≠ Software Component。
+Runtime Semantic Flow ≠ Python Import Graph；Protocol ≠ Runtime Hop。
+C2b TaskRuntime 是 Execution / Capability Invocation Coordination owner。
+C2a ResearchSkill 是 Business Method；C3 SearchCapability 是 typed software seam。
+C4a 是 Composition-time static binding，C4b 是 ScrapeCreatorsAdapter。
+Search / Research / Provider Integration 保持隔离；Provider raw payload 不进入 business value。
+采用 stdlib dataclass、manual constructor injection、单一 Composition Root、同步执行与薄 CLI。
+Retention 采用 Local JSON Execution Bundle，生命周期为 STAGING → FINALIZED/PUBLISHED；不引入 DB 或通用 Service。
+```
+
 ---
 
-## 1. Purpose, Scope, and Non-Scope
+## 1. 文档目的、范围与非目标（Purpose, Scope, and Non-Scope）
 
-### 1.1 Purpose
+### 1.1 文档目的（Purpose）
 
-Step 6 records, for the First Slice only:
+Step 6 仅针对 First Slice 记录：
 
 - the selected package-family and module shape;
 - the software representation of C1, C2a, C2b, C3, C4a, C4b, C5a, C5b, and C6;
@@ -73,13 +89,13 @@ Step 6 records, for the First Slice only:
 - the initial test shape and Step 6 sufficiency evidence;
 - the final candidate verdict and current next step.
 
-### 1.2 In scope
+### 1.2 范围内（In Scope）
 
-The scope is the minimum Python 3.12 software shape needed to walk the US / Car Vacuum / TikTok Content Research slice while preserving the inherited semantics.
+范围是支持 US / Car Vacuum / TikTok Content Research slice 的最小 Python 3.12 software shape，同时保持所有继承语义。
 
-### 1.3 Non-scope
+### 1.3 非目标（Non-Scope）
 
-This document does not:
+本文不做以下事项：
 
 - redesign Product Architecture, System Architecture, D1–D5, or any upstream contract;
 - change TT-17 admission, endpoint semantics, pagination semantics, or provider meaning;
@@ -91,11 +107,11 @@ This document does not:
 
 ---
 
-## 2. Inherited Inputs and Frozen Invariants
+## 2. 继承输入与冻结不变量（Inherited Inputs and Frozen Invariants）
 
-### 2.1 Input documents
+### 2.1 输入文档（Input Documents）
 
-This assembly is consistent with the following existing software-design records:
+本组装记录与以下既有 software-design records 保持一致：
 
 ```text
 01_SOFTWARE_RESPONSIBILITY_MAPPING.md
@@ -105,9 +121,9 @@ This assembly is consistent with the following existing software-design records:
 05_EXECUTION_RECORD_REFERENCEABILITY_SOFTWARE_DESIGN.md
 ```
 
-It also inherits the upstream System Architecture, D1–D5 detailed contracts, the First Slice responsibility coverage and minimal runtime path, the Deferred Register, architecture/review closure, and TT-17 Endpoint Admission / Selection Closure.
+它同时继承上游 System Architecture、D1–D5 detailed contracts、First Slice responsibility coverage 与 minimal runtime path、Deferred Register、architecture/review closure，以及 TT-17 Endpoint Admission / Selection Closure。
 
-### 2.2 Frozen semantic invariants
+### 2.2 冻结的语义不变量（Frozen Semantic Invariants）
 
 ```text
 C1 = transport-neutral execution entry, rejection, and terminal return seam
@@ -131,15 +147,15 @@ Business Completion precedes Execution Completion
 Insufficient Evidence may be a valid Research Result outcome
 ```
 
-The software assembly preserves local responsibility ownership while choosing a minimal concrete representation. A required software presence does not imply an independent runtime component.
+软件组装在选择最小具体表示的同时，保持各责任的局部所有权。某项责任需要软件承载，并不意味着必须创建独立 runtime component。
 
 ---
 
-## 3. Final Package-Family Assembly Decision
+## 3. 最终软件包族组装决策（Final Package-Family Assembly Decision）
 
-The First Slice uses six cohesive package families:
+First Slice 使用六个内聚的软件包族：
 
-| Package family | Primary responsibility | Boundary | Explicit non-interpretation |
+| 软件包族（Package family） | 主要职责（Primary responsibility） | 边界（Boundary） | 明确不承担的职责（Explicit non-interpretation） |
 |---|---|---|---|
 | **Application / Entry** | Thin operator-facing entry and terminal presentation | `argparse` CLI facing C1 | Not a business runtime or provider client |
 | **Runtime** | Execution establishment, coordination, terminalization, C6 facts/finalization, retention | C1/C2b/C6 runtime-facing behavior | Not a generic workflow engine or provider registry |
@@ -148,9 +164,9 @@ The First Slice uses six cohesive package families:
 | **Provider Integration** | C4b `ScrapeCreatorsAdapter`, Provider Access / Integration implementation, HTTP client, TT-17 translation | C4b/provider access | Not a generic transport platform |
 | **Composition / Configuration** | C4a static Search → Scrape Creators binding, `AppConfig`, and concrete wiring | Composition root | Not runtime orchestration or a service locator |
 
-Package families are not runtime services. They are not one-to-one copies of System Architecture layers and are not one-to-one copies of Contract IDs. One package family may carry several related responsibilities without merging their semantics; a Contract may be represented by a Protocol, a callable owner, a binding, a stable value, or bounded behavior without creating a new package or class.
+软件包族不是 runtime services，不是 System Architecture layers 的一对一复制，也不是 Contract IDs 的一对一复制。一个 package family 可以承载多个相关责任而不合并它们的语义；Contract 可以由 Protocol、callable owner、binding、stable value 或 bounded behavior 表示，而不必创建新的 package 或 class。
 
-Generic buckets are explicitly not part of the selected First-Slice target unless later evidence earns them:
+除非后续证据证明确有必要，以下 generic buckets 不属于选定的 First-Slice target：
 
 ```text
 services/
@@ -164,9 +180,9 @@ repositories/
 
 ---
 
-## 4. Final Target Python Package / Module Tree
+## 4. 最终目标 Python Package / Module Tree
 
-The target shape is exactly the following in substance:
+目标形态在实质上如下：
 
 ```text
 src/ecommerce_ai_os/
@@ -203,15 +219,17 @@ src/ecommerce_ai_os/
         └── adapter.py
 ```
 
-The tree is a target representation, not a demand that every semantic concept receives a module or dataclass. A module may contain a small cohesive set of types/functions owned by the same responsibility family.
+该 tree 是目标表示，不要求每个 semantic concept 都获得独立 module 或 dataclass。一个 module 可以包含由同一 responsibility family 所有的一小组内聚 types/functions。
 
 ---
 
-## 5. Software Representation Mapping
+## 5. 软件表示映射（Software Representation Mapping）
 
-### 5.1 C1, C2a, C2b, C3, C4a, C4b, C5a, C5b, C6
+中文说明：本节把 C1–C6 的责任映射到最小 software representation。映射不要求 Contract、package、class 与 runtime hop 一一对应。
 
-| Seam / responsibility | Selected software representation | Boundary rule |
+### 5.1 C1、C2a、C2b、C3、C4a、C4b、C5a、C5b、C6
+
+| Seam / responsibility（边界 / 责任） | Selected software representation（选定的软件表示） | Boundary rule（边界规则） |
 |---|---|---|
 | **C1** | Public transport-neutral method on concrete `TaskRuntime`, conceptually `TaskRuntime.execute(...)` | No C1 Protocol, ABC, or `TaskExecutionService`; C1 is the public callable boundary of the concrete runtime owner |
 | **C2a Research Skill** | `typing.Protocol` in `research/ports.py` | The concrete research method is injected; the Protocol is a replacement/isolation seam, not a runtime hop |
@@ -235,7 +253,7 @@ ScrapeCreatorsAdapter = current concrete implementation behind the C3 seam
 
 `Protocol != runtime hop`. A Protocol describes a typed software seam; the object supplied at that seam is the concrete implementation currently selected by composition.
 
-### 5.2 Illustrative callable shape
+### 5.2 示例性可调用形态（Illustrative Callable Shape）
 
 Only the following conceptual signatures are needed to explain the selected representation; they are not implementation code:
 
@@ -262,9 +280,11 @@ The concrete `ScrapeCreatorsAdapter` satisfies `SearchCapability` by shape. Ther
 
 ---
 
-## 6. Corrected Runtime and Call Structure
+## 6. 修正后的 Runtime 与调用结构
 
-### 6.1 Text call structure
+中文说明：调用结构强调 C2b 对 Capability invocation 的协调，以及 C2a 与同一 Execution 的连续性。`SearchCapability` 是 typed seam，不是独立 runtime object。
+
+### 6.1 文本调用结构（Text Call Structure）
 
 ```text
 CLI
@@ -313,7 +333,7 @@ Contract != class count
 SearchCapability Protocol != SearchService runtime object
 ```
 
-### 6.2 Mermaid sequence
+### 6.2 Mermaid 序列图
 
 ```mermaid
 sequenceDiagram
@@ -357,9 +377,11 @@ The sequence is a responsibility/call view. `C3 SearchCapability` is a typed sof
 
 ---
 
-## 7. Dependency / Import DAG
+## 7. 依赖 / 导入有向无环图（Dependency / Import DAG）
 
-### 7.1 Frozen import rules
+中文说明：依赖方向用于保持 provider isolation 与责任边界。Composition 是 concrete assembly point；核心 package 不反向依赖 application 或 composition。
+
+### 7.1 冻结的导入规则（Frozen Import Rules）
 
 1. `search` depends on stdlib only.
 2. `research` may depend on `search.models`, but must not depend on `search.port`, `runtime`, or `providers`.
@@ -405,9 +427,11 @@ The red nodes are guard examples, not imports. The actual architecture is a DAG 
 
 ---
 
-## 8. Data Model and Type Strategy
+## 8. 数据模型与类型策略（Data Model and Type Strategy）
 
-### 8.1 Selected model technology
+中文说明：稳定完成值优先采用 frozen/slots dataclass，运行中状态使用明确的 mutable dataclass。类型策略服务于稳定语义，不把每个概念机械扩展为 Service。
+
+### 8.1 选定的模型技术（Selected Model Technology）
 
 ```text
 Python 3.12 stdlib dataclass
@@ -419,7 +443,7 @@ Stable cross-boundary representations must not be `dict[str, Any]`. Pydantic is 
 
 Frozen values are preferred for completed Search outcomes, Evidence, Findings, Hypotheses, Research Results, stable execution facts, and finalized record values. Mutable dataclasses are reserved for explicitly changing Execution Context, working state, and bounded accumulators.
 
-### 8.2 Type / owner mapping
+### 8.2 类型 / 所有者映射（Type / Owner Mapping）
 
 | Type / concept | Owner / module family | Representation note |
 |---|---|---|
@@ -453,7 +477,7 @@ Frozen values are preferred for completed Search outcomes, Evidence, Findings, H
 | Local JSON bundle | Runtime retention | Physical execution-scoped retention representation |
 | `AppConfig` | Composition/config boundary | Small immutable configuration value loaded at composition boundary |
 
-### 8.3 Search outcome and error representation
+### 8.3 Search 结果与错误表示
 
 C3 returns an explicit typed outcome:
 
@@ -463,7 +487,7 @@ SearchResult | SearchFailure
 
 A valid empty `SearchResult` is success. It is not converted to failure merely because zero results were found. Provider-specific exceptions terminate at C4b translation and become `SearchFailure` where the semantics call for a provider/search outcome. Unexpected programming or software defects may remain exceptions and are handled by C2b closure; no universal error taxonomy is invented.
 
-### 8.3.1 Bounded SearchResult representation
+### 8.3.1 有界 SearchResult 表示
 
 `SearchResult` is not represented as only `list[SearchItem]`. Its stable Search-owned representation must be able to express these semantic categories without freezing unnecessary exact field names:
 
@@ -499,7 +523,7 @@ ranking semantics = unverified
 
 These limitations remain expressible through SearchResult bounded-retrieval semantics and are available to the Research Skill without leaking provider-specific traversal syntax.
 
-### 8.3.2 Search invocation context and provenance
+### 8.3.2 Search invocation context 与 provenance
 
 The concrete C3 callable has the following semantics:
 
@@ -563,7 +587,7 @@ Configured Provider Binding != Resolved Provider != Actually Used Provider
 
 C4a composition-time binding represents the configured/current legal binding only. Runtime must not infer the actual provider from `type(adapter)` or composition configuration. Provider resolution failure may have no actual used provider; provider invocation failure and successful Search have an actual provider when invocation occurred. Provider implementation does not import Runtime.
 
-### 8.4 Evidence formalization outcome
+### 8.4 Evidence formalization 结果
 
 The local research outcome is:
 
@@ -573,7 +597,7 @@ Evidence | EvidenceInadmissible
 
 `EvidenceInadmissible` is a semantic result returned to the Research Method when an observation does not satisfy the evidence admissibility rules. A formalizer/software malfunction remains an exception. There is no `EvidenceFailureContract` and no `EvidenceService`.
 
-### 8.5 Terminal return and partial closure
+### 8.5 Terminal return 与部分闭环
 
 `TerminalReturn` supports partial terminal closure:
 
@@ -612,7 +636,7 @@ Pre-execution rejection != Execution failure
 
 There is no `TaskExecutionService`, `RejectionService`, or `GlobalResponseEnvelope`.
 
-### 8.6 Runtime-local execution abort
+### 8.6 Runtime-local ExecutionAbort
 
 After a `SearchFailure` enters C2b, C2b decides whether the failure is continuable:
 
@@ -631,7 +655,7 @@ Non-continuable SearchFailure
 
 `ExecutionAbort` is a C2b-private control mechanism. It is not a Contract, SearchFailure, global error taxonomy, retry mechanism, or public Application error. It is not exposed to C3, C4b, Research Skill business semantics, or Application. Unexpected software defects may remain exceptions and are captured by TaskRuntime's execution-closure handling.
 
-### 8.7 Time representation
+### 8.7 时间表示（Time Representation）
 
 - Internal times use timezone-aware `datetime`.
 - Canonical internal time is normalized to UTC.
@@ -639,11 +663,11 @@ Non-continuable SearchFailure
 - Publication Time, Observation Time, and Collection Time remain distinct.
 - A generic undifferentiated `timestamp` must not collapse their meanings.
 
-### 8.8 Missingness representation
+### 8.8 Missingness 表示
 
 Known missingness remains explicit wherever the semantics require it. `None` alone must not erase known missingness semantics. The First Slice does not introduce a universal missingness framework or ontology; each owner preserves the missingness meaning relevant to its boundary.
 
-### 8.9 Internal and provider IDs
+### 8.9 Internal 与 Provider ID
 
 - Target-specific typed string IDs use `NewType` or an equivalent low-level typing convention where the distinction prevents accidental mixing.
 - Generated internal IDs are UUID4-backed opaque strings.
@@ -651,7 +675,7 @@ Known missingness remains explicit wherever the semantics require it. `None` alo
 - Provider IDs are never converted to fake global IDs or numeric canonical forms.
 - No `UniversalReference` model or registry is introduced.
 
-### 8.10 Owner-local identity and version references
+### 8.10 所有者本地 identity 与 version references
 
 The following stable owner-local identity/version references are explicit:
 
@@ -681,9 +705,11 @@ schema_version != adapter_version
 
 ---
 
-## 9. Dependency Injection and Composition
+## 9. Dependency Injection 与 Composition
 
-### 9.1 Selected approach
+中文说明：使用 manual constructor injection 与一个 Composition Root。Composition 只负责静态 wiring，不负责 runtime orchestration。
+
+### 9.1 选定方案（Selected Approach）
 
 ```text
 Explicit manual constructor injection
@@ -695,13 +721,15 @@ No service container
 
 The composition root performs static wiring and configuration assembly only. It is not runtime orchestration. `TaskRuntime` does not instantiate the concrete provider or concrete skill internally. The root constructs the concrete `ScrapeCreatorsHttpClient`, `ScrapeCreatorsAdapter`, concrete First-Slice Research Skill, and `TaskRuntime`, then injects the selected dependencies.
 
-### 9.2 Static binding
+### 9.2 静态绑定（Static Binding）
 
 C4a is represented by the composition-time fact that the C3 `SearchCapability` seam is satisfied by the concrete `ScrapeCreatorsAdapter`. Skill extension is likewise static composition/registration for this slice, with a bound `SkillDeclaration` checked before invocation. There is no `SkillRegistry`, hot-reload plugin runtime, provider resolver, or dynamic selection platform.
 
 ---
 
-## 10. Sync / Async Decision
+## 10. Sync / Async 决策
+
+中文说明：First Slice 采用 synchronous end-to-end。没有证据证明需要 async、worker pool 或 concurrency，因此本阶段不引入它们。
 
 First-Slice execution is synchronous end-to-end. Multiple sequential provider calls are allowed. No async, coroutine, concurrency, worker pool, or parallel execution mechanism is introduced until real evidence requires it.
 
@@ -713,7 +741,9 @@ Each call to `TaskRuntime.execute(...)` receives its own `ExecutionContext` and 
 
 ---
 
-## 11. Application / Transport Decision
+## 11. Application / Transport 决策
+
+中文说明：Application 是 thin CLI，C1 是本地 Python callable；CLI 不知道 Provider internals，也不承担 business runtime。
 
 - C1 is a local Python callable on `TaskRuntime`.
 - The First Walking-Implementation Application is a thin CLI adapter.
@@ -724,7 +754,9 @@ Each call to `TaskRuntime.execute(...)` receives its own `ExecutionContext` and 
 
 ---
 
-## 12. Configuration Decision
+## 12. Configuration 决策
+
+中文说明：AppConfig 在 Composition boundary 加载，依赖只接收所需的 narrowed values；secret 不进入 SearchRequest、Research Skill、C6 或 business logs。
 
 `AppConfig` is a small immutable dataclass loaded at the composition boundary. Secrets come from environment variables. Dependencies receive only the values they need; there is no global configuration propagation and no `GlobalContext`.
 
@@ -742,7 +774,9 @@ Configuration narrowing is an ownership boundary, not a reason to introduce `Con
 
 ---
 
-## 13. Provider Integration Decisions
+## 13. Provider Integration 决策
+
+中文说明：C4b 负责 translation，ScrapeCreatorsAccess 隔离 provider-specific access，ScrapeCreatorsHttpClient 使用同步 stdlib HTTP。Raw Provider payload 不上升为 business value。
 
 `ScrapeCreatorsAdapter` and the concrete access mechanism remain separate module responsibilities:
 
@@ -771,7 +805,9 @@ The adapter may use an execution-scoped opaque raw-capture mechanism for bounded
 
 ---
 
-## 14. Research / Evidence Representation Decisions
+## 14. Research / Evidence 软件表示决策
+
+中文说明：Research Skill 保持 sampling、evidence-worthiness、interpretation、Finding、Hypothesis 与 Research Result 的业务方法所有权；ResearchCompletion 是 C2a 到 C2b 的内存 handoff。
 
 The Research Skill owns business method judgment:
 
@@ -789,7 +825,7 @@ Research Result formation
 Business Completion declaration
 ```
 
-### 14.1 SkillDeclaration
+### 14.1 SkillDeclaration（技能声明）
 
 `SkillDeclaration` is a stable Research-owned representation with the minimum semantic content:
 
@@ -826,7 +862,7 @@ Declared Capability Dependency
 
 `SkillDeclaration` is representation only. It is not a `SkillRegistry`, Plugin Registry, Extension Runtime, Marketplace, or Dynamic Discovery mechanism.
 
-### 14.2 ResearchCompletion and Business Completion
+### 14.2 ResearchCompletion 与 Business Completion
 
 `ResearchSkill.run(...)` returns `ResearchCompletion`. This is the in-memory C2a Business Completion handoff and is the single completion representation for S7-R2 and S7-R7; no second Completion abstraction is introduced.
 
@@ -851,7 +887,7 @@ Research Skill
 
 Business Completion is the receipt of a valid `ResearchCompletion` containing a C5b-valid `ResearchResult`. `ResearchResult` references Evidence; it is not a full Evidence payload copy. Business Completion precedes Execution Completion.
 
-### 14.3 Module responsibility refinement
+### 14.3 模块职责细化（Module Responsibility Refinement）
 
 The existing package tree is unchanged. The refined responsibilities are placed in the existing modules:
 
@@ -904,9 +940,11 @@ Semantic evidence rejection is an explicit `EvidenceInadmissible` outcome. A val
 
 ---
 
-## 15. Local Retention Representation
+## 15. Local JSON Retention 表示
 
-### 15.1 Selected concrete representation
+中文说明：每个 Execution 使用一个 Local JSON Execution Bundle；先写入 staging，完成 C6 finalization 并验证 references 后再 publish，Record Ref 只能在 publish 后暴露。
+
+### 15.1 选定的具体表示（Selected Concrete Representation）
 
 ```text
 Local JSON Execution Bundle = SELECTED concrete First-Slice retention representation
@@ -916,7 +954,7 @@ Dedicated persistence subsystem = NOT PROVEN / not introduced
 
 One Execution owns one bundle. The bundle retains only the referents required for the finalized execution explanation, required provenance, and business-output traceability. It is not a universal object store and does not turn C6 into a database schema.
 
-### 15.2 Retained bundle layout
+### 15.2 保留 Bundle 布局（Retained Bundle Layout）
 
 ```text
 var/
@@ -941,7 +979,7 @@ var/
 
 Not all directories/files must exist for every Execution. Failed executions may legitimately have no Evidence or Research Result. `provider_raw/` stores only required bounded provenance, not a universal provider archive. No media, video, or image binary download retention is required. C6 JSON contains only C6-owned stable facts plus references; it does not inline full foreign payloads by default.
 
-### 15.3 Lifecycle
+### 15.3 生命周期（Lifecycle）
 
 ```text
 Execution Establishment
@@ -974,15 +1012,15 @@ Runtime records actually used provider / capability / adapter version refs when 
 
 This is not crash recovery, durable workflow, or a transactional outbox. A process failure may leave staging material; no recovery subsystem is introduced in the First Slice.
 
-### 15.4 Raw Provider retention rule
+### 15.4 Raw Provider Retention 规则
 
 Actual TT-17 response pages that contribute to retained SearchResults are retained as bounded provenance artifacts for the Walking Slice. This does not create a General Provider Raw Archive. Raw-result referenceability is not a permanent retention guarantee, and external source availability is not guaranteed by retaining an observation-time locator.
 
-### 15.5 Retention duration
+### 15.5 Retention duration（保留时长）
 
 There is no automatic expiry or cleanup in the First Slice. This is explicitly **not** a permanent-retention guarantee. The exact retention policy remains future, evidence-driven work.
 
-### 15.6 JSON serialization ownership
+### 15.6 JSON 序列化所有权
 
 Stable JSON codecs live near semantic owners:
 
@@ -994,7 +1032,7 @@ runtime/execution_record.py or runtime-owned C6 serialization
 
 Retention owns physical bundle placement, not foreign semantic serialization. Each retained stable JSON representation carries a simple owner-local `schema_version = 1` or semantically equivalent version marker. There is no schema registry or migration framework.
 
-### 15.7 Runtime bundle source-control and credential safety
+### 15.7 Runtime Bundle 的 source-control 与 credential 安全
 
 The selected runtime root is:
 
@@ -1024,9 +1062,11 @@ provider_raw/ != general Provider archive
 
 ---
 
-## 16. Testing Strategy
+## 16. 测试策略（Testing Strategy）
 
-### 16.1 Target test shape
+中文说明：测试按责任边界组织，使用 stdlib `unittest`、saved Provider fixtures、fake access、AST import guard 与 opt-in live smoke；测试策略不引入新的 framework。
+
+### 16.1 目标测试形态（Target Test Shape）
 
 ```text
 tests/
@@ -1045,7 +1085,7 @@ tests/
     └── test_tt17_smoke.py
 ```
 
-### 16.2 Test rules
+### 16.2 测试规则（Test Rules）
 
 - Initial test runner: stdlib `unittest`.
 - Provider translation tests use saved TT-17 raw fixtures through a fake `ScrapeCreatorsAccess`.
@@ -1054,7 +1094,7 @@ tests/
 - Import-boundary architecture tests use stdlib `ast` plus `pathlib`; no import-linter framework is introduced.
 - Tests mirror ownership boundaries: runtime, research, search, provider integration, bundle lifecycle, fake provider integration, and architecture rules.
 
-### 16.3 Explicit import-boundary guard examples
+### 16.3 导入边界护栏示例
 
 The architecture test must reject at least these dependencies:
 
@@ -1075,7 +1115,7 @@ It must also verify that composition is the only concrete assembly point for the
 
 ---
 
-## 17. Existing Scaffold Handling
+## 17. 现有 Scaffold 的处理
 
 Existing empty packages such as:
 
@@ -1091,7 +1131,9 @@ are scaffold facts, not architecture authority. They do not constrain the select
 
 ---
 
-## 18. Assembly Stress Test Summary
+## 18. 组装压力测试摘要（Assembly Stress Test Summary）
+
+中文说明：压力测试用于确认最小表示是否足够，同时检查没有 Contract → Service 机械扩展、Provider leakage 或 unproven infrastructure。
 
 The Step 6 assembly was pressure-tested across the representation questions left by Steps 1–5. The following are the closed outcomes.
 
@@ -1138,7 +1180,9 @@ The pressure tests confirm that the selected shape is implementation-ready for t
 
 ---
 
-## 19. Candidate Decisions
+## 19. 候选决策（Candidate Decisions）
+
+中文说明：S6-01 至 S6-47 记录本阶段的候选闭环。Decision IDs 与原有状态 token 保持不变。
 
 The following decisions are the Step 6 candidate closure, S6-01 through S6-47.
 
@@ -1332,7 +1376,9 @@ Each retained stable JSON representation carries an owner-local `schema_version 
 
 ---
 
-## 20. Delete Test
+## 20. 删除测试（Delete Test）
+
+中文说明：Delete Test 检查删除某个机制后，First Slice 的责任是否仍有清晰 owner；可删除项不代表未来永远不能引入，而是表示当前证据不足以支撑它。
 
 The Delete Test asks whether the selected First-Slice behavior still has a clear owner if a proposed mechanism is removed. The following can be deleted without violating the closed First-Slice shape:
 
@@ -1391,7 +1437,9 @@ The following are non-deletable for the selected First Slice because they carry 
 
 ---
 
-## 21. Step 6 Sufficiency Gate
+## 21. Step 6 充分性门（Sufficiency Gate）
+
+中文说明：Sufficiency Gate 检查 package/module、callable、依赖、transport、retention、testing 与 semantic guardrails 是否已足够闭合。
 
 Step 6 is sufficient for a review gate when all of the following are closed for the First Slice:
 
@@ -1427,7 +1475,9 @@ The gate passes only for the First Slice. It does not claim final Ecommerce AI O
 
 ---
 
-## 22. Step 7 Review Refinement Sync
+## 22. Step 7 Review Refinement Sync（Step 7 评审细化同步）
+
+中文说明：本节只同步 S7-R1 至 S7-R10 的 representation refinements，不重新设计 Step 6，不打开 Architecture、System Architecture 或 Contract inventory。
 
 The Step 7 review findings are synchronized as representation refinements only. They do not redesign the Step 6 structure or reopen any upstream architecture or Contract semantics.
 
@@ -1460,7 +1510,9 @@ The refinement sync does not mark Step 7 as PASS and does not authorize Walking 
 
 ---
 
-## 23. Final Step 6 Verdict
+## 23. Step 6 最终结论（Final Step 6 Verdict）
+
+中文说明：Step 6 是 First Slice 的 refined candidate；它达到 implementation-ready 形态，但 Walking Implementation 仍需单独的 explicit human authorization decision。
 
 ```text
 Step 6 — Minimal Software Architecture Assembly + Representation Closure
