@@ -450,9 +450,25 @@ docs/02_system/vertical_slices/01_research_execution/contracts/
 `06_DETAILED_CONTRACT_CONSISTENCY_REVIEW.md` is not D6, not a new Contract,
 and not an Architecture Authority.
 
-The package is complete for the current First-Slice Contract stage. This does
-not mean Software Architecture, persistence architecture, or implementation
-has been designed.
+The Detailed Contract package is complete for the First-Slice Contract stage.
+
+Completion of the Detailed Contract stage did not by itself mean that Software
+Architecture, persistence architecture, or implementation had already been
+designed at that time.
+
+The First-Slice Minimal Software Architecture was subsequently completed,
+refined through Step 7 review, and is now:
+
+```text
+Minimal Software Architecture
+    = REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
+
+Walking Implementation
+    = AUTHORIZED
+```
+
+This does not claim completion of the Full Ecommerce AI OS Software
+Architecture beyond the reviewed First-Slice scope.
 
 ## 7. First Slice Planning Package
 
@@ -721,16 +737,25 @@ create a tenth Contract, or authorize unrelated architecture expansion.
 The current Deferred Register remains the detailed status authority. This
 summary is a navigation aid and is not a new backlog.
 
-### 11.1 NOT YET DESIGNED
+### 11.1 NOT YET DESIGNED / NOT YET FROZEN BEYOND REVIEWED FIRST-SLICE REPRESENTATION
 
-- exact Search software fields and schemas;
-- exact Evidence / Research Result software model;
-- exact Execution Record software model;
-- exact reference representation;
-- exact Runtime state taxonomy;
-- exact retention lifecycle and duration;
-- Application interaction and transport;
-- Full Ecommerce AI OS Software Architecture beyond the reviewed First-Slice scope;
+The reviewed First-Slice Minimal Software Architecture has already closed the
+required software representation sufficiently for Walking Implementation.
+
+The items below refer only to implementation-level details not yet established
+by code, policy details intentionally left open, or scope beyond the reviewed
+First Slice.
+
+- exact implementation-level field names / low-level schemas where the
+  reviewed First-Slice representation intentionally stayed semantic rather than
+  field-complete;
+- exact low-level runtime state taxonomy beyond the reviewed ExecutionContext /
+  StableExecutionFacts / terminal outcome distinctions;
+- exact retention lifecycle / cleanup duration beyond the selected First-Slice
+  Local JSON Execution Bundle;
+- application surfaces / transports beyond the reviewed First-Slice thin CLI;
+- Full Ecommerce AI OS Software Architecture beyond the reviewed First-Slice
+  scope;
 - additional Provider endpoint subsets beyond TT-17.
 
 ### 11.2 NOT YET PROVEN
