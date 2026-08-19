@@ -321,6 +321,353 @@ WI-1 learning 仅限于：
 
 本 Round Record 不是通用的 DDD、Clean Architecture 或 SOLID tutorial。
 
+### 10.1 WI-1 分步实施 / 学习 Checkpoints
+
+WI-1 仍然是一个正式 Walking Round。以下 P0～P5 不是新的 Architecture Round、不是新的
+Contract、不是新的 Vertical Slice、不是新的 Software Architecture Step，也不是新的正式
+WI Round。
+
+P0～P5 只是 WI-1 内部的 Implementation / Learning Checkpoints，用于避免 Codex 一次性实现整个
+WI-1，并确保每一小段实现后都能形成：
+
+```text
+Architecture
+-> Code
+-> Test / Run
+-> Human Learning Review
+-> Next Checkpoint
+```
+
+核心规则：
+
+```text
+Later Checkpoint
+must not be implemented
+before the current Checkpoint
+has been reviewed by Human.
+```
+
+即：当前 Checkpoint 未经 Human Review，不得提前实现后续 Checkpoint。
+
+#### P0 - Pre-Code Learning
+
+Current Status:
+IN PROGRESS
+
+Goal:
+先建立 WI-1 的整体 mental model，知道当前代码将解决哪些 architecture questions，但不要求
+Human 在写代码前已经完全掌握所有答案。
+
+Learning Focus:
+
+- Q1. `BusinessWorkRequest` 为什么不等于 established Execution？
+- Q2. `TaskRuntime` 和 `ResearchSkill` 分别拥有什么 authority？
+- Q3. 为什么 `ResearchSkill` 不直接调用 concrete Fake Search？
+- Q4. `ResearchExecutionPort` 隔离了谁和谁？
+- Q5. 为什么 `SearchCapability` Protocol 不是 runtime hop？
+- Q6. 为什么 `ResearchCompletion` 之后仍需要 C6 / Bundle / Record Ref / TerminalReturn？
+
+Implementation Boundary:
+
+```text
+P0:
+DO NOT WRITE CODE
+```
+
+P0 完成条件不是闭卷考试。P0 只要求 Human understands what the six questions are，并能在后续
+implementation 中把它们作为 observation questions 使用。
+
+#### P1 - Boundary Skeleton
+
+Status:
+PLANNED
+
+Goal:
+只建立第一批最小 software boundaries / stable representations，让 Human 第一次看到 Architecture
+如何变成 Python representation。
+
+Learning Focus:
+
+- 为什么有些概念是 dataclass；
+- 为什么有些概念是 Protocol；
+- 为什么 Protocol 是 dependency seam 而不是 runtime service；
+- 为什么 stable boundary 不应直接使用 `dict[str, Any]`。
+
+Implementation Boundary:
+P1 只允许关注以下概念：
+
+- `BusinessWorkRequest`
+- `SkillDeclaration`
+- `ResearchSkill` Protocol
+- `ResearchExecutionPort` Protocol
+- `SearchCapability` Protocol
+- minimal `SearchRequest`
+- minimal `SearchResult`
+
+P1 不追求完整运行 WI-1，并明确不实现：
+
+- full `TaskRuntime` execution loop
+- Fake Search end-to-end path
+- `ResearchCompletion` closure
+- C6 finalization
+- Local JSON Execution Bundle
+- Record Ref
+- CLI end-to-end
+- live Provider
+- TT-17
+
+P1 完成后必须暂停，进行 Code Review、Architecture -> Code Mapping 和 Human Learning Review。
+Human Review 后才能进入 P2。
+
+#### P2 - Core Execution Loop
+
+Status:
+PLANNED
+
+Goal:
+第一次真正证明 C2a / C2b / C3 fake path 的核心控制关系。
+
+Learning Focus:
+
+```text
+TaskRuntime
+= Execution / Capability Invocation Coordination Owner
+
+ResearchSkill
+= Business Method Owner
+
+ResearchExecutionPort
+= C2a <-> C2b seam
+
+SearchCapability
+= provider-neutral dependency seam
+
+Fake Search
+= concrete test implementation
+```
+
+Implementation Boundary:
+目标行为只覆盖：
+
+```text
+ResearchSkill
+-> ResearchExecutionPort.search(...)
+-> TaskRuntime-controlled capability invocation
+-> SearchCapability seam
+-> Fake Search concrete implementation
+-> SearchResult
+-> same ResearchSkill
+```
+
+必须保持：
+
+```text
+ResearchSkill
+must NOT directly call
+the concrete Fake Search implementation.
+```
+
+P2 不提前实现：
+
+- C6 full closure
+- Local JSON Bundle full publish lifecycle
+- CLI full E2E
+- real Provider integration
+- TT-17
+- Finding / Hypothesis formation
+
+P2 完成后必须暂停并进行 Human Learning Review，重点回看 Q2、Q3、Q4、Q5。
+
+#### P3 - Business Completion & Execution Closure
+
+Status:
+PLANNED
+
+Goal:
+理解并实现：
+
+```text
+Business Completion
+!= Execution Completion
+```
+
+Learning Focus:
+
+```text
+ResearchCompletion
+= C2a Business Completion handoff
+
+C6
+= stable execution facts / finalization responsibility
+
+Runtime State
+!= Stable Execution Facts
+!= Finalized Execution Record
+
+Business Completion
+precedes
+Execution Completion
+```
+
+Implementation Boundary:
+目标路径只覆盖：
+
+```text
+minimal SearchResult
+-> minimal ActualSampleBoundary
+-> minimal Evidence representation
+-> minimal ResearchResult
+-> ResearchCompletion
+-> TaskRuntime recognizes Business Completion
+-> C6 finalization
+-> Local JSON Execution Bundle
+-> required-reference validation
+-> publish
+-> Record Ref
+-> TerminalReturn
+```
+
+本阶段重点回答 Q6。P3 完成后必须实际检查相关 retained artifacts，但不得提前进入完整 CLI E2E。
+
+#### P4 - Composition / CLI / End-to-End
+
+Status:
+PLANNED
+
+Goal:
+第一次从真实应用入口跑通整个 WI-1 Fake vertical slice。
+
+Learning Focus:
+
+- `composition.py`
+- manual constructor injection
+- thin CLI / `argparse`
+- `BusinessWorkRequest` creation
+- `TaskRuntime.execute()`
+- Fake Search dependency wiring
+- `TerminalReturn` presentation
+
+Implementation Boundary:
+必须保持：
+
+```text
+composition.py
+= static wiring / assembly point
+
+composition.py
+!= runtime orchestrator
+
+CLI
+= thin application adapter
+
+CLI
+!= business runtime
+```
+
+目标运行路径：
+
+```text
+python -m ecommerce_ai_os.application.cli ...
+```
+
+必须真正得到：
+
+```text
+Execution Outcome
+ResearchResult / Business Result
+Record Ref
+```
+
+并能解析 final execution bundle。
+
+#### P5 - Verification & Learning Review
+
+Status:
+PLANNED
+
+Goal:
+P5 不新增业务能力，只完成验证与学习复盘。
+
+Learning Focus:
+
+- Architecture -> Code mapping
+- Traceability evidence preparation
+- Runtime Evidence inspection
+- Delete Test / What-if
+- Human Learning Review
+
+Implementation Boundary:
+P5 只做：
+
+- unit tests
+- integration tests
+- architecture import-boundary tests
+- real fake CLI run
+- bundle inspection
+- runtime evidence inspection
+- Architecture -> Code mapping
+- Traceability evidence preparation
+- Delete Test / What-if
+- Human Learning Review
+
+必须重点执行 Delete Test / What-if，例如：
+
+- 如果删除 `ResearchSkill` Protocol，让 Runtime 直接 import concrete skill，程序是否还能运行？架构失去了什么？
+- 如果 `ResearchSkill` 直接调用 Fake Search，程序是否还能运行？`TaskRuntime` 失去了什么 authority？
+- 如果 `SearchCapability` Protocol 被当成一个 runtime Service，实际多出了什么错误 runtime hop？
+- 如果 `ResearchCompletion` 后直接返回，跳过 C6 / bundle publish，会破坏什么 referenceability / closure semantics？
+
+P5 最后重新回答 P0 的六个问题。此时 Human 应从“知道这些概念存在”推进到“能根据真实代码、测试和
+Runtime Evidence 解释这些边界为什么存在。”
+
+#### Checkpoint 推进规则
+
+```text
+P0
+-> Human Review
+-> P1
+-> Code / Test / Review
+-> Human Review
+-> P2
+-> Code / Run / Review
+-> Human Review
+-> P3
+-> Code / Runtime Evidence / Review
+-> Human Review
+-> P4
+-> E2E Run / Review
+-> Human Review
+-> P5
+-> Verification / Learning Review
+-> WI-1 Round Review
+```
+
+核心约束：
+
+```text
+Do not implement later Checkpoints early.
+```
+
+即：
+
+- P1 不得顺手实现 P2～P5。
+- P2 不得顺手实现 P3～P5。
+- P3 不得顺手实现 P4～P5。
+- P4 不得顺手把 P5 全部完成。
+
+P0～P5 不是独立 PASS 的 Walking Rounds。它们只是 WI-1 内部的推进节奏。最终仍然只有
+WI-1 Round Review 来决定 WI-1 是否满足本 Round Record 的 Acceptance Criteria。
+
+不要为 P0～P5 创建新的 Round Record 文件、新的 Traceability ID、新的 Contract、新的
+Architecture status 或新的 commit policy。默认仍然是：
+
+```text
+One Walking Round
+-> one coherent Round-level implementation/review cycle
+```
+
+除非 Human 后续明确调整 Git 策略。
+
 ## 11. 可追溯性覆盖范围（Traceability Coverage）
 
 Planned WI-1 coverage:
