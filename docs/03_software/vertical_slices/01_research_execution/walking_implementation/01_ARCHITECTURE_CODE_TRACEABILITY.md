@@ -25,17 +25,18 @@ Step 6 最终审查后决定怎样表示？
 | Walking Implementation | `AUTHORIZED` |
 | Current Round | `WI-1` |
 | WI-1 | `IN PROGRESS` |
-| Current Internal Checkpoint | `P3 - COMPLETE / HUMAN APPROVED` |
-| P3 | `COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED` |
-| Core Concepts | `14 TESTED` / `0 IMPLEMENTED` / `14 PLANNED` / `0 RUNTIME VERIFIED` |
-| Actual Code Evidence | `ESTABLISHED THROUGH P3` |
-| Test Evidence | `ESTABLISHED THROUGH P3` |
-| Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
+| Current Internal Checkpoint | `P4 - COMPLETE / HUMAN APPROVED` |
+| P4 | `COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS` |
+| Core Concepts | `12 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `8 RUNTIME VERIFIED` |
+| Actual Code Evidence | `ESTABLISHED THROUGH P4` |
+| Test Evidence | `ESTABLISHED THROUGH P4` |
+| Runtime Evidence | `WI-1 FAKE EXECUTABLE PATH ESTABLISHED THROUGH P4` |
 | Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `P4 - Composition / CLI / End-to-End` |
+| Current Next | `P5 - Verification & Learning Review` |
 
-当前状态确认 P1 / P2 / P3 已建立并通过 Human Review 的 code/test evidence。它不宣称 WI-1 executable
-path、end-to-end runtime behavior 或任何 `RUNTIME VERIFIED` evidence 已经存在。
+当前状态确认 P1～P4 已建立并通过 Human Review 的 code/test evidence，且 P4 已建立 WI-1 Fake
+executable path 与 published bundle runtime evidence。P5 尚未开始；WI-1 仍为 `IN PROGRESS`，本状态
+不宣称 WI-1 final verdict 已建立，也不把 Fake evidence 强化为 real Provider 或 TT-17 facts。
 
 ## 2. 本文职责与非职责
 
@@ -190,17 +191,17 @@ Traceability status 保持简单，并按证据成熟度递进：
 
 ## 8. Live Implementation Evidence Map
 
-以下 live map 按 P1 / P2 / P3 已确认的实际证据更新。未由当前 checkpoints 直接建立的行继续保持
-`PLANNED`；unit tests、compileall 与 internal coordination path 不构成 WI-1 executable-path
-runtime evidence。
+以下 live map 按 P1～P4 已确认的实际证据更新。P4 只把由实际 Fake CLI run、published bundle 与
+对应 tests 直接证明的八行升级为 `RUNTIME VERIFIED`；未由当前 checkpoints 直接建立的行继续保持
+`PLANNED` 或既有 `TESTED`，不因整条路径曾被执行而机械升级全部 28 行。
 
 | ID | Actual Code | Test Evidence | Runtime Evidence | Current Status | Architecture Deviation |
 |---|---|---|---|---|---|
-| A01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| A01 | `src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute` | `tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；actual CLI entered `TaskRuntime.execute` and returned terminal success | `RUNTIME VERIFIED` | `NONE` |
 | A02 | `src/ecommerce_ai_os/runtime/execution.py → BusinessWorkRequest`（`business_goal` correction closed / P1） | `tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_represents_the_first_slice_business_context → PASS / P1`<br>`tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_is_a_frozen_stable_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
-| A03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A04 | `src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._invoke_search`（P2 capability invocation coordination）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill`（P3 Business Completion coordination） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_undeclared_search_capability_is_not_invoked → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3` | `NOT YET VERIFIED`；P3 Business Completion path exercised under unit test only | `TESTED` | `NONE` |
-| A05 | `src/ecommerce_ai_os/runtime/execution.py → ExecutionContext`（P2 minimal representation；Execution Establishment lifecycle not implemented） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| A03 | `src/ecommerce_ai_os/runtime/execution.py → TerminalReturn`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（WI-1 success return partial only） | `tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；actual CLI printed `SUCCEEDED`, business result, and a resolvable Record Ref | `RUNTIME VERIFIED` | `NONE` |
+| A04 | `src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（P4 Execution closure coordination）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._invoke_search`（P2 capability invocation coordination）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill`（P3 Business Completion coordination） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_undeclared_search_capability_is_not_invoked → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；one runtime coordinated Search, Business Completion, terminalization, publication, and C1 return | `RUNTIME VERIFIED` | `NONE` |
+| A05 | `src/ecommerce_ai_os/runtime/execution.py → ExecutionContext`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（P4 actual happy-path Execution establishment） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；one unique `execution_id` was established and propagated into the published bundle and TerminalReturn | `RUNTIME VERIFIED` | `NONE` |
 | A06 | `src/ecommerce_ai_os/research/ports.py → ResearchSkill`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill` | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3` | `NOT YET VERIFIED`；concrete Research business method exercised under unit test only | `TESTED` | `NONE` |
 | A07 | `src/ecommerce_ai_os/research/models.py → SkillDeclaration` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_skill_declaration_preserves_declared_capability_identity → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort.search` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_structural_port_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>Independent static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
@@ -220,10 +221,10 @@ runtime evidence。
 | C03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | C04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | C05 | `src/ecommerce_ai_os/research/models.py → ResearchResult`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`（P3 minimal synthetic result with explicit limitations） | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3` | `NOT YET VERIFIED`；Business Result exercised under unit test only | `TESTED` | `NONE` |
-| D01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| D02 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| D03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| D04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| D01 | `src/ecommerce_ai_os/runtime/execution_record.py → StableExecutionFacts`<br>`src/ecommerce_ai_os/runtime/execution_record.py → StableExecutionFacts.finalize_success`<br>`src/ecommerce_ai_os/runtime/execution_record.py → FinalizedExecutionRecord`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_terminal_c6_record_resolves_every_required_reference → PASS / P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；published C6 recorded `SUCCEEDED` and five required references | `RUNTIME VERIFIED` | `NONE` |
+| D02 | `src/ecommerce_ai_os/runtime/execution_record.py → ExecutionRecordRef`<br>`src/ecommerce_ai_os/runtime/retention.py → LocalJsonRetention.resolve_record_ref` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_record_ref_is_available_only_after_successful_publish → PASS / P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；returned `execution://.../execution_record.json` resolved after terminal publication | `RUNTIME VERIFIED` | `NONE` |
+| D03 | `src/ecommerce_ai_os/runtime/retention.py → LocalJsonRetention`<br>`src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_terminal_c6_record_resolves_every_required_reference → PASS / P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；one final local JSON bundle contained input, Search result, sample boundary, evidence, Research Result, and C6 | `RUNTIME VERIFIED` | `NONE` |
+| D04 | `src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle.write_json`<br>`src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle.publish` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_missing_required_reference_rejects_publish → PASS / P4`<br>`tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_record_ref_is_available_only_after_successful_publish → PASS / P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；all five required refs resolved, final publication succeeded, and staging execution count was zero | `RUNTIME VERIFIED` | `NONE` |
 
 P3 Human Review identified one blocking implementation defect: Runtime did not prove that the actual
 bound `ResearchSkill.declaration` matched `ExecutionContext.skill_declaration` before capability
@@ -234,8 +235,8 @@ proves the mismatch is rejected before Fake Search invocation. The correction is
 Human approved, and closed; it did not reopen Architecture or Contracts.
 
 未升级行的 `PLANNED + Architecture Deviation = NONE` 只表示目前尚未观察到 implementation
-contradiction；它不表示 architecture conformity 已经验证。P1 / P2 / P3 的 14 个已升级行也只建立
-对应 checkpoints 的部分 code/test conformity，不代表 WI-1 或整体 Architecture 已完全验证。
+contradiction；它不表示 architecture conformity 已经验证。P1～P4 的已升级行也只建立对应
+checkpoints 的 bounded code/test/runtime conformity，不代表 WI-1 或整体 Architecture 已完全验证。
 
 ## 9. Cross-cutting Traceability
 
@@ -256,6 +257,21 @@ contradiction；它不表示 architecture conformity 已经验证。P1 / P2 / P3
 | Opaque Provider IDs | `03`；`06` S6-26 | exact provider strings；no fake global ID | `WI-4` | `WI-5` |
 | TT-17 Bounded Semantics | `03`,`06`,`07` G15 + provider facts | no strengthening of global completeness / exact region / sort / date semantics | `WI-3` partial | `WI-5` / `WI-8` |
 | Runtime Bundle Secret Safety | `06` S7-R8 | runtime raw artifacts source-control excluded and credential-safe | `WI-1` local bundle | `WI-5` |
+
+P4 已为以下既有横切关注点建立 bounded actual evidence：
+
+| 既有横切关注点 | P4 Actual Evidence |
+|---|---|
+| Package / Dependency DAG | `tests/unit/architecture/test_import_directions.py` 继续 PASS；composition 保持 concrete assembly owner。 |
+| Manual Dependency Injection | `src/ecommerce_ai_os/composition.py → build_fake_first_slice_runtime` 以 constructor injection 组装 Fake Search、Research Skill、Retention 与 Task Runtime；无 DI framework。 |
+| Synchronous Execution | actual CLI 在单一同步调用中完成 `TaskRuntime.execute`、publish 与 `TerminalReturn`。 |
+| Thin CLI | `src/ecommerce_ai_os/application/cli.py → main` 仅解析输入、调用 composed runtime 并呈现 terminal result。 |
+| Dataclass Model Strategy | P4 的 `TerminalReturn`、`ExecutionRecordRef` 与 `FinalizedExecutionRecord` 使用 reviewed dataclass representation。 |
+| Owner-local `schema_version` | runtime、research 与 search owner-local serializers 写入 schema version `1`。 |
+| Runtime Bundle Secret Safety | `.gitignore` 排除 `/var/executions/`；actual Fake bundle 不含 `provider_raw`、real Provider、Scrape Creators 或 TT-17 facts。 |
+
+这些证据不建立 `AppConfig / Secret Narrowing`、live Provider、完整 owner-local component version 或
+TT-17 runtime semantics；相应 final verification Round 保持不变。
 
 ## 10. Round → Traceability Coverage Map
 
@@ -429,35 +445,35 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至当前 `WI-1` P3 closure，coverage 为：
+截至当前 `WI-1` P4 closure，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
 | Architecture baseline | `28 core concepts` |
-| Current Status Count | `14 TESTED` / `0 IMPLEMENTED` / `14 PLANNED` / `0 RUNTIME VERIFIED` |
-| TESTED | `A02`, `A04`, `A05`, `A06`, `A07`, `A08`, `A10`, `B01`, `B02`, `B03`, `B04`, `C01`, `C02`, `C05` |
+| Current Status Count | `12 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `8 RUNTIME VERIFIED` |
+| TESTED | `A02`, `A06`, `A07`, `A08`, `A10`, `B01`, `B02`, `B03`, `B04`, `C01`, `C02`, `C05`（`12` 项） |
 | IMPLEMENTED | `NONE` |
-| PLANNED | `A01`, `A03`, `A09`, `B05`-`B09`, `C03`, `C04`, `D01`-`D04`（`14` 项） |
+| PLANNED | `A09`, `B05`-`B09`, `C03`, `C04`（`8` 项） |
+| RUNTIME VERIFIED | `A01`, `A03`, `A04`, `A05`, `D01`, `D02`, `D03`, `D04`（`8` 项） |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `ESTABLISHED THROUGH P3` |
-| Test Evidence | `ESTABLISHED THROUGH P3` |
-| Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
+| Actual Code | `ESTABLISHED THROUGH P4` |
+| Test Evidence | `ESTABLISHED THROUGH P4` |
+| Runtime Evidence | `FAKE EXECUTABLE PATH + PUBLISHED BUNDLE ESTABLISHED THROUGH P4` |
 | Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `PARTIALLY VERIFIED THROUGH P3` |
+| Architecture conformity | `PARTIALLY VERIFIED THROUGH P4` |
 
-P1 / P2 / P3 的 unit tests、compileall、structural stub behavior 与 internal coordination path 不构成
-WI-1 end-to-end Runtime Evidence，
-因此没有任何行升级为 `RUNTIME VERIFIED`。最初未设置 `PYTHONPATH=src` 的 unittest import failure
-是 Test / local execution environment fact，不是 Architecture Deviation；当前不因此修改
-`pyproject.toml`。
+P4 的 unit、integration、compileall 与 actual Fake CLI run 已建立 bounded WI-1 executable-path
+Runtime Evidence，并直接支持以上八行升级。其余 `TESTED` 行不因同一次路径曾经过其 representation
+而机械升级。最初未设置 `PYTHONPATH=src` 的 unittest import failure是 Test / local execution
+environment fact，不是 Architecture Deviation；当前不因此修改 `pyproject.toml`。
 
 ## 21. Current Next
 
 ```text
-P4 - Composition / CLI / End-to-End
+P5 - Verification & Learning Review
 NEXT / NOT STARTED
 ```
 
-P1 / P2 / P3 已完成 code/test evidence sync 与 Human Review。P4 尚未开始；后续仍必须先遵守当前
-Checkpoint 的 Human Review gate，且不得把 planned code、planned test 或 expected runtime path
-改写为 actual evidence。
+P1～P4 已完成 code/test evidence sync 与 Human Review。P4 verdict 为 `PASS`；P5 尚未开始，WI-1
+仍为 `IN PROGRESS`。P5 必须完成 Verification & Learning Review 后才能形成 WI-1 final verdict，且
+不得把 Fake runtime evidence 改写为 real Provider、Scrape Creators 或 TT-17 facts。

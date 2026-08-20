@@ -38,3 +38,6 @@ htmlcov/
 *.swp
 *.swo
 *~
+
+# Runtime execution artifacts
+/var/executions/

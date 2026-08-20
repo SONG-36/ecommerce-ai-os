@@ -1,8 +1,14 @@
-"""Stable input representations at the execution boundary."""
+"""Stable input and return representations at the execution boundary."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from ecommerce_ai_os.research.models import SkillDeclaration
+from ecommerce_ai_os.research.models import ResearchResult, SkillDeclaration
+
+if TYPE_CHECKING:
+    from .execution_record import ExecutionRecordRef
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,3 +30,13 @@ class ExecutionContext:
     execution_id: str
     work_request: BusinessWorkRequest
     skill_declaration: SkillDeclaration
+
+
+@dataclass(frozen=True, slots=True)
+class TerminalReturn:
+    """Successful C1 return after the established Execution is published."""
+
+    execution_id: str
+    execution_outcome: str
+    business_result: ResearchResult
+    record_ref: ExecutionRecordRef

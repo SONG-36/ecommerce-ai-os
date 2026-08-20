@@ -128,7 +128,6 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
         self.assertIs(fake_search.last_request, request)
         self.assertIsInstance(fake_search.last_context, SearchInvocationContext)
         self.assertEqual(fake_search.last_context.execution_id, context.execution_id)
-        self.assertFalse(hasattr(runtime, "execute"))
         self.assertFalse(hasattr(completion, "record_ref"))
         self.assertFalse(hasattr(completion, "finalized_execution_record"))
 

@@ -1,6 +1,12 @@
 """Stable representations owned by Research."""
 
 from dataclasses import dataclass
+from typing import NewType
+
+
+SampleBoundaryId = NewType("SampleBoundaryId", str)
+EvidenceId = NewType("EvidenceId", str)
+ResearchResultId = NewType("ResearchResultId", str)
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,6 +22,7 @@ class SkillDeclaration:
 class ActualSampleBoundary:
     """The bounded set actually available to the research method."""
 
+    sample_boundary_id: SampleBoundaryId
     source_search_result_id: str
     returned_item_count: int
 
@@ -24,6 +31,7 @@ class ActualSampleBoundary:
 class Evidence:
     """An admitted synthetic observation about the bounded Fake result."""
 
+    evidence_id: EvidenceId
     actual_sample_boundary: ActualSampleBoundary
     observation: str
 
@@ -32,6 +40,7 @@ class Evidence:
 class ResearchResult:
     """A minimal human-reviewable result with explicit limitations."""
 
+    research_result_id: ResearchResultId
     actual_sample_boundary: ActualSampleBoundary
     evidence: tuple[Evidence, ...]
     limitations: tuple[str, ...]

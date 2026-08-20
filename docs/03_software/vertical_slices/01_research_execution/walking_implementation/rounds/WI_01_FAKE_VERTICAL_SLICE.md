@@ -18,19 +18,19 @@ Implementation:
 IN PROGRESS
 
 Current Internal Checkpoint:
-P3 - COMPLETE / HUMAN APPROVED
+P4 - COMPLETE / HUMAN APPROVED
 
-P3:
-COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
+P4:
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS
 
 Actual Code Evidence:
-ESTABLISHED THROUGH P3
+ESTABLISHED THROUGH P4
 
 Test Evidence:
-ESTABLISHED THROUGH P3
+ESTABLISHED THROUGH P4
 
 Runtime Evidence:
-NOT YET ESTABLISHED
+FAKE CLI EXECUTABLE PATH + PUBLISHED BUNDLE ESTABLISHED THROUGH P4
 
 Architecture Deviation:
 NONE OBSERVED
@@ -863,7 +863,7 @@ C6, Local JSON Execution Bundle, required-reference validation, publish, Record 
 #### P4 - Composition / CLI / End-to-End
 
 Status:
-NEXT / NOT STARTED
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS
 
 Goal:
 第一次从真实应用入口跑通整个 WI-1 Fake vertical slice。
@@ -911,13 +911,141 @@ Record Ref
 
 并能解析 final execution bundle。
 
+**P4 Actual Production Files**
+
+```text
+.gitignore
+src/ecommerce_ai_os/application/__init__.py
+src/ecommerce_ai_os/application/cli.py
+src/ecommerce_ai_os/composition.py
+src/ecommerce_ai_os/research/car_vacuum_tiktok.py
+src/ecommerce_ai_os/research/models.py
+src/ecommerce_ai_os/research/serialization.py
+src/ecommerce_ai_os/runtime/execution.py
+src/ecommerce_ai_os/runtime/execution_record.py
+src/ecommerce_ai_os/runtime/retention.py
+src/ecommerce_ai_os/runtime/task_runtime.py
+src/ecommerce_ai_os/search/fake.py
+src/ecommerce_ai_os/search/serialization.py
+```
+
+**P4 Actual Test Files**
+
+```text
+tests/integration/__init__.py
+tests/integration/test_fake_first_slice.py
+tests/unit/runtime/test_retention.py
+tests/unit/runtime/test_task_runtime.py
+```
+
+**P4 Actual End-to-End Path**
+
+```text
+CLI
+-> BusinessWorkRequest
+-> TaskRuntime.execute
+-> ExecutionContext
+-> CarVacuumTikTokResearchSkill
+-> RuntimeResearchExecutionPort
+-> TaskRuntime._invoke_search
+-> FakeSearchCapability
+-> SearchResult
+-> ResearchCompletion
+-> StableExecutionFacts
+-> FinalizedExecutionRecord
+-> required-ref validation
+-> atomic publication
+-> ExecutionRecordRef
+-> TerminalReturn
+-> CLI
+```
+
+**P4 Executed Test Evidence**
+
+```text
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+-> 17 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+-> 1 test / PASS
+
+python -m compileall -q src tests
+-> PASS
+
+git diff --check
+-> PASS
+
+git check-ignore -v var/executions/test-placeholder
+-> .gitignore:43:/var/executions/ var/executions/test-placeholder
+```
+
+**P4 Actual Runtime Evidence**
+
+Actual command path:
+
+```text
+PYTHONPATH=src python -m ecommerce_ai_os.application.cli ...
+```
+
+Observed execution:
+
+```text
+execution_id = 08921c4e-ae46-4432-b1c2-1fde59e454ad
+Execution Outcome = SUCCEEDED
+Business Result = returned to CLI
+Record Ref = execution://08921c4e-ae46-4432-b1c2-1fde59e454ad/execution_record.json
+Record Ref resolved = YES
+required references = 5
+required references resolved = 5 / 5
+staging execution count after publication = 0
+provider_raw = ABSENT
+```
+
+Observed local review artifact:
+
+```text
+/tmp/ecommerce-ai-os-WI1-P4-runtime.W2v2Fd/executions/
+08921c4e-ae46-4432-b1c2-1fde59e454ad/execution_record.json
+```
+
+The `/tmp` path is review evidence only and is not a repository artifact or durability guarantee.
+No real Provider, Scrape Creators, or TT-17 fact was created or claimed.
+
+```text
+Fake CLI executable path
+= ESTABLISHED
+
+Published Bundle Runtime Evidence
+= ESTABLISHED
+
+P4 Verdict
+= PASS
+
+WI-1 Final Verdict
+= NOT YET
+```
+
 #### P5 - Verification & Learning Review
 
 Status:
-PLANNED
+NEXT / NOT STARTED
 
 Goal:
 P5 不新增业务能力，只完成验证与学习复盘。
+
+P5 review must explicitly inspect these non-blocking P4 follow-ups:
+
+```text
+A. Reuse the same TaskRuntime for two sequential execute() calls and verify:
+   distinct execution IDs;
+   distinct published bundles;
+   no execution-scoped state leak.
+
+B. Treat wi1-fake-search-result as deterministic WI-1 Fake identity only.
+   Full Search Result identity semantics remain deferred to WI-3.
+```
+
+These are P5 verification / learning notes, not P4 blockers and not P5 implementation started early.
 
 Learning Focus:
 
@@ -1035,27 +1163,27 @@ WI-1 明确不实现：
 - C03
 - C04
 
-P1 / P2 / P3 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P3 新增或
-推进 A04、A06、A10、C01、C02 与 C05 的 actual code/test evidence；其余 planned WI-1 coverage
-不因 Round planning coverage 而提前升级。
-WI-1 executable-path runtime evidence 仍为 NOT YET ESTABLISHED。
+P1～P4 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P4 直接建立 A01、
+A03（`TerminalReturn` partial）、A04、A05、D01、D02、D03 与 D04 的 bounded runtime evidence；
+其余 WI-1 coverage 不因同一条 Fake executable path 曾经过相关 representation 而机械升级。
+WI-1 Fake executable-path runtime evidence 已建立，但 WI-1 final verdict 仍为 NOT YET。
 
 ## 12. 已知实施前置条件 / 缺口（Known Implementation Preconditions / Gaps）
 
-Known factual gap:
+Closed factual gap:
 
 ```text
 var/executions/
-    = currently NOT ignored by Git
+    = ignored by Git through repository-root rule /var/executions/
 ```
 
-在 WI-1 生成 runtime execution bundles 前，implementation 必须使：
+P4 implementation 已使：
 
 ```text
 var/executions/
 ```
 
-被 source-control 排除。
+被 source-control 排除；`git check-ignore -v var/executions/test-placeholder` 已确认该规则生效。
 
 This is:
 
@@ -1069,7 +1197,7 @@ It is not:
 Architecture Assumption Conflict
 ```
 
-本 planning task 不得修改 `.gitignore`。
+P4 actual runtime evidence 生成在 `/tmp`，repository 中没有 runtime bundle 被 stage。
 
 ## 13. Planning 评审门（Planning Review Gate / Historical Entry Gate）
 
@@ -1080,15 +1208,15 @@ Implementation:
 IN PROGRESS
 
 Python Code:
-ESTABLISHED THROUGH P3
+ESTABLISHED THROUGH P4
 
 Current Internal Checkpoint:
-P3 - COMPLETE / HUMAN APPROVED
-
-P3:
-COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
+P4 - COMPLETE / HUMAN APPROVED
 
 P4:
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS
+
+P5:
 NEXT / NOT STARTED
 
 Architecture Reopen:
@@ -1107,4 +1235,4 @@ Do not mark:
 
 - WI-1 = PASS
 - WI-1 = IMPLEMENTED
-- WI-1 = RUNTIME VERIFIED
+- WI-1 = FINAL VERDICT ESTABLISHED

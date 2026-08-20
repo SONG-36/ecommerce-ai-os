@@ -1,14 +1,18 @@
 """The minimal First-Slice Research business method."""
 
 from dataclasses import dataclass, field
+from uuid import uuid4
 
 from ecommerce_ai_os.search.models import SearchRequest
 
 from .models import (
     ActualSampleBoundary,
     Evidence,
+    EvidenceId,
     ResearchCompletion,
     ResearchResult,
+    ResearchResultId,
+    SampleBoundaryId,
     SkillDeclaration,
 )
 from .ports import ResearchExecutionPort
@@ -32,6 +36,7 @@ class CarVacuumTikTokResearchSkill:
         """Execute the minimal business method and declare Business Completion."""
         search_result = port.search(self.search_request)
         sample_boundary = ActualSampleBoundary(
+            sample_boundary_id=SampleBoundaryId(str(uuid4())),
             source_search_result_id=search_result.search_result_id,
             returned_item_count=search_result.returned_item_count,
         )
@@ -49,6 +54,7 @@ class CarVacuumTikTokResearchSkill:
         else:
             evidence = (
                 Evidence(
+                    evidence_id=EvidenceId(str(uuid4())),
                     actual_sample_boundary=sample_boundary,
                     observation=(
                         "WI-1 Fake Search returned a bounded result containing "
@@ -58,6 +64,7 @@ class CarVacuumTikTokResearchSkill:
             )
 
         research_result = ResearchResult(
+            research_result_id=ResearchResultId(str(uuid4())),
             actual_sample_boundary=sample_boundary,
             evidence=evidence,
             limitations=tuple(limitations),
