@@ -6,7 +6,7 @@ from typing import Protocol
 
 from ecommerce_ai_os.search.models import SearchRequest, SearchResult
 
-from .models import SkillDeclaration
+from .models import ResearchCompletion, SkillDeclaration
 
 
 class ResearchExecutionPort(Protocol):
@@ -30,5 +30,5 @@ class ResearchSkill(Protocol):
         ...
 
 
-# SearchFailure and ResearchCompletion remain postponed annotations until the
-# checkpoints that implement those stable representations.
+# SearchFailure remains a postponed annotation until WI-3 implements its
+# complete representation.

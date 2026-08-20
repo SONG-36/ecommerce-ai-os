@@ -25,16 +25,16 @@ Step 6 最终审查后决定怎样表示？
 | Walking Implementation | `AUTHORIZED` |
 | Current Round | `WI-1` |
 | WI-1 | `IN PROGRESS` |
-| Current Internal Checkpoint | `P2 - COMPLETE / HUMAN APPROVED` |
-| P3 | `NEXT / NOT STARTED` |
-| Core Concepts | `9 TESTED` / `1 IMPLEMENTED` / `18 PLANNED` / `0 RUNTIME VERIFIED` |
-| Actual Code Evidence | `ESTABLISHED THROUGH P2` |
-| Test Evidence | `ESTABLISHED THROUGH P2` |
+| Current Internal Checkpoint | `P3 - COMPLETE / HUMAN APPROVED` |
+| P3 | `COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED` |
+| Core Concepts | `14 TESTED` / `0 IMPLEMENTED` / `14 PLANNED` / `0 RUNTIME VERIFIED` |
+| Actual Code Evidence | `ESTABLISHED THROUGH P3` |
+| Test Evidence | `ESTABLISHED THROUGH P3` |
 | Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
 | Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `P3 - Business Completion & Execution Closure` |
+| Current Next | `P4 - Composition / CLI / End-to-End` |
 
-当前状态确认 P1 / P2 已建立并通过 Human Review 的 code/test evidence。它不宣称 WI-1 executable
+当前状态确认 P1 / P2 / P3 已建立并通过 Human Review 的 code/test evidence。它不宣称 WI-1 executable
 path、end-to-end runtime behavior 或任何 `RUNTIME VERIFIED` evidence 已经存在。
 
 ## 2. 本文职责与非职责
@@ -190,7 +190,7 @@ Traceability status 保持简单，并按证据成熟度递进：
 
 ## 8. Live Implementation Evidence Map
 
-以下 live map 按 P1 / P2 已确认的实际证据更新。未由当前 checkpoints 直接建立的行继续保持
+以下 live map 按 P1 / P2 / P3 已确认的实际证据更新。未由当前 checkpoints 直接建立的行继续保持
 `PLANNED`；unit tests、compileall 与 internal coordination path 不构成 WI-1 executable-path
 runtime evidence。
 
@@ -199,13 +199,13 @@ runtime evidence。
 | A01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | A02 | `src/ecommerce_ai_os/runtime/execution.py → BusinessWorkRequest`（`business_goal` correction closed / P1） | `tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_represents_the_first_slice_business_context → PASS / P1`<br>`tests/unit/runtime/test_execution.py → BusinessWorkRequestTests.test_is_a_frozen_stable_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | A03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A04 | `src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._invoke_search`（P2 capability invocation coordination only） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_undeclared_search_capability_is_not_invoked → PASS / P2` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
+| A04 | `src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._invoke_search`（P2 capability invocation coordination）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill`（P3 Business Completion coordination） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_undeclared_search_capability_is_not_invoked → PASS / P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3` | `NOT YET VERIFIED`；P3 Business Completion path exercised under unit test only | `TESTED` | `NONE` |
 | A05 | `src/ecommerce_ai_os/runtime/execution.py → ExecutionContext`（P2 minimal representation；Execution Establishment lifecycle not implemented） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
-| A06 | `src/ecommerce_ai_os/research/ports.py → ResearchSkill` | `NOT YET DIRECTLY VERIFIED` | `NOT YET VERIFIED` | `IMPLEMENTED` | `NONE` |
+| A06 | `src/ecommerce_ai_os/research/ports.py → ResearchSkill`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill` | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3` | `NOT YET VERIFIED`；concrete Research business method exercised under unit test only | `TESTED` | `NONE` |
 | A07 | `src/ecommerce_ai_os/research/models.py → SkillDeclaration` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_skill_declaration_preserves_declared_capability_identity → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort.search` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_structural_port_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>Independent static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
 | A09 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| A10 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| A10 | `src/ecommerce_ai_os/research/models.py → ResearchCompletion`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill` | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3` | `NOT YET VERIFIED`；Business Completion exercised under unit test; Execution Completion not established | `TESTED` | `NONE` |
 | B01 | `src/ecommerce_ai_os/search/port.py → SearchCapability` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_structural_search_stub_satisfies_the_callable_seam → PASS / P1`<br>Runtime structural behavior demonstrated; static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | B02 | `src/ecommerce_ai_os/search/models.py → SearchRequest` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_request_is_a_frozen_provider_neutral_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
 | B03 | `src/ecommerce_ai_os/search/models.py → SearchResult`<br>P1 minimal representation; full C3 semantics deferred to `WI-3` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_has_identity_and_returned_set_boundary → PASS / P1`<br>`tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_rejects_a_negative_returned_item_count → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
@@ -215,18 +215,26 @@ runtime evidence。
 | B07 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B08 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B09 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| C01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| C02 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| C01 | `src/ecommerce_ai_os/research/models.py → ActualSampleBoundary`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`（P3 minimal bounded Fake representation） | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3` | `NOT YET VERIFIED`；P3 representation exercised under unit test only | `TESTED` | `NONE` |
+| C02 | `src/ecommerce_ai_os/research/models.py → Evidence`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`（P3 minimal synthetic Evidence only；`EvidenceInadmissible` deferred） | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3` | `NOT YET VERIFIED`；P3 representation exercised under unit test only | `TESTED` | `NONE` |
 | C03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | C04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| C05 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| C05 | `src/ecommerce_ai_os/research/models.py → ResearchResult`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`（P3 minimal synthetic result with explicit limitations） | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3` | `NOT YET VERIFIED`；Business Result exercised under unit test only | `TESTED` | `NONE` |
 | D01 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | D02 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | D03 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | D04 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 
+P3 Human Review identified one blocking implementation defect: Runtime did not prove that the actual
+bound `ResearchSkill.declaration` matched `ExecutionContext.skill_declaration` before capability
+authorization. `TaskRuntime._run_research_skill` now enforces that invariant before port creation or
+Skill execution, and
+`TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search`
+proves the mismatch is rejected before Fake Search invocation. The correction is implemented, tested,
+Human approved, and closed; it did not reopen Architecture or Contracts.
+
 未升级行的 `PLANNED + Architecture Deviation = NONE` 只表示目前尚未观察到 implementation
-contradiction；它不表示 architecture conformity 已经验证。P1 / P2 的 10 个已升级行也只建立
+contradiction；它不表示 architecture conformity 已经验证。P1 / P2 / P3 的 14 个已升级行也只建立
 对应 checkpoints 的部分 code/test conformity，不代表 WI-1 或整体 Architecture 已完全验证。
 
 ## 9. Cross-cutting Traceability
@@ -421,23 +429,23 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至当前 `WI-1` P2 closure，coverage 为：
+截至当前 `WI-1` P3 closure，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
 | Architecture baseline | `28 core concepts` |
-| Current Status Count | `9 TESTED` / `1 IMPLEMENTED` / `18 PLANNED` / `0 RUNTIME VERIFIED` |
-| TESTED | `A02`, `A04`, `A05`, `A07`, `A08`, `B01`, `B02`, `B03`, `B04` |
-| IMPLEMENTED | `A06` |
-| PLANNED | 其余 `18` 项 |
+| Current Status Count | `14 TESTED` / `0 IMPLEMENTED` / `14 PLANNED` / `0 RUNTIME VERIFIED` |
+| TESTED | `A02`, `A04`, `A05`, `A06`, `A07`, `A08`, `A10`, `B01`, `B02`, `B03`, `B04`, `C01`, `C02`, `C05` |
+| IMPLEMENTED | `NONE` |
+| PLANNED | `A01`, `A03`, `A09`, `B05`-`B09`, `C03`, `C04`, `D01`-`D04`（`14` 项） |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `ESTABLISHED THROUGH P2` |
-| Test Evidence | `ESTABLISHED THROUGH P2` |
+| Actual Code | `ESTABLISHED THROUGH P3` |
+| Test Evidence | `ESTABLISHED THROUGH P3` |
 | Runtime Evidence | `NOT YET ESTABLISHED FOR WI-1 EXECUTABLE PATH` |
 | Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `PARTIALLY VERIFIED FOR P1 ONLY` |
+| Architecture conformity | `PARTIALLY VERIFIED THROUGH P3` |
 
-P1 / P2 的 unit tests、compileall、structural stub behavior 与 internal coordination path 不构成
+P1 / P2 / P3 的 unit tests、compileall、structural stub behavior 与 internal coordination path 不构成
 WI-1 end-to-end Runtime Evidence，
 因此没有任何行升级为 `RUNTIME VERIFIED`。最初未设置 `PYTHONPATH=src` 的 unittest import failure
 是 Test / local execution environment fact，不是 Architecture Deviation；当前不因此修改
@@ -446,10 +454,10 @@ WI-1 end-to-end Runtime Evidence，
 ## 21. Current Next
 
 ```text
-P3 - Business Completion & Execution Closure
+P4 - Composition / CLI / End-to-End
 NEXT / NOT STARTED
 ```
 
-P1 / P2 已完成 code/test evidence sync 与 Human Review。P3 尚未开始；后续仍必须先遵守当前
+P1 / P2 / P3 已完成 code/test evidence sync 与 Human Review。P4 尚未开始；后续仍必须先遵守当前
 Checkpoint 的 Human Review gate，且不得把 planned code、planned test 或 expected runtime path
 改写为 actual evidence。

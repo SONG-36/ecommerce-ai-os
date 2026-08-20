@@ -2,6 +2,8 @@
 
 from typing import cast
 
+from ecommerce_ai_os.research.models import ResearchCompletion
+from ecommerce_ai_os.research.ports import ResearchSkill
 from ecommerce_ai_os.search.models import (
     SearchInvocationContext,
     SearchRequest,
@@ -17,6 +19,20 @@ class TaskRuntime:
 
     def __init__(self, search_capability: SearchCapability) -> None:
         self._search_capability = search_capability
+
+    def _run_research_skill(
+        self,
+        context: ExecutionContext,
+        skill: ResearchSkill,
+    ) -> ResearchCompletion:
+        """Run the bound business method without terminalizing the Execution."""
+        if skill.declaration != context.skill_declaration:
+            raise RuntimeError(
+                "bound ResearchSkill declaration does not match ExecutionContext"
+            )
+
+        port = RuntimeResearchExecutionPort(self, context)
+        return skill.run(port)
 
     def _invoke_search(
         self,

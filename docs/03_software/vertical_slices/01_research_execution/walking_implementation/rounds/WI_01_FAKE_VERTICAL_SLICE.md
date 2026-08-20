@@ -18,16 +18,16 @@ Implementation:
 IN PROGRESS
 
 Current Internal Checkpoint:
-P2 - COMPLETE / HUMAN APPROVED
+P3 - COMPLETE / HUMAN APPROVED
 
 P3:
-NEXT / NOT STARTED
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
 
 Actual Code Evidence:
-ESTABLISHED THROUGH P2
+ESTABLISHED THROUGH P3
 
 Test Evidence:
-ESTABLISHED THROUGH P2
+ESTABLISHED THROUGH P3
 
 Runtime Evidence:
 NOT YET ESTABLISHED
@@ -735,13 +735,13 @@ Evidence and does not upgrade any Traceability row to `RUNTIME VERIFIED`.
 - C6 / Bundle / Record Ref remain deferred.
 - Multi-Execution scheduling is not designed or implemented.
 
-#### P3 - Business Completion & Execution Closure
+#### P3 - Business Completion
 
 Status:
-NEXT / NOT STARTED
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
 
 Goal:
-理解并实现：
+已实现并验证：
 
 ```text
 Business Completion
@@ -754,9 +754,6 @@ Learning Focus:
 ResearchCompletion
 = C2a Business Completion handoff
 
-C6
-= stable execution facts / finalization responsibility
-
 Runtime State
 != Stable Execution Facts
 != Finalized Execution Record
@@ -766,30 +763,107 @@ precedes
 Execution Completion
 ```
 
-Implementation Boundary:
-目标路径只覆盖：
+**P3 Actual Production Files**
 
 ```text
-minimal SearchResult
--> minimal ActualSampleBoundary
--> minimal Evidence representation
--> minimal ResearchResult
--> ResearchCompletion
--> TaskRuntime recognizes Business Completion
--> C6 finalization
--> Local JSON Execution Bundle
--> required-reference validation
--> publish
--> Record Ref
--> TerminalReturn
+src/ecommerce_ai_os/research/models.py
+src/ecommerce_ai_os/research/ports.py
+src/ecommerce_ai_os/research/car_vacuum_tiktok.py
+src/ecommerce_ai_os/runtime/task_runtime.py
 ```
 
-本阶段重点回答 Q6。P3 完成后必须实际检查相关 retained artifacts，但不得提前进入完整 CLI E2E。
+**P3 Actual Test Files**
+
+```text
+tests/unit/research/test_first_slice_skill.py
+tests/unit/runtime/test_task_runtime.py
+```
+
+**P3 Actual Business Path**
+
+```text
+TaskRuntime._run_research_skill
+-> CarVacuumTikTokResearchSkill.run
+-> RuntimeResearchExecutionPort.search
+-> TaskRuntime._invoke_search
+-> FakeSearchCapability.search
+-> SearchResult
+-> CarVacuumTikTokResearchSkill.run
+-> ActualSampleBoundary
+-> Evidence
+-> ResearchResult
+-> ResearchCompletion
+-> TaskRuntime._run_research_skill
+```
+
+`CarVacuumTikTokResearchSkill` uses only the provider-neutral `ResearchExecutionPort` to express its
+Search need. It forms a minimal bounded synthetic result from the existing P2 `SearchResult` facts.
+The zero-result path returns a valid `ResearchCompletion` with empty Evidence and an explicit
+insufficient-evidence limitation; it does not manufacture an Execution failure.
+
+**P3 Human Review Correction**
+
+Human Review found one blocking implementation defect: Runtime could use
+`ExecutionContext.skill_declaration` for capability authorization while running a different actual
+bound Research Skill. The correction is now closed:
+
+```text
+Bound ResearchSkill declaration guard
+= implemented / tested / closed
+
+TaskRuntime._run_research_skill
+-> verify skill.declaration == context.skill_declaration
+-> only then create RuntimeResearchExecutionPort
+-> only then invoke skill.run(...)
+```
+
+`TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search`
+proves a mismatch raises the local `RuntimeError` before Fake Search invocation
+(`fake_search.calls == 0`). This was an Implementation Defect, not an Architecture Conflict,
+Contract Change, or Architecture Reopen.
+
+**P3 Executed Test Evidence**
+
+```text
+PYTHONPATH=src python -m unittest tests.unit.runtime.test_task_runtime -v
+-> 4 tests PASS
+
+PYTHONPATH=src python -m unittest tests.unit.research.test_first_slice_skill -v
+-> 2 tests PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+-> 14 tests PASS
+
+python -m compileall -q src tests
+-> PASS
+
+git diff --check
+-> PASS
+```
+
+**P3 Evidence Discipline**
+
+```text
+Business Completion
+= exercised under unit test
+
+Execution Completion
+= NOT YET ESTABLISHED
+
+WI-1 executable-path Runtime Evidence
+= NOT YET ESTABLISHED
+
+RUNTIME VERIFIED
+= 0
+```
+
+C6, Local JSON Execution Bundle, required-reference validation, publish, Record Ref, TerminalReturn,
+`TaskRuntime.execute()`, composition, and CLI remain deferred. P3 does not mark WI-1 complete.
 
 #### P4 - Composition / CLI / End-to-End
 
 Status:
-PLANNED
+NEXT / NOT STARTED
 
 Goal:
 第一次从真实应用入口跑通整个 WI-1 Fake vertical slice。
@@ -961,8 +1035,9 @@ WI-1 明确不实现：
 - C03
 - C04
 
-P1 / P2 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P2 新增覆盖
-A04、A05、A08 与 B04；其余 planned WI-1 coverage 不因 Round planning coverage 而提前升级。
+P1 / P2 / P3 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P3 新增或
+推进 A04、A06、A10、C01、C02 与 C05 的 actual code/test evidence；其余 planned WI-1 coverage
+不因 Round planning coverage 而提前升级。
 WI-1 executable-path runtime evidence 仍为 NOT YET ESTABLISHED。
 
 ## 12. 已知实施前置条件 / 缺口（Known Implementation Preconditions / Gaps）
@@ -1005,12 +1080,15 @@ Implementation:
 IN PROGRESS
 
 Python Code:
-ESTABLISHED THROUGH P2
+ESTABLISHED THROUGH P3
 
 Current Internal Checkpoint:
-P2 - COMPLETE / HUMAN APPROVED
+P3 - COMPLETE / HUMAN APPROVED
 
 P3:
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
+
+P4:
 NEXT / NOT STARTED
 
 Architecture Reopen:

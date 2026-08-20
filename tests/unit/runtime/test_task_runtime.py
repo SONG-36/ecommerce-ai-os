@@ -1,6 +1,9 @@
 import unittest
 
-from ecommerce_ai_os.research.models import SkillDeclaration
+from ecommerce_ai_os.research.car_vacuum_tiktok import (
+    CarVacuumTikTokResearchSkill,
+)
+from ecommerce_ai_os.research.models import ResearchCompletion, SkillDeclaration
 from ecommerce_ai_os.research.ports import ResearchExecutionPort
 from ecommerce_ai_os.runtime.execution import BusinessWorkRequest, ExecutionContext
 from ecommerce_ai_os.runtime.task_runtime import (
@@ -100,6 +103,58 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
             "bound Skill did not declare Search capability",
         ):
             port.search(SearchRequest(query="car vacuum", market="US"))
+
+        self.assertEqual(fake_search.calls, 0)
+
+    def test_runtime_receives_business_completion_without_terminalization(self) -> None:
+        expected_result = SearchResult(
+            search_result_id="search-result-001",
+            returned_item_count=2,
+        )
+        fake_search = FakeSearchCapability(expected_result)
+        runtime = TaskRuntime(search_capability=fake_search)
+        context = self.make_context()
+        request = SearchRequest(query="car vacuum", market="US")
+        skill = CarVacuumTikTokResearchSkill(search_request=request)
+
+        completion = runtime._run_research_skill(context, skill)
+
+        self.assertIsInstance(completion, ResearchCompletion)
+        self.assertIs(
+            completion.research_result.actual_sample_boundary,
+            completion.actual_sample_boundary,
+        )
+        self.assertEqual(fake_search.calls, 1)
+        self.assertIs(fake_search.last_request, request)
+        self.assertIsInstance(fake_search.last_context, SearchInvocationContext)
+        self.assertEqual(fake_search.last_context.execution_id, context.execution_id)
+        self.assertFalse(hasattr(runtime, "execute"))
+        self.assertFalse(hasattr(completion, "record_ref"))
+        self.assertFalse(hasattr(completion, "finalized_execution_record"))
+
+    def test_mismatched_bound_skill_declaration_is_rejected_before_search(self) -> None:
+        fake_search = FakeSearchCapability(
+            SearchResult(
+                search_result_id="unused-result",
+                returned_item_count=0,
+            )
+        )
+        runtime = TaskRuntime(search_capability=fake_search)
+        context = self.make_context()
+        context.skill_declaration = SkillDeclaration(
+            skill_id="different-research-skill",
+            skill_version="1",
+            declared_capabilities=frozenset({"Search"}),
+        )
+        skill = CarVacuumTikTokResearchSkill(
+            search_request=SearchRequest(query="car vacuum", market="US")
+        )
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "bound ResearchSkill declaration does not match ExecutionContext",
+        ):
+            runtime._run_research_skill(context, skill)
 
         self.assertEqual(fake_search.calls, 0)
 
