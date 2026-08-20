@@ -24,19 +24,20 @@ Step 6 最终审查后决定怎样表示？
 |---|---|
 | Walking Implementation | `AUTHORIZED` |
 | Current Round | `WI-1` |
-| WI-1 | `IN PROGRESS` |
-| Current Internal Checkpoint | `P4 - COMPLETE / HUMAN APPROVED` |
-| P4 | `COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS` |
-| Core Concepts | `12 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `8 RUNTIME VERIFIED` |
-| Actual Code Evidence | `ESTABLISHED THROUGH P4` |
-| Test Evidence | `ESTABLISHED THROUGH P4` |
-| Runtime Evidence | `WI-1 FAKE EXECUTABLE PATH ESTABLISHED THROUGH P4` |
+| WI-1 | `COMPLETE / PASS` |
+| Current Internal Checkpoint | `P5 - COMPLETE / TESTED / HUMAN REVIEWED` |
+| P5 | `COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
+| Core Concepts | `10 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `10 RUNTIME VERIFIED` |
+| Actual Code Evidence | `ESTABLISHED THROUGH P5` |
+| Test Evidence | `ESTABLISHED THROUGH P5` |
+| Runtime Evidence | `ESTABLISHED FOR WI-1 FAKE FIRST EXECUTABLE VERTICAL SLICE` |
 | Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `P5 - Verification & Learning Review` |
+| Current Next | `WI-2 - Execution Lifecycle / NOT STARTED` |
 
-当前状态确认 P1～P4 已建立并通过 Human Review 的 code/test evidence，且 P4 已建立 WI-1 Fake
-executable path 与 published bundle runtime evidence。P5 尚未开始；WI-1 仍为 `IN PROGRESS`，本状态
-不宣称 WI-1 final verdict 已建立，也不把 Fake evidence 强化为 real Provider 或 TT-17 facts。
+P1～P5 已完成。P5 的 AST import guard、sequential multi-Execution isolation、bundle inspection、
+Delete Test、真实 Fake CLI rerun 与 consistency gate 均通过，因此 WI-1 final verdict 为 `PASS`。
+该 PASS 只证明 reviewed First-Slice minimal software shape 可以执行；它不把 Fake evidence 强化为
+real Provider / TT-17、完整 Search/C6 semantics、scale readiness 或完整 Ecommerce AI OS architecture。
 
 ## 2. 本文职责与非职责
 
@@ -207,9 +208,9 @@ Traceability status 保持简单，并按证据成熟度递进：
 | A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort.search` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_structural_port_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>Independent static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
 | A09 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | A10 | `src/ecommerce_ai_os/research/models.py → ResearchCompletion`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill` | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / P3` | `NOT YET VERIFIED`；Business Completion exercised under unit test; Execution Completion not established | `TESTED` | `NONE` |
-| B01 | `src/ecommerce_ai_os/search/port.py → SearchCapability` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_structural_search_stub_satisfies_the_callable_seam → PASS / P1`<br>Runtime structural behavior demonstrated; static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| B01 | `src/ecommerce_ai_os/search/port.py → SearchCapability`<br>`src/ecommerce_ai_os/search/fake.py → FakeSearchCapability`（WI-1 Fake implementation only） | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_structural_search_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_sequential_executions_are_isolated_with_deterministic_fake_id → PASS / P5`<br>Runtime structural behavior demonstrated; static type-check evidence `NOT YET ESTABLISHED` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P5 Final Fake CLI Runtime Evidence`；the injected Fake implementation was actually invoked through the provider-neutral seam | `RUNTIME VERIFIED`（WI-1 Fake only） | `NONE` |
 | B02 | `src/ecommerce_ai_os/search/models.py → SearchRequest` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_request_is_a_frozen_provider_neutral_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
-| B03 | `src/ecommerce_ai_os/search/models.py → SearchResult`<br>P1 minimal representation; full C3 semantics deferred to `WI-3` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_has_identity_and_returned_set_boundary → PASS / P1`<br>`tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_rejects_a_negative_returned_item_count → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
+| B03 | `src/ecommerce_ai_os/search/models.py → SearchResult`<br>P1 minimal representation; full C3 semantics deferred to `WI-3` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_has_identity_and_returned_set_boundary → PASS / P1`<br>`tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_rejects_a_negative_returned_item_count → PASS / P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_sequential_executions_are_isolated_with_deterministic_fake_id → PASS / P5` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P5 Sequential Multi-Execution Evidence`；the deterministic `wi1-fake-search-result` existed independently inside two execution-scoped bundles without cross-execution collision | `RUNTIME VERIFIED`（WI-1 minimal only；full semantics remain `WI-3`） | `NONE` |
 | B04 | `src/ecommerce_ai_os/search/models.py → SearchInvocationContext`（P2 minimal representation only；WI-3 full semantics / main verification） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
 | B05 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B06 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
@@ -262,7 +263,7 @@ P4 已为以下既有横切关注点建立 bounded actual evidence：
 
 | 既有横切关注点 | P4 Actual Evidence |
 |---|---|
-| Package / Dependency DAG | `tests/unit/architecture/test_import_directions.py` 继续 PASS；composition 保持 concrete assembly owner。 |
+| Package / Dependency DAG | `tests/unit/architecture/test_import_directions.py → ImportDirectionTests.test_reviewed_import_dag_holds_for_the_current_source_tree → PASS / P5`；stdlib AST 实际解析当前 `src` tree，composition 保持 concrete assembly owner。 |
 | Manual Dependency Injection | `src/ecommerce_ai_os/composition.py → build_fake_first_slice_runtime` 以 constructor injection 组装 Fake Search、Research Skill、Retention 与 Task Runtime；无 DI framework。 |
 | Synchronous Execution | actual CLI 在单一同步调用中完成 `TaskRuntime.execute`、publish 与 `TerminalReturn`。 |
 | Thin CLI | `src/ecommerce_ai_os/application/cli.py → main` 仅解析输入、调用 composed runtime 并呈现 terminal result。 |
@@ -272,6 +273,14 @@ P4 已为以下既有横切关注点建立 bounded actual evidence：
 
 这些证据不建立 `AppConfig / Secret Narrowing`、live Provider、完整 owner-local component version 或
 TT-17 runtime semantics；相应 final verification Round 保持不变。
+
+P5 additionally verified the existing cross-cutting constraints without creating new concepts:
+
+- Manual DI / Composition：same composed `TaskRuntime` executed two isolated sequential Executions。
+- Synchronous Execution：two calls completed sequentially; no async, queue, scheduler, or concurrency mechanism。
+- Thin CLI：actual CLI rerun returned `SUCCEEDED`, Research Result summary, and resolvable Record Ref。
+- Runtime Bundle Secret Safety：temporary bundle had no `provider_raw`, secret-like value, Scrape Creators claim, or TT-17 claim。
+- Architecture Import Guard：all reviewed forbidden directions were absent in the current source tree。
 
 ## 10. Round → Traceability Coverage Map
 
@@ -445,35 +454,35 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至当前 `WI-1` P4 closure，coverage 为：
+截至 `WI-1` P5 final closure，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
 | Architecture baseline | `28 core concepts` |
-| Current Status Count | `12 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `8 RUNTIME VERIFIED` |
-| TESTED | `A02`, `A06`, `A07`, `A08`, `A10`, `B01`, `B02`, `B03`, `B04`, `C01`, `C02`, `C05`（`12` 项） |
+| Current Status Count | `10 TESTED` / `0 IMPLEMENTED` / `8 PLANNED` / `10 RUNTIME VERIFIED` |
+| TESTED | `A02`, `A06`, `A07`, `A08`, `A10`, `B02`, `B04`, `C01`, `C02`, `C05`（`10` 项） |
 | IMPLEMENTED | `NONE` |
 | PLANNED | `A09`, `B05`-`B09`, `C03`, `C04`（`8` 项） |
-| RUNTIME VERIFIED | `A01`, `A03`, `A04`, `A05`, `D01`, `D02`, `D03`, `D04`（`8` 项） |
+| RUNTIME VERIFIED | `A01`, `A03`, `A04`, `A05`, `B01`, `B03`, `D01`, `D02`, `D03`, `D04`（`10` 项） |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `ESTABLISHED THROUGH P4` |
-| Test Evidence | `ESTABLISHED THROUGH P4` |
-| Runtime Evidence | `FAKE EXECUTABLE PATH + PUBLISHED BUNDLE ESTABLISHED THROUGH P4` |
+| Actual Code | `ESTABLISHED THROUGH P5` |
+| Test Evidence | `ESTABLISHED THROUGH P5` |
+| Runtime Evidence | `ESTABLISHED FOR WI-1 FAKE FIRST EXECUTABLE VERTICAL SLICE` |
 | Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `PARTIALLY VERIFIED THROUGH P4` |
+| Architecture conformity | `WI-1 MINIMAL SHAPE VERIFIED / LATER-ROUND SEMANTICS REMAIN PLANNED` |
 
-P4 的 unit、integration、compileall 与 actual Fake CLI run 已建立 bounded WI-1 executable-path
-Runtime Evidence，并直接支持以上八行升级。其余 `TESTED` 行不因同一次路径曾经过其 representation
-而机械升级。最初未设置 `PYTHONPATH=src` 的 unittest import failure是 Test / local execution
-environment fact，不是 Architecture Deviation；当前不因此修改 `pyproject.toml`。
+P5 新增的实际 evidence 只进一步升级 B01 与 B03 的 WI-1 bounded representation；其余
+`TESTED` / `PLANNED` 行不因整条路径再次执行而机械升级。尤其 B03 的 deterministic Fake identity
+不是 final SearchResult identity proof，B04/B05/B06 与完整 C3 semantics 仍由 WI-3 验证；Research
+与 C6 的 full semantics 仍分别保留给 WI-6 / WI-7。
 
 ## 21. Current Next
 
 ```text
-P5 - Verification & Learning Review
+WI-2 - Execution Lifecycle
 NEXT / NOT STARTED
 ```
 
-P1～P4 已完成 code/test evidence sync 与 Human Review。P4 verdict 为 `PASS`；P5 尚未开始，WI-1
-仍为 `IN PROGRESS`。P5 必须完成 Verification & Learning Review 后才能形成 WI-1 final verdict，且
-不得把 Fake runtime evidence 改写为 real Provider、Scrape Creators 或 TT-17 facts。
+WI-1 P0～P5 已完成，WI-1 final verdict 为 `PASS`。WI-2 尚未开始；其完整 response family、
+Execution establishment/failure lifecycle、ExecutionAbort 与 failure closure scope 仍保持 planned，
+不得由 WI-1 success-only Fake evidence提前升级。

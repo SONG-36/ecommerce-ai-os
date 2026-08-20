@@ -12,28 +12,37 @@ Current Phase:
 Walking Implementation
 
 Round Status:
-IN PROGRESS
+COMPLETE / PASS
 
 Implementation:
-IN PROGRESS
+COMPLETE FOR WI-1
 
 Current Internal Checkpoint:
-P4 - COMPLETE / HUMAN APPROVED
+P5 - COMPLETE / TESTED / HUMAN REVIEWED
 
-P4:
-COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS
+P0-P5:
+COMPLETE
+
+P5:
+COMPLETE / TESTED / HUMAN REVIEWED / PASS
 
 Actual Code Evidence:
-ESTABLISHED THROUGH P4
+ESTABLISHED THROUGH P5
 
 Test Evidence:
-ESTABLISHED THROUGH P4
+ESTABLISHED THROUGH P5
 
 Runtime Evidence:
-FAKE CLI EXECUTABLE PATH + PUBLISHED BUNDLE ESTABLISHED THROUGH P4
+ESTABLISHED FOR FAKE FIRST EXECUTABLE VERTICAL SLICE
+
+WI-1 Final Verdict:
+PASS
 
 Architecture Deviation:
 NONE OBSERVED
+
+Architecture Assumption Conflict:
+NONE
 
 本文档不是 Architecture Authority、不是新的 Architecture Specification、不是新的
 Contract、不是 code inventory，也不是
@@ -1028,7 +1037,7 @@ WI-1 Final Verdict
 #### P5 - Verification & Learning Review
 
 Status:
-NEXT / NOT STARTED
+COMPLETE / TESTED / HUMAN REVIEWED / PASS
 
 Goal:
 P5 不新增业务能力，只完成验证与学习复盘。
@@ -1045,7 +1054,229 @@ B. Treat wi1-fake-search-result as deterministic WI-1 Fake identity only.
    Full Search Result identity semantics remain deferred to WI-3.
 ```
 
-These are P5 verification / learning notes, not P4 blockers and not P5 implementation started early.
+These were non-blocking P4 follow-ups and are now verified by P5.
+
+**P5 Actual Verification Files**
+
+```text
+tests/unit/architecture/__init__.py
+tests/unit/architecture/test_import_directions.py
+tests/integration/test_fake_first_slice.py
+```
+
+No production implementation file changed in P5.
+
+**P5 Architecture Import Guard**
+
+`ImportDirectionTests.test_reviewed_import_dag_holds_for_the_current_source_tree` uses only stdlib
+`ast`, `pathlib`, and `unittest`. It parses every current Python file under `src/ecommerce_ai_os` and
+verified:
+
+```text
+research -X-> runtime / providers / search.port
+search   -X-> runtime / research / providers
+runtime  -X-> concrete research.car_vacuum_tiktok / search.fake / providers
+runtime  -X-> composition / application
+providers -X-> runtime / research
+core packages -X-> composition / application
+
+research -> search.models = ALLOWED
+runtime -> Research/Search seams, models, owner-local serializers = ALLOWED
+composition -> concrete Skill / Fake / Runtime / Retention = ALLOWED
+application -> composition / C1-facing values = ALLOWED
+```
+
+Result:
+
+```text
+Architecture Import Guard = TESTED / PASS
+```
+
+**P5 Sequential Multi-Execution Evidence**
+
+One composed `TaskRuntime` instance executed request A and request B synchronously:
+
+```text
+Execution A = 553f66ae-7eda-4a1d-8666-a6ac117207ce
+Record Ref A = execution://553f66ae-7eda-4a1d-8666-a6ac117207ce/execution_record.json
+
+Execution B = cfa73c3a-e83b-4b5a-84b8-8691ff4df5ef
+Record Ref B = execution://cfa73c3a-e83b-4b5a-84b8-8691ff4df5ef/execution_record.json
+```
+
+Observed result:
+
+```text
+distinct Execution IDs = YES
+distinct Record Refs = YES
+distinct final bundles = YES
+both final bundles exist = YES
+staging A absent after publish = YES
+staging B absent after publish = YES
+all A required refs resolve inside bundle A = YES
+all B required refs resolve inside bundle B = YES
+resolved absolute reference sets are disjoint = YES
+request A / request B input refs remain isolated = YES
+sample boundary refs are distinct = YES
+Evidence refs are disjoint = YES
+Research Result refs are distinct = YES
+independent ExecutionContext objects observed = YES
+cross-execution state leakage = NOT OBSERVED
+```
+
+Both bundles legitimately contain the same execution-scoped relative ref:
+
+```text
+search_results/wi1-fake-search-result.json
+```
+
+The two absolute paths remain distinct because each ref is resolved within its own Execution bundle.
+
+```text
+Deterministic Fake ID
+!= proof of final SearchResult identity semantics
+
+Full SearchResult identity / bounded semantics
+= DEFERRED TO WI-3
+```
+
+**P5 Bundle Inspection**
+
+Automated integration verification and the final CLI bundle inspection established:
+
+```text
+execution_record.json exists = YES
+input exists = YES
+SearchResult exists = YES
+ActualSampleBoundary exists = YES
+Evidence exists for the successful Fake result = YES
+ResearchResult exists = YES
+required refs resolve = 5 / 5
+provider_raw absent = YES
+secret-like values absent = YES
+Scrape Creators claim absent = YES
+TT-17 claim absent = YES
+C6 does not inline Search/Research payload fields = YES
+ResearchResult uses Evidence IDs and is not an Evidence observation dump = YES
+Record Ref resolves only to the final published bundle = YES
+staging execution count after publish = 0
+```
+
+**P5 Delete Test / What-if Review**
+
+| What-if | Can run? | Architecture preserved? | Review result |
+|---|---|---|---|
+| Delete `ResearchExecutionPort` | Possibly | NO | Research would know Runtime/internal coordination. |
+| Research directly calls `FakeSearchCapability` | YES | NO | Business Method bypasses Runtime authority and C3 isolation. |
+| `TaskRuntime` constructs concrete Skill/Fake internally | YES | NO | Breaks composition ownership and dependency inversion. |
+| Return Record Ref before publish | Possibly | NO | Post-terminal resolvability is no longer guaranteed. |
+| Merge `SearchResult` into Evidence | YES | NO | Retrieval outcome is not admitted Evidence. |
+| Move Research judgment into `TaskRuntime` | YES | NO | C2b absorbs C2a Business Method authority. |
+| Add `GenericTaskRuntime` / `ITask` now | Not needed | N/A | No evidence; premature abstraction. |
+| Move Runtime to C++ now | Not required | N/A | Native kernel remains only a future candidate after cross-task/concurrency/resource/isolation evidence. |
+
+**P5 TaskRuntime Pressure Audit Final Status**
+
+The preceding Human Review remains valid; no P5 runtime or test evidence proved a RED defect:
+
+```text
+Overall = GREEN with bounded YELLOW pressure
+Refactor before WI-1 closure = NOT REQUIRED
+
+YELLOW-1 = TaskRuntime.execute orchestration density
+YELLOW-2 = _artifact_ref bundle taxonomy coupling
+YELLOW-3 = concrete LocalJsonRetention constructor dependency
+YELLOW-4 = Research-shaped generality beyond this slice is NOT YET PROVEN
+
+All YELLOW observations = NON-BLOCKING WI-1 future pressure observations
+Architecture defect = NO
+```
+
+**P5 Final Fake CLI Runtime Evidence**
+
+Command used a `/tmp` output root and did not write runtime artifacts into the repository:
+
+```text
+PYTHONPATH=src python -m ecommerce_ai_os.application.cli \
+  --request-id request-wi1-p5-final \
+  --product-context "Car Vacuum" \
+  --market US \
+  --platform TikTok \
+  --business-goal "Commerce Content" \
+  --research-question "What content patterns merit human review?" \
+  --output-root /tmp/ecommerce-ai-os-WI1-P5-final.sAMJvB/executions
+```
+
+Observed stdout:
+
+```text
+Execution Outcome: SUCCEEDED
+Execution ID: b61590ee-7293-4183-bb1e-3fe144b011ce
+Research Result: 1 synthetic evidence item(s); sample size 2
+Record Ref: execution://b61590ee-7293-4183-bb1e-3fe144b011ce/execution_record.json
+```
+
+```text
+stderr = empty
+exit code = 0
+resolved path = /tmp/ecommerce-ai-os-WI1-P5-final.sAMJvB/executions/b61590ee-7293-4183-bb1e-3fe144b011ce/execution_record.json
+required refs = 5 / 5 resolve
+staging execution count = 0
+provider_raw = absent
+```
+
+**P5 Executed Verification Suite**
+
+```text
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+-> 18 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+-> 2 tests / PASS
+
+python -m compileall -q src tests
+-> PASS
+
+git diff --check
+-> PASS
+
+git check-ignore -v var/executions/test-placeholder
+-> repository /var/executions/ ignore rule confirmed
+```
+
+**WI-1 Final Acceptance Gate**
+
+| Criterion | Result |
+|---|---|
+| Thin CLI actually executed | PASS |
+| TerminalReturn produced | PASS |
+| Execution Outcome exists | PASS |
+| ResearchResult / Business Result exists | PASS |
+| Record Ref exists and resolves | PASS |
+| Published bundle and `execution_record.json` exist | PASS |
+| Required refs resolve | PASS — 5 / 5 |
+| Runtime artifacts are Git-ignored | PASS |
+| Fake Search only; no real Provider facts | PASS |
+| Research → Runtime forbidden import absent | PASS |
+| Runtime → concrete Skill / Provider absent | PASS |
+| Architecture import guard | PASS |
+| Sequential Executions isolated | PASS |
+| Unit / integration / compileall / diff check | PASS |
+| TaskRuntime pressure audit has RED finding | NO |
+| Unresolved Architecture Assumption Conflict | NONE |
+
+```text
+P0-P5 = COMPLETE
+WI-1 Runtime Evidence = ESTABLISHED FOR FAKE FIRST EXECUTABLE VERTICAL SLICE
+WI-1 Final Verdict = PASS
+Architecture Deviation = NONE OBSERVED
+Architecture Assumption Conflict = NONE
+```
+
+WI-1 PASS proves only that the reviewed First-Slice minimal software shape can execute. It does not
+prove the full Ecommerce AI OS architecture, scale readiness, a multi-task scheduler, Agent
+architecture, real Provider correctness, production Research quality, full Search semantics, or full
+C6 semantics.
 
 Learning Focus:
 
@@ -1163,10 +1394,11 @@ WI-1 明确不实现：
 - C03
 - C04
 
-P1～P4 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P4 直接建立 A01、
-A03（`TerminalReturn` partial）、A04、A05、D01、D02、D03 与 D04 的 bounded runtime evidence；
-其余 WI-1 coverage 不因同一条 Fake executable path 曾经过相关 representation 而机械升级。
-WI-1 Fake executable-path runtime evidence 已建立，但 WI-1 final verdict 仍为 NOT YET。
+P1～P5 已建立 WI-1 scope 内的 actual code/test/runtime evidence。P5 进一步建立 architecture import
+guard、sequential Execution isolation、deterministic Fake ID bundle scoping、bundle payload boundary 与
+final Fake CLI evidence，并只将 B01 / B03 的 WI-1 bounded representation 升级为 runtime verified。
+其余 concepts 不因同一条 Fake executable path 再次执行而机械升级。WI-2+ 的 main verification
+rounds 保持原计划。
 
 ## 12. 已知实施前置条件 / 缺口（Known Implementation Preconditions / Gaps）
 
@@ -1197,7 +1429,7 @@ It is not:
 Architecture Assumption Conflict
 ```
 
-P4 actual runtime evidence 生成在 `/tmp`，repository 中没有 runtime bundle 被 stage。
+P4 / P5 actual runtime evidence 均生成在 `/tmp`，repository 中没有 runtime bundle 被 stage。
 
 ## 13. Planning 评审门（Planning Review Gate / Historical Entry Gate）
 
@@ -1205,19 +1437,25 @@ WI-1 Round Plan:
 HUMAN REVIEWED / IMPLEMENTATION AUTHORIZED
 
 Implementation:
-IN PROGRESS
+COMPLETE FOR WI-1
 
 Python Code:
-ESTABLISHED THROUGH P4
+ESTABLISHED THROUGH P5
 
 Current Internal Checkpoint:
-P4 - COMPLETE / HUMAN APPROVED
+P5 - COMPLETE / TESTED / HUMAN REVIEWED
 
-P4:
-COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / REAL FAKE RUNTIME OBSERVED / HUMAN REVIEWED / HUMAN APPROVED / PASS
+P0-P5:
+COMPLETE
 
 P5:
-NEXT / NOT STARTED
+COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+WI-1 Final Verdict:
+PASS
+
+Current Next:
+WI-2 - NEXT / NOT STARTED
 
 Architecture Reopen:
 NO
@@ -1231,8 +1469,17 @@ NO
 Live TT-17:
 FORBIDDEN IN WI-1
 
-Do not mark:
+Architecture Deviation:
+NONE OBSERVED
 
-- WI-1 = PASS
-- WI-1 = IMPLEMENTED
-- WI-1 = FINAL VERDICT ESTABLISHED
+Architecture Assumption Conflict:
+NONE
+
+Do not infer from WI-1 PASS:
+
+- WI-2 implementation started
+- real Provider / TT-17 correctness
+- full Search semantics
+- full Research semantics
+- full C6 semantics
+- scale, scheduler, Agent, async, queue, or generic Task framework readiness
