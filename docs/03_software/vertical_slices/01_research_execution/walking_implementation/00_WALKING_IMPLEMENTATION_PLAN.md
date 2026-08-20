@@ -9,8 +9,8 @@
 - **Walking Implementation**: AUTHORIZED
 - **Architecture Expansion**: NOT AUTHORIZED
 - **Current Round**: WI-1
-- **Current Round Status**: NEXT / NOT STARTED
-- **Current Next**: WI-1 Round Planning — Fake First Executable Vertical Slice
+- **Current Round Status**: COMPLETE / PASS
+- **Current Next**: WI-2 — Execution Lifecycle / NEXT / NOT STARTED
 
 ---
 
@@ -274,8 +274,8 @@ Architecture is correct
 
 | Round | 中文名称 | 核心目标 | 主要实现 | 主要验证 | 学习重点 | 当前状态 |
 |---|---|---|---|---|---|---|
-| WI-1 | Fake 第一条可执行纵向切片 | 第一次跑通内部完整闭环 | CLI / C1 / C2b / C2a / Fake C3 / ResearchCompletion / C6 / JSON | 一条 CLI 真正形成 TerminalReturn + Record Ref + Bundle | Vertical Slice / Protocol / DI / Runtime vs Business Method | NEXT / NOT STARTED |
-| WI-2 | 执行生命周期与失败闭环 | 把 Execution semantics 做正确 | PreExecutionRejection / Establishment / ExecutionAbort / failure closure | success / rejection / runtime failure / closure failure | Lifecycle / State / Failure / Exception | PLANNED |
+| WI-1 | Fake 第一条可执行纵向切片 | 第一次跑通内部完整闭环 | CLI / C1 / C2b / C2a / Fake C3 / ResearchCompletion / C6 / JSON | 一条 CLI 真正形成 TerminalReturn + Record Ref + Bundle | Vertical Slice / Protocol / DI / Runtime vs Business Method | COMPLETE / PASS |
+| WI-2 | 执行生命周期与失败闭环 | 把 Execution semantics 做正确 | PreExecutionRejection / Establishment / ExecutionAbort / failure closure | success / rejection / runtime failure / closure failure | Lifecycle / State / Failure / Exception | NEXT / NOT STARTED |
 | WI-3 | C3 Search 数据契约 | 建立真实的 provider-neutral Search semantics | SearchRequest / Result / Failure / Context / Provenance | duplicates / missingness / partial retrieval / continuation | Data Contract / Missingness / Bounded Completeness | PLANNED |
 | WI-4 | Scrape Creators Adapter | 把外部 Provider schema 隔离在 C4b 下 | Adapter / Access Protocol / real TT-17 fixtures | Raw TT-17 → provider-neutral SearchResult | Adapter / Ports & Adapters / Anti-Corruption Layer | PLANNED |
 | WI-5 | Live TT-17 | 第一次真正访问外部 Provider | HttpClient / AppConfig / secret / raw capture / live smoke | 实际 TT-17 → SearchResult → provenance | HTTP / I-O / Config / Secrets / Integration | PLANNED |
@@ -1719,10 +1719,26 @@ Current Round
 = WI-1
 
 Current Round Status
-= NEXT / NOT STARTED
+= COMPLETE / PASS
+
+WI-1 Internal Checkpoints
+= P0-P5 COMPLETE
+
+WI-1 Checkpoint Commits
+= P1 c400f33
+= P2 c169f2f
+= P3 bca1175
+= P4 8d4ea24
+= P5 fbc31e5
+
+WI-1 Runtime Evidence
+= ESTABLISHED
+
+WI-1 Final Verdict
+= PASS
 
 Current Next
-= WI-1 Round Planning — Fake First Executable Vertical Slice
+= WI-2 — Execution Lifecycle / NEXT / NOT STARTED
 ```
 
 授权仅适用于：
@@ -1825,6 +1841,15 @@ Architecture Expansion
 Current Round
 = WI-1
 
+Current Round Status
+= COMPLETE / PASS
+
+WI-1 Runtime Evidence
+= ESTABLISHED
+
+WI-1 Final Verdict
+= PASS
+
 Current Next
-= WI-1 Round Planning — Fake First Executable Vertical Slice
+= WI-2 — Execution Lifecycle / NEXT / NOT STARTED
 ```

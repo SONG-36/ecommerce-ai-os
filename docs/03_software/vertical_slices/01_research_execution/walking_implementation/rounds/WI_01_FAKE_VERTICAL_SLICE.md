@@ -26,6 +26,16 @@ COMPLETE
 P5:
 COMPLETE / TESTED / HUMAN REVIEWED / PASS
 
+Checkpoint Commits:
+
+```text
+P1 = c400f33
+P2 = c169f2f
+P3 = bca1175
+P4 = 8d4ea24
+P5 = fbc31e5
+```
+
 Actual Code Evidence:
 ESTABLISHED THROUGH P5
 
