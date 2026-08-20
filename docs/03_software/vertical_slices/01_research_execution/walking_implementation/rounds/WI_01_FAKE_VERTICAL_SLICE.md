@@ -18,16 +18,16 @@ Implementation:
 IN PROGRESS
 
 Current Internal Checkpoint:
-P1 - COMPLETE / HUMAN APPROVED
+P2 - COMPLETE / HUMAN APPROVED
 
-P2:
+P3:
 NEXT / NOT STARTED
 
 Actual Code Evidence:
-ESTABLISHED FOR P1
+ESTABLISHED THROUGH P2
 
 Test Evidence:
-ESTABLISHED FOR P1
+ESTABLISHED THROUGH P2
 
 Runtime Evidence:
 NOT YET ESTABLISHED
@@ -560,7 +560,7 @@ Can run
 #### P2 - Core Execution Loop
 
 Status:
-NEXT / NOT STARTED
+COMPLETE FOR CHECKPOINT / IMPLEMENTED / TESTED / HUMAN REVIEWED / HUMAN APPROVED
 
 Goal:
 第一次真正证明 C2a / C2b / C3 fake path 的核心控制关系。
@@ -652,10 +652,93 @@ P2 不提前实现：
 
 P2 完成后必须暂停并进行 Human Learning Review，重点回看 Q2、Q3、Q4、Q5。
 
+##### P2 Actual Evidence
+
+**P2 Actual Production Files**
+
+```text
+src/ecommerce_ai_os/runtime/execution.py
+src/ecommerce_ai_os/runtime/task_runtime.py
+src/ecommerce_ai_os/search/models.py
+```
+
+**P2 Actual Test File**
+
+```text
+tests/unit/runtime/test_task_runtime.py
+```
+
+**P2 Actual Symbols**
+
+```text
+ExecutionContext
+SearchInvocationContext
+TaskRuntime
+TaskRuntime.__init__
+TaskRuntime._invoke_search
+RuntimeResearchExecutionPort
+RuntimeResearchExecutionPort.search
+
+test-only:
+FakeSearchCapability
+request_search_through
+```
+
+**P2 Actual Tested Call Path**
+
+```text
+request_search_through
+-> RuntimeResearchExecutionPort.search
+-> TaskRuntime._invoke_search
+-> FakeSearchCapability.search
+-> SearchResult
+-> original caller
+```
+
+**P2 Tests**
+
+```text
+PYTHONPATH=src python -m unittest tests.unit.runtime.test_task_runtime -v
+-> 2 tests PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+-> 10 tests PASS
+
+python -m compileall -q src tests
+-> PASS
+
+git diff --check
+-> PASS
+```
+
+P2 internal coordination path was exercised under unit test. This is not WI-1 executable-path Runtime
+Evidence and does not upgrade any Traceability row to `RUNTIME VERIFIED`.
+
+**P2 Human Review Conclusions**
+
+- Runtime owns Search invocation coordination.
+- Undeclared Search dependency is blocked before invocation.
+- Fake receives the original `SearchRequest`.
+- `SearchInvocationContext` carries the current `execution_id`.
+- The Fake-generated `SearchResult` returns to the original caller.
+- Research does not depend on Runtime.
+- Runtime does not depend on a concrete `ResearchSkill`.
+- Runtime does not depend on Provider implementation.
+- Fake remains test-only.
+
+**P2 Controlled Deferrals**
+
+- `SearchFailure` handling remains deferred.
+- Full `SearchInvocationContext` semantics remain in WI-3.
+- Production concrete `ResearchSkill` remains deferred.
+- Business Completion remains deferred to P3.
+- C6 / Bundle / Record Ref remain deferred.
+- Multi-Execution scheduling is not designed or implemented.
+
 #### P3 - Business Completion & Execution Closure
 
 Status:
-PLANNED
+NEXT / NOT STARTED
 
 Goal:
 理解并实现：
@@ -878,9 +961,9 @@ WI-1 明确不实现：
 - C03
 - C04
 
-P1 Human Review 已建立 A02、A06、A07、A08、B01、B02、B03 的实际 code/test evidence；
-其余 planned WI-1 coverage 不因 Round planning coverage 而提前升级。WI-1 executable-path
-runtime evidence 仍为 NOT YET ESTABLISHED。
+P1 / P2 Human Review 已建立当前 checkpoint 范围内的实际 code/test evidence。P2 新增覆盖
+A04、A05、A08 与 B04；其余 planned WI-1 coverage 不因 Round planning coverage 而提前升级。
+WI-1 executable-path runtime evidence 仍为 NOT YET ESTABLISHED。
 
 ## 12. 已知实施前置条件 / 缺口（Known Implementation Preconditions / Gaps）
 
@@ -922,12 +1005,12 @@ Implementation:
 IN PROGRESS
 
 Python Code:
-ESTABLISHED FOR P1 ONLY
+ESTABLISHED THROUGH P2
 
 Current Internal Checkpoint:
-P1 - COMPLETE / HUMAN APPROVED
+P2 - COMPLETE / HUMAN APPROVED
 
-P2:
+P3:
 NEXT / NOT STARTED
 
 Architecture Reopen:

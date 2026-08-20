@@ -4,6 +4,13 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
+class SearchInvocationContext:
+    """Minimal P2 context binding a Search invocation to one Execution."""
+
+    execution_id: str
+
+
+@dataclass(frozen=True, slots=True)
 class SearchRequest:
     """A minimal provider-neutral Search need for the First Slice."""
 
