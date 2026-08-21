@@ -9,6 +9,7 @@ from ecommerce_ai_os.runtime.execution import BusinessWorkRequest, ExecutionCont
 from ecommerce_ai_os.runtime.task_runtime import (
     RuntimeResearchExecutionPort,
     TaskRuntime,
+    _ExecutionAbort,
 )
 from ecommerce_ai_os.search.models import (
     SearchInvocationContext,
@@ -33,6 +34,26 @@ class FakeSearchCapability:
         self.last_request = request
         self.last_context = context
         return self._result
+
+
+class ControlledSearchFailure:
+    """Test-only non-result outcome for the P2 private unwind path."""
+
+
+class ControlledFailureSearchCapability:
+    def __init__(self) -> None:
+        self.calls = 0
+        self.last_context: SearchInvocationContext | None = None
+
+    def search(
+        self,
+        request: SearchRequest,
+        context: SearchInvocationContext,
+    ) -> ControlledSearchFailure:
+        del request
+        self.calls += 1
+        self.last_context = context
+        return ControlledSearchFailure()
 
 
 def request_search_through(
@@ -156,6 +177,23 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
             runtime._run_research_skill(context, skill)
 
         self.assertEqual(fake_search.calls, 0)
+
+    def test_non_result_search_outcome_triggers_private_execution_abort(self) -> None:
+        controlled_failure = ControlledFailureSearchCapability()
+        runtime = TaskRuntime(search_capability=controlled_failure)
+        context = self.make_context()
+        port = RuntimeResearchExecutionPort(runtime, context)
+
+        with self.assertRaises(_ExecutionAbort) as captured_abort:
+            port.search(SearchRequest(query="car vacuum", market="US"))
+
+        self.assertEqual(captured_abort.exception.execution_id, context.execution_id)
+        self.assertEqual(controlled_failure.calls, 1)
+        self.assertIsNotNone(controlled_failure.last_context)
+        self.assertEqual(
+            controlled_failure.last_context.execution_id,
+            context.execution_id,
+        )
 
 
 if __name__ == "__main__":

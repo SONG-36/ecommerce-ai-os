@@ -1,6 +1,6 @@
 """Execution-scoped capability invocation coordination."""
 
-from typing import Callable, cast
+from typing import Callable, NoReturn
 from uuid import uuid4
 
 from ecommerce_ai_os.research.models import ResearchCompletion
@@ -34,6 +34,14 @@ from .retention import LocalJsonRetention
 
 
 SearchResultObserver = Callable[[SearchResult], None]
+
+
+class _ExecutionAbort(Exception):
+    """C2b-private unwind for an established Execution that cannot continue."""
+
+    def __init__(self, execution_id: str) -> None:
+        super().__init__(f"established Execution {execution_id} cannot continue")
+        self.execution_id = execution_id
 
 
 class TaskRuntime:
@@ -88,11 +96,22 @@ class TaskRuntime:
             )
             stable_facts.record_search_result(search_result_ref)
 
-        completion = self._run_research_skill(
-            context,
-            self._research_skill,
-            search_result_observer=retain_search_result,
-        )
+        failure_execution_id: str | None = None
+        try:
+            completion = self._run_research_skill(
+                context,
+                self._research_skill,
+                search_result_observer=retain_search_result,
+            )
+        except _ExecutionAbort as abort:
+            failure_execution_id = abort.execution_id
+
+        if failure_execution_id is not None:
+            # P2 stops after the private unwind returns to the lifecycle owner.
+            raise RuntimeError(
+                f"established Execution {failure_execution_id} failure reached "
+                "TaskRuntime; failure terminalization is not implemented in P2"
+            )
 
         sample_boundary = completion.actual_sample_boundary
         sample_boundary_ref = bundle.write_json(
@@ -184,9 +203,14 @@ class TaskRuntime:
             execution_id=context.execution_id,
         )
         result = self._search_capability.search(request, invocation_context)
+        if not isinstance(result, SearchResult):
+            self._abort_execution(context)
 
-        # P2 exercises the Fake success path only; SearchFailure handling is deferred.
-        return cast(SearchResult, result)
+        return result
+
+    @staticmethod
+    def _abort_execution(context: ExecutionContext) -> NoReturn:
+        raise _ExecutionAbort(context.execution_id)
 
     @staticmethod
     def _artifact_ref(directory: str, identifier: str) -> str:

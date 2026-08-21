@@ -37,7 +37,7 @@ Walking Implementation
 **Document Maturity**
 
 ```text
-HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS
+HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS
 ```
 
 **Repository Materialization**
@@ -49,31 +49,31 @@ PERFORMED
 **Round Status**
 
 ```text
-P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Current Internal Checkpoint**
 
 ```text
-P1 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P2 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Implementation**
 
 ```text
-P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Python Changes**
 
 ```text
-P1 ACTUAL / TESTED / PASS
+P2 ACTUAL / TESTED / PASS
 ```
 
 **Test Changes**
 
 ```text
-P1 ACTUAL / TESTED / PASS
+P2 ACTUAL / TESTED / PASS
 ```
 
 **Architecture Expansion**
@@ -1798,6 +1798,149 @@ P2 不完成 failure C6 publication。
 
 P2 完成后必须暂停进行 Human Review。
 
+## 18.5 P2 Actual Evidence
+
+### Status
+
+```text
+P2
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P2 Human PASS
+= PASS
+
+P2 Final Verdict
+= PASS
+
+P3
+= NEXT / NOT AUTHORIZED
+```
+
+### Existing Failure Surface Before P2
+
+```text
+ResearchSkill.run
+→ could propagate exceptions from business method or execution port
+
+RuntimeResearchExecutionPort.search
+→ propagated TaskRuntime._invoke_search and observer exceptions
+
+TaskRuntime._invoke_search
+→ rejected undeclared Search with RuntimeError
+→ otherwise cast the SearchCapability outcome to SearchResult
+
+SearchCapability.search
+→ WI-01 Fake returned SearchResult only
+→ no implemented SearchFailure representation
+```
+
+### Actual Files and Symbols
+
+```text
+src/ecommerce_ai_os/runtime/task_runtime.py
+→ private _ExecutionAbort
+→ TaskRuntime.execute private-abort catch boundary
+→ TaskRuntime._invoke_search controlled non-result recognition
+→ TaskRuntime._abort_execution
+
+tests/unit/runtime/test_task_runtime.py
+→ ControlledFailureSearchCapability
+→ TaskRuntimeCoordinationTests.test_non_result_search_outcome_triggers_private_execution_abort
+
+tests/integration/test_fake_first_slice.py
+→ ControlledFailureSearchCapability
+→ FakeFirstSliceIntegrationTests.test_established_failure_unwinds_privately_to_task_runtime_owner
+```
+
+### Actual Control Path
+
+```text
+valid BusinessWorkRequest
+→ admission succeeds
+→ statically bound ResearchSkill available
+→ execution_id allocated
+→ ExecutionContext constructed
+→ Execution Establishment Commit
+→ active ResearchSkill.run
+→ RuntimeResearchExecutionPort.search
+→ controlled test-only non-result Search outcome
+→ established Execution cannot legally continue
+→ TaskRuntime._abort_execution
+→ private _ExecutionAbort
+→ current Skill call unwinds
+→ TaskRuntime.execute catches _ExecutionAbort
+→ P2 stops at TaskRuntime lifecycle-owner boundary
+```
+
+P2 intentionally does not create a failed `TerminalReturn`, failure C6, failure Record Ref, or CLI failure response. The private signal is not a member of `TaskExecutionResponse` and does not escape as the public exception type.
+
+### Test Strategy and Evidence
+
+The deterministic failure is supplied by a constructor-injected test double at the existing provider-neutral `SearchCapability` seam. It returns a test-only non-result marker after receiving the execution-scoped `SearchInvocationContext`. No production failure flag, Provider behavior, TT-17 semantics, or full `SearchFailure` representation is introduced.
+
+The focused integration evidence established:
+
+```text
+Execution established = YES
+execution_id exists = YES
+ExecutionContext exists = YES
+active Research execution entered = YES
+Search invocation entered = YES
+controlled non-continuable failure occurred = YES
+PreExecutionRejection used = NO
+private _ExecutionAbort occurred = YES
+control returned to TaskRuntime owner = YES
+
+staging bundle exists = YES
+input fact retained before failure = YES
+failure C6 exists = NO
+final bundle exists = NO
+TerminalReturn returned = NO
+```
+
+### Tests Executed
+
+```text
+PYTHONPATH=src python -m unittest tests.unit.runtime.test_task_runtime -v
+→ 5 tests / PASS
+
+PYTHONPATH=src python -m unittest tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_established_failure_unwinds_privately_to_task_runtime_owner -v
+→ 1 test / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+→ 20 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+→ 4 tests / PASS
+
+PYTHONPATH=src python -m unittest tests.unit.architecture.test_import_directions -v
+→ 1 test / PASS
+
+python -m compileall -q src tests
+→ PASS
+
+git diff --check
+→ PASS
+```
+
+### Architecture Mapping and Review Result
+
+```text
+A04 — TaskRuntime recognizes and catches established failure control
+A05 — execution identity/context and pre-failure input fact remain available
+A09 — private _ExecutionAbort unwind mechanism established
+
+Architecture Deviation = NONE
+Architecture Assumption Conflict = NONE
+
+P2-YELLOW-1
+= P3 must verify that the bounded stable failure facts required for failure C6
+  remain available after private ExecutionAbort unwind.
+
+Blocking
+= NO
+```
+
 ---
 
 # 19. P3 — Failure Terminalization + Minimum Failure C6
@@ -2781,7 +2924,7 @@ Materialization
 
 ```text
 WI-02
-= P1 Complete / Implemented / Tested / Human Reviewed / Pass
+= P2 Complete / Implemented / Tested / Human Reviewed / Pass
 
 P0
 = COMPLETE / HUMAN REVIEWED / PASS
@@ -2799,10 +2942,10 @@ Architecture Assumption Conflict
 = NONE
 
 Python
-= P1 ACTUAL / TESTED / PASS
+= P2 ACTUAL / TESTED / PASS
 
 Tests
-= P1 ACTUAL / PASS
+= P2 ACTUAL / PASS
 
 P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -2875,19 +3018,19 @@ Blocking Contradiction
 
 ```text
 Current Next
-= P2 — NEXT / NOT AUTHORIZED
+= P3 — NEXT / NOT AUTHORIZED
 ```
 
 但必须保持：
 
 ```text
-P1 Implementation
+P2
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
-P1 Human PASS
+P2 Human PASS
 = PASS
 
-P2
+P3
 = NEXT / NOT AUTHORIZED
 ```
 
@@ -2951,7 +3094,7 @@ P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Current Next
-= P2 — NEXT / NOT AUTHORIZED
+= P3 — NEXT / NOT AUTHORIZED
 
 P1 Implementation
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -2963,13 +3106,22 @@ P1 Runtime Evidence
 = ESTABLISHED
 
 P2
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P2 Human PASS
+= PASS
+
+P2 Final Verdict
+= PASS
+
+P3
 = NEXT / NOT AUTHORIZED
 
 Python Changes
-= P1 ACTUAL / TESTED / PASS
+= P2 ACTUAL / TESTED / PASS
 
 Test Changes
-= P1 ACTUAL / PASS
+= P2 ACTUAL / PASS
 
 Architecture Reopen
 = NO
@@ -2999,6 +3151,9 @@ Pre-P1 Live Repository Audit
 = PASS
 
 Blocking Contradiction
+= NONE
+
+Architecture Deviation
 = NONE
 
 Architecture Assumption Conflict

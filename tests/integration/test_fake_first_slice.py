@@ -5,12 +5,40 @@ import unittest
 from unittest.mock import patch
 
 from ecommerce_ai_os.composition import build_fake_first_slice_runtime
+from ecommerce_ai_os.research.car_vacuum_tiktok import (
+    CarVacuumTikTokResearchSkill,
+)
 from ecommerce_ai_os.runtime.execution import (
     BusinessWorkRequest,
     PreExecutionRejection,
     TerminalReturn,
 )
 from ecommerce_ai_os.runtime.retention import LocalJsonRetention
+from ecommerce_ai_os.runtime.task_runtime import TaskRuntime, _ExecutionAbort
+from ecommerce_ai_os.search.models import (
+    SearchInvocationContext,
+    SearchRequest,
+)
+
+
+class ControlledSearchFailure:
+    """Test-only non-result outcome for the established failure path."""
+
+
+class ControlledFailureSearchCapability:
+    def __init__(self) -> None:
+        self.calls = 0
+        self.last_context: SearchInvocationContext | None = None
+
+    def search(
+        self,
+        request: SearchRequest,
+        context: SearchInvocationContext,
+    ) -> ControlledSearchFailure:
+        del request
+        self.calls += 1
+        self.last_context = context
+        return ControlledSearchFailure()
 
 
 class FakeFirstSliceIntegrationTests(unittest.TestCase):
@@ -154,6 +182,70 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             observed_skill_run.assert_not_called()
             observed_search_invocation.assert_not_called()
             self.assertFalse(execution_root.exists())
+
+    def test_established_failure_unwinds_privately_to_task_runtime_owner(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            execution_root = Path(temporary_directory) / "executions"
+            controlled_failure = ControlledFailureSearchCapability()
+            skill = CarVacuumTikTokResearchSkill(
+                search_request=SearchRequest(query="car vacuum", market="US")
+            )
+            runtime = TaskRuntime(
+                search_capability=controlled_failure,
+                research_skill=skill,
+                retention=LocalJsonRetention(execution_root),
+            )
+            request = BusinessWorkRequest(
+                request_id="request-established-failure-001",
+                product_context="Car Vacuum",
+                market="US",
+                platform="TikTok",
+                business_goal="Commerce Content",
+                research_question="What content patterns merit human review?",
+            )
+
+            with (
+                patch.object(
+                    runtime,
+                    "_run_research_skill",
+                    wraps=runtime._run_research_skill,
+                ) as observed_skill_run,
+                patch.object(
+                    runtime,
+                    "_abort_execution",
+                    wraps=runtime._abort_execution,
+                ) as observed_abort,
+                self.assertRaisesRegex(
+                    RuntimeError,
+                    "failure reached TaskRuntime; failure terminalization is not "
+                    "implemented in P2",
+                ) as captured_owner_boundary,
+            ):
+                runtime.execute(request)
+
+            established_context = observed_skill_run.call_args.args[0]
+            self.assertTrue(established_context.execution_id)
+            self.assertIs(established_context.work_request, request)
+            self.assertEqual(controlled_failure.calls, 1)
+            self.assertIsNotNone(controlled_failure.last_context)
+            self.assertEqual(
+                controlled_failure.last_context.execution_id,
+                established_context.execution_id,
+            )
+            observed_abort.assert_called_once_with(established_context)
+            self.assertNotIsInstance(captured_owner_boundary.exception, _ExecutionAbort)
+            self.assertIsNone(captured_owner_boundary.exception.__context__)
+
+            staging_bundle = (
+                execution_root / ".staging" / established_context.execution_id
+            )
+            final_bundle = execution_root / established_context.execution_id
+            self.assertTrue(staging_bundle.is_dir())
+            self.assertEqual(len(list((staging_bundle / "inputs").glob("*.json"))), 1)
+            self.assertFalse((staging_bundle / "execution_record.json").exists())
+            self.assertFalse(final_bundle.exists())
 
     def test_sequential_executions_are_isolated_with_deterministic_fake_id(
         self,
