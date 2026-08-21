@@ -4,7 +4,7 @@
 - Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
 - Document role: Current navigation and handoff state
 - Authority status: Navigation only; this file is not an Architecture Authority
-- Last synchronized: 2026-08-19
+- Last synchronized: 2026-08-20
 
 ## 0. How To Use This Handoff
 
@@ -124,10 +124,16 @@ Current Round
 = WI-1
 
 WI-1 Status
-= NEXT / NOT STARTED
+= COMPLETE / PASS
+
+P0-P5
+= COMPLETE
 
 Current Next
-= WI-1 Round Planning — Fake First Executable Vertical Slice
+= WI-2 Execution Lifecycle — NEXT / NOT STARTED
+
+Next Action
+= WI-2 document audit + Round Planning
 ```
 
 This is an implementation phase for the reviewed architecture, not a new
@@ -737,6 +743,29 @@ create a tenth Contract, or authorize unrelated architecture expansion.
 The current Deferred Register remains the detailed status authority. This
 summary is a navigation aid and is not a new backlog.
 
+### WI-1 Closure Scope Boundary
+
+WI-1 is complete, but the following remain unimplemented. This list records
+the WI-1 implementation boundary; it does not change each item's primary
+status in the Deferred Register or create a backlog commitment.
+
+```text
+real Provider
+TT-17
+Agent
+MCP
+Memory
+Async
+Queue
+Scheduler
+Multi-task execution
+Generic Task Framework
+C++ Runtime
+Full Research Method
+Full Search semantics
+Full C6 semantics
+```
+
 ### 11.1 NOT YET DESIGNED / NOT YET FROZEN BEYOND REVIEWED FIRST-SLICE REPRESENTATION
 
 The reviewed First-Slice Minimal Software Architecture has already closed the
@@ -976,10 +1005,13 @@ Current Round
 = WI-1
 
 WI-1 Status
-= NEXT / NOT STARTED
+= COMPLETE / PASS
 
 Current Next
-= WI-1 Round Planning — Fake First Executable Vertical Slice
+= WI-2 Execution Lifecycle — NEXT / NOT STARTED
+
+Next Action
+= WI-2 document audit + Round Planning
 ```
 
 ### Walking Implementation Entry
@@ -1015,30 +1047,47 @@ Architecture
 
 ```text
 28 Core Concepts
-= PLANNED
+= 10 TESTED / 0 IMPLEMENTED / 8 PLANNED / 10 RUNTIME VERIFIED
 
 Actual Implementation Evidence
-= NOT YET ESTABLISHED
+= ESTABLISHED THROUGH P5
+
+Runtime Evidence
+= ESTABLISHED FOR WI-1 FAKE FIRST EXECUTABLE VERTICAL SLICE
 ```
 
 Walking Implementation Plan 与 Traceability Map 是本阶段的执行与学习
 入口，不是新的 Architecture Authority。
 
-### WI-1 当前目标（Current WI-1 Objective）
+### WI-1 Completion Baseline
 
 ```text
 WI-1
 = Fake First Executable Vertical Slice
 
 Status
-= NEXT / NOT STARTED
+= COMPLETE / PASS
+
+P0-P5
+= COMPLETE
 ```
 
-目标是第一次证明 Reviewed Minimal Software Architecture 能形成真实可执行
-的内部纵向闭环。WI-1 只使用 Fake Search，不调用 live Scrape Creators 或
-live TT-17。
+WI-1 proved that the reviewed First-Slice Minimal Software Architecture can
+form a real executable internal vertical path. WI-1 used Fake Search only and
+did not call live Scrape Creators or live TT-17.
 
-目标 semantic path：
+Established baseline:
+
+- TaskRuntime execution coordination;
+- ExecutionContext;
+- ResearchSkill boundary;
+- Capability seam;
+- Minimal C6;
+- Local JSON Execution Bundle;
+- Record Ref;
+- Fake executable path.
+
+Actual minimal semantic path:
 
 ```text
 CLI
@@ -1059,17 +1108,16 @@ CLI
 → CLI
 ```
 
-WI-1 不应在 Planning 完成前直接开始写代码。
-
-下一聊天首先应：audit Git / repo / worktree，确认本 Handoff 与 Walking
-Plan，确认 current `src` scaffold 不是 Architecture Authority，然后创建并
-讨论：
-
 ```text
-walking_implementation/rounds/WI_01_FAKE_VERTICAL_SLICE.md
+WI-1
+= First Slice baseline
+
+WI-1
+!= Final Ecommerce AI OS completion
 ```
 
-Human review 后，才开始 WI-1 implementation。
+The P1-P5 completion commits are recorded in Section 19. Full lifecycle,
+Provider, Search, Research Method, and C6 semantics remain outside WI-1.
 
 ### WI-1 Architecture Reading Map
 
@@ -1106,8 +1154,8 @@ Focus 与 Traceability Coverage。实施后追加 Actual Files、Actual Symbols�
 Actual Call Path、Tests、Runtime Evidence、Architecture Mapping、
 Discovered Contradictions、Learning Review 与 Final Verdict。
 
-本轮尚未进入 WI-1 Planning，因此不要提前创建 Round Record、Python
-implementation、fixtures、runtime JSON 或 live TT-17 请求。
+The WI-1 Round Record is complete. WI-2 has not started; perform its document
+audit and Round Planning before any WI-2 implementation.
 
 ### Architecture–Code Learning Method
 
@@ -1281,7 +1329,7 @@ the Current Handoff as the single new-chat entry.
 2. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md`
 3. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/01_ARCHITECTURE_CODE_TRACEABILITY.md`
 
-### Tier 2 — WI-1 Architecture Reading Map
+### Tier 2 — WI-1 Closure Baseline / WI-2 Audit Inputs
 
 4. `docs/03_software/vertical_slices/01_research_execution/00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md`
 5. `docs/03_software/vertical_slices/01_research_execution/01_SOFTWARE_RESPONSIBILITY_MAPPING.md`
@@ -1292,8 +1340,8 @@ the Current Handoff as the single new-chat entry.
 ### Tier 3 — Read On Demand
 
 Upstream Product Architecture, System Architecture, D1–D5, Deferred Register,
-Provider Lab facts and other Contract docs are read only when the WI-1 question
-genuinely requires them.
+Provider Lab facts and other Contract docs are read only when the WI-2 audit
+question genuinely requires them.
 
 The upstream package guide is:
 `docs/02_system/vertical_slices/01_research_execution/00_READ_ME_FIRST.md`.
@@ -1324,7 +1372,16 @@ Current Round:
 WI-1 — Fake First Executable Vertical Slice
 
 Status:
-NEXT / NOT STARTED
+COMPLETE / PASS
+
+P0-P5:
+COMPLETE
+
+Current Next:
+WI-2 — Execution Lifecycle / NEXT / NOT STARTED
+
+Next Action:
+WI-2 document audit + Round Planning
 
 Then read:
 
@@ -1334,7 +1391,12 @@ docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 01_ARCHITECTURE_CODE_TRACEABILITY.md
 
-For WI-1 additionally read:
+Read the completed WI-1 Round Record as the implementation baseline:
+
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+rounds/WI_01_FAKE_VERTICAL_SLICE.md
+
+Use these Architecture inputs during the WI-2 document audit as needed:
 
 00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md
 01_SOFTWARE_RESPONSIBILITY_MAPPING.md
@@ -1344,19 +1406,17 @@ For WI-1 additionally read:
 
 Do not write code immediately.
 
-First:
+Before any WI-2 implementation:
 
 1. audit repository / worktree;
-2. confirm Current Handoff;
-3. confirm Walking Implementation Plan;
-4. create `rounds/WI_01_FAKE_VERTICAL_SLICE.md`;
-5. discuss and freeze WI-1 scope, allowed files, forbidden files, expected call
-   path, acceptance criteria, learning focus and traceability coverage;
-6. only then begin implementation.
+2. confirm Current Handoff and the completed WI-1 baseline;
+3. perform the WI-2 document audit;
+4. prepare and review WI-2 Round Planning;
+5. begin no WI-2 implementation until Human review authorizes it.
 
 Do not redesign Steps 1–7.
 Do not add a 10th Contract.
-Do not start live TT-17 in WI-1.
+Do not start live TT-17 as part of WI-2 planning.
 
 Minimum Endpoint Selection:
 CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
@@ -1376,6 +1436,13 @@ NOT AUTHORIZED
 The following hashes were read from the current Ecommerce AI OS Git history:
 
 ```text
+f32ad7b docs: close wi-1 baseline state sync
+P5  fbc31e5 test: close wi-1 fake vertical slice
+P4  8d4ea24 feat: establish wi-1 p4 fake end-to-end
+P3  bca1175 feat: establish wi-1 p3 business completion
+P2  c169f2f feat: establish wi-1 p2 core execution loop
+P1  c400f33 feat: establish wi-1 p1 boundary skeleton
+
 8b37338 docs: complete research contract consistency review
 2702f9f docs: align research contract consistency semantics
 0eb9f3d docs: define scrape creators provider mapping contract
@@ -1420,7 +1487,10 @@ Current Round
     = WI-1
 
 WI-1
-    = NEXT / NOT STARTED
+    = COMPLETE / PASS
+
+P0-P5
+    = COMPLETE
 
 Detailed Contract Design Package
     = COMPLETE / CONSISTENCY REVIEWED
@@ -1438,7 +1508,13 @@ Minimum Endpoint Selection
     = CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
 
 Current Phase / Current Next
-    = Walking Implementation / WI-1 Round Planning
+    = Walking Implementation / WI-2 Execution Lifecycle
+
+WI-2
+    = NEXT / NOT STARTED
+
+Next Action
+    = WI-2 document audit + Round Planning
 ```
 
 ## 21. Authority Boundary

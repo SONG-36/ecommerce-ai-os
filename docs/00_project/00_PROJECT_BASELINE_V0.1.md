@@ -5,8 +5,8 @@
 - **文档类型**：Project Baseline / 项目总地图
 - **项目名称**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：System Architecture V0.2 Candidate Stabilized / Pre-Vertical-Slice
-- **最后更新**：2026-08-15
+- **当前阶段**：Walking Implementation — WI-1 COMPLETE / PASS；WI-2 NEXT / NOT STARTED
+- **最后更新**：2026-08-20
 
 ---
 
@@ -746,6 +746,23 @@ Pluggable Skill
 
 # 10. Current Project Status / 当前项目状态
 
+当前动态 Walking Implementation 状态：
+
+```text
+WI-1 Fake First Executable Vertical Slice
+= COMPLETE / PASS
+
+P0-P5
+= COMPLETE
+
+WI-2 Execution Lifecycle
+= NEXT / NOT STARTED
+```
+
+WI-1 establishes a First-Slice implementation baseline. It does not mean the
+full Ecommerce AI OS, full Software Architecture, or Candidate System
+Architecture is complete or promoted.
+
 ## 10.1 已建立的 Baseline 文档
 
 当前已经形成工作基线：
@@ -852,7 +869,7 @@ System Placement Under Review
 
 当前阶段是：
 
-# **System Architecture V0.2 Candidate Stabilized / Preparing First Vertical Slice and System Detailed Design**
+# **Walking Implementation — WI-1 COMPLETE / PASS；WI-2 NEXT / NOT STARTED**
 
 当前不进入：
 
@@ -874,10 +891,11 @@ System Placement Under Review
 
 当前可以开始：
 
-- Development Strategy；
-- First Vertical Slice System Detailed Design；
-- Selected slice 所需的 Minimal Software Architecture；
-- 在 slice 设计获批后进行 Walking Implementation。
+- WI-2 document audit；
+- WI-2 Round Planning；
+- Human Review of the planned WI-2 scope and evidence requirements。
+
+WI-2 implementation 尚未开始，也未由本动态状态同步自动授权。
 
 当前仍然不进入：
 
@@ -892,7 +910,20 @@ System Placement Under Review
 
 # 12. Current Next Step / 当前下一步
 
-当前建议顺序：
+当前执行点：
+
+```text
+WI-1
+= COMPLETE / PASS
+
+Current Next
+= WI-2 Execution Lifecycle — NEXT / NOT STARTED
+
+Next Action
+= WI-2 document audit + Round Planning
+```
+
+项目级演进顺序仍为：
 
 ```text
 1. Freeze / synchronize V0.2 current project state
