@@ -5,7 +5,11 @@ import unittest
 from unittest.mock import patch
 
 from ecommerce_ai_os.composition import build_fake_first_slice_runtime
-from ecommerce_ai_os.runtime.execution import BusinessWorkRequest, TerminalReturn
+from ecommerce_ai_os.runtime.execution import (
+    BusinessWorkRequest,
+    PreExecutionRejection,
+    TerminalReturn,
+)
 from ecommerce_ai_os.runtime.retention import LocalJsonRetention
 
 
@@ -23,9 +27,20 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                 research_question="What content patterns merit human review?",
             )
 
-            terminal_return = runtime.execute(request)
+            with patch.object(
+                runtime,
+                "_run_research_skill",
+                wraps=runtime._run_research_skill,
+            ) as observed_skill_run:
+                terminal_return = runtime.execute(request)
 
             self.assertIsInstance(terminal_return, TerminalReturn)
+            established_context = observed_skill_run.call_args.args[0]
+            self.assertIs(established_context.work_request, request)
+            self.assertEqual(
+                established_context.execution_id,
+                terminal_return.execution_id,
+            )
             self.assertEqual(terminal_return.execution_outcome, "SUCCEEDED")
             self.assertIsNotNone(terminal_return.business_result)
             self.assertIsNotNone(terminal_return.record_ref)
@@ -103,6 +118,42 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                 second_return.execution_id,
                 terminal_return.execution_id,
             )
+
+    def test_incomplete_request_is_rejected_before_execution_establishment(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            execution_root = Path(temporary_directory) / "executions"
+            runtime = build_fake_first_slice_runtime(execution_root)
+            request = BusinessWorkRequest(
+                request_id="request-rejected-001",
+                product_context="",
+                market="US",
+                platform="TikTok",
+                business_goal="Commerce Content",
+                research_question="What content patterns merit human review?",
+            )
+
+            with (
+                patch.object(
+                    runtime,
+                    "_run_research_skill",
+                    wraps=runtime._run_research_skill,
+                ) as observed_skill_run,
+                patch.object(
+                    runtime,
+                    "_invoke_search",
+                    wraps=runtime._invoke_search,
+                ) as observed_search_invocation,
+            ):
+                response = runtime.execute(request)
+
+            self.assertIsInstance(response, PreExecutionRejection)
+            self.assertFalse(hasattr(response, "execution_id"))
+            self.assertFalse(hasattr(response, "record_ref"))
+            observed_skill_run.assert_not_called()
+            observed_search_invocation.assert_not_called()
+            self.assertFalse(execution_root.exists())
 
     def test_sequential_executions_are_isolated_with_deterministic_fake_id(
         self,

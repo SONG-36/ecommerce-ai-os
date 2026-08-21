@@ -18,7 +18,13 @@ from ecommerce_ai_os.search.models import (
 from ecommerce_ai_os.search.port import SearchCapability
 from ecommerce_ai_os.search.serialization import serialize_search_result
 
-from .execution import BusinessWorkRequest, ExecutionContext, TerminalReturn
+from .execution import (
+    BusinessWorkRequest,
+    ExecutionContext,
+    PreExecutionRejection,
+    TaskExecutionResponse,
+    TerminalReturn,
+)
 from .execution_record import (
     StableExecutionFacts,
     serialize_finalized_execution_record,
@@ -43,12 +49,17 @@ class TaskRuntime:
         self._research_skill = research_skill
         self._retention = retention
 
-    def execute(self, work_request: BusinessWorkRequest) -> TerminalReturn:
-        """Execute and publish the WI-1 minimal successful C1 path."""
+    def execute(self, work_request: BusinessWorkRequest) -> TaskExecutionResponse:
+        """Admit business work, then execute the established WI-1 path."""
         if self._research_skill is None or self._retention is None:
             raise RuntimeError("TaskRuntime.execute requires composed P4 dependencies")
 
+        rejection = self._pre_execution_rejection(work_request)
+        if rejection is not None:
+            return rejection
+
         execution_id = str(uuid4())
+        # Creating the canonical context is the semantic establishment commit.
         context = ExecutionContext(
             execution_id=execution_id,
             work_request=work_request,
@@ -123,6 +134,24 @@ class TaskRuntime:
             business_result=research_result,
             record_ref=record_ref,
         )
+
+    @staticmethod
+    def _pre_execution_rejection(
+        work_request: BusinessWorkRequest,
+    ) -> PreExecutionRejection | None:
+        required_request_values = (
+            work_request.request_id,
+            work_request.product_context,
+            work_request.market,
+            work_request.platform,
+            work_request.business_goal,
+            work_request.research_question,
+        )
+        if any(not value.strip() for value in required_request_values):
+            return PreExecutionRejection(
+                reason="required First-Slice request context is incomplete"
+            )
+        return None
 
     def _run_research_skill(
         self,

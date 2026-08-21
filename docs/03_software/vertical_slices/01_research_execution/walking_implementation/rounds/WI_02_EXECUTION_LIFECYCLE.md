@@ -37,7 +37,7 @@ Walking Implementation
 **Document Maturity**
 
 ```text
-HUMAN REVIEWED ROUND PLAN / P0 PASS
+HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS
 ```
 
 **Repository Materialization**
@@ -49,31 +49,31 @@ PERFORMED
 **Round Status**
 
 ```text
-ROUND PLANNING / P0 COMPLETE
+P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Current Internal Checkpoint**
 
 ```text
-P0 — COMPLETE / HUMAN REVIEWED / PASS
+P1 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Implementation**
 
 ```text
-NOT STARTED
+P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Python Changes**
 
 ```text
-NONE / NOT AUTHORIZED
+P1 ACTUAL / TESTED / PASS
 ```
 
 **Test Changes**
 
 ```text
-NONE / NOT AUTHORIZED
+P1 ACTUAL / TESTED / PASS
 ```
 
 **Architecture Expansion**
@@ -1580,6 +1580,164 @@ full C6
 
 P1 完成后必须暂停进行 Human Review。
 
+## 17.6 P1 Actual Evidence
+
+### Status
+
+```text
+P1
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P1 Human PASS
+= PASS
+
+P1 Runtime Evidence
+= ESTABLISHED
+
+P2
+= NEXT / NOT AUTHORIZED
+```
+
+### Actual Files and Symbols
+
+```text
+src/ecommerce_ai_os/runtime/execution.py
+→ PreExecutionRejection
+→ TaskExecutionResponse = PreExecutionRejection | TerminalReturn
+
+src/ecommerce_ai_os/runtime/task_runtime.py
+→ TaskRuntime.execute
+→ TaskRuntime._pre_execution_rejection
+
+src/ecommerce_ai_os/application/cli.py
+→ main rejection presentation
+
+tests/unit/runtime/test_execution.py
+→ BusinessWorkRequestTests.test_c1_response_family_distinguishes_rejection_from_terminal_return
+
+tests/integration/test_fake_first_slice.py
+→ FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle
+→ FakeFirstSliceIntegrationTests.test_incomplete_request_is_rejected_before_execution_establishment
+```
+
+### Actual Rejection Path
+
+```text
+BusinessWorkRequest with incomplete required First-Slice context
+→ TaskRuntime._pre_execution_rejection
+→ PreExecutionRejection
+
+Execution identity = absent
+ExecutionContext = absent
+ResearchSkill execution = absent
+Search capability invocation = absent
+C6 = absent
+Execution bundle = absent
+Record Ref = absent
+```
+
+The admission check uses only the already-required First-Slice request context fields. It does not add a new business policy.
+
+### Actual Establishment Path
+
+```text
+valid BusinessWorkRequest
+→ admission passes
+→ execution_id allocated
+→ ExecutionContext constructed
+→ Execution is established
+→ existing WI-01 success path
+→ TerminalReturn
+```
+
+For P1, successful `ExecutionContext` construction is the exact Execution Establishment Commit. A valid runtime run established one `execution_id` and propagated it through the existing published WI-01 bundle and terminal return.
+
+### Test and Runtime Evidence
+
+```text
+PYTHONPATH=src python -m unittest tests.unit.runtime.test_execution -v
+→ 3 tests / PASS
+
+PYTHONPATH=src python -m unittest tests.integration.test_fake_first_slice -v
+→ 3 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+→ 19 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+→ 3 tests / PASS
+
+PYTHONPATH=src python -m unittest tests.unit.architecture.test_import_directions -v
+→ 1 test / PASS
+
+python -m compileall -q src tests
+→ PASS
+
+git diff --check
+→ PASS
+```
+
+Valid-path runtime evidence:
+
+```text
+CLI exit = 0
+Execution outcome = SUCCEEDED
+execution_id = b609cb2c-5c7e-45e3-9b74-d417fc725214
+Record Ref = execution://b609cb2c-5c7e-45e3-9b74-d417fc725214/execution_record.json
+required references = 5
+resolved references = 5
+staging bundle after publication = absent
+```
+
+Rejection-path runtime evidence:
+
+```text
+CLI output = Request Rejected: required First-Slice request context is incomplete
+CLI exit = 1
+Execution root = absent
+```
+
+### Traceability and Review Result
+
+```text
+A02 — BusinessWorkRequest admission evidence established
+A03 — C1 rejection / terminal response distinction established
+A05 — rejection-before-establishment and exact establishment commit established
+
+Architecture Deviation = NONE
+Architecture Assumption Conflict = NONE
+```
+
+### Final Focused Audit — Actual Skill Binding
+
+```text
+self._research_skill
+= actual statically bound ResearchSkill
+
+composition
+→ creates one concrete ResearchSkill
+→ constructor-injects it before TaskRuntime.execute()
+
+TaskRuntime.execute()
+→ uses the same stored Skill instance
+
+reviewed synchronous First-Slice execution
+→ no dynamic Skill change or selection
+
+TaskRuntime._run_research_skill declaration equality check
+= post-establishment defensive consistency invariant
+!= Skill binding operation
+
+BusinessWorkRequest.skill_id
+= NOT REQUIRED
+
+dynamic Skill selection
+= NOT REQUIRED
+
+Classification
+= NO ISSUE
+```
+
 ---
 
 # 18. P2 — Established Execution Failure + ExecutionAbort
@@ -2623,7 +2781,7 @@ Materialization
 
 ```text
 WI-02
-= Round Planning / P0 Complete
+= P1 Complete / Implemented / Tested / Human Reviewed / Pass
 
 P0
 = COMPLETE / HUMAN REVIEWED / PASS
@@ -2641,13 +2799,13 @@ Architecture Assumption Conflict
 = NONE
 
 Python
-= NONE / NOT AUTHORIZED
+= P1 ACTUAL / TESTED / PASS
 
 Tests
-= NONE / NOT AUTHORIZED
+= P1 ACTUAL / PASS
 
 P1
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 P0 Human Review 只批准：
@@ -2691,7 +2849,7 @@ live repository audit = PASS
 blocking contradiction = NONE
 ```
 
-这些 audit prerequisites 的完成不授权 P1 implementation。
+这些 audit prerequisites 已在 P1 implementation 前完成；P1 actual evidence 已通过 Human Review。
 
 ---
 
@@ -2717,20 +2875,23 @@ Blocking Contradiction
 
 ```text
 Current Next
-= P1 — Admission + Execution Establishment Boundary
+= P2 — NEXT / NOT AUTHORIZED
 ```
 
 但必须保持：
 
 ```text
-P0 PASS
-!= P1 implementation authorization
-
 P1 Implementation
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P1 Human PASS
+= PASS
+
+P2
+= NEXT / NOT AUTHORIZED
 ```
 
-P1 只允许实现：
+P1 已实现范围：
 
 ```text
 PreExecutionRejection boundary
@@ -2787,19 +2948,28 @@ P0
 = COMPLETE / HUMAN REVIEWED / PASS
 
 P1
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Current Next
-= P1 — Admission + Execution Establishment Boundary
+= P2 — NEXT / NOT AUTHORIZED
 
 P1 Implementation
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P1 Human PASS
+= PASS
+
+P1 Runtime Evidence
+= ESTABLISHED
+
+P2
+= NEXT / NOT AUTHORIZED
 
 Python Changes
-= NONE / NOT AUTHORIZED
+= P1 ACTUAL / TESTED / PASS
 
 Test Changes
-= NONE / NOT AUTHORIZED
+= P1 ACTUAL / PASS
 
 Architecture Reopen
 = NO

@@ -1,7 +1,13 @@
 from dataclasses import FrozenInstanceError
+from typing import get_args
 import unittest
 
-from ecommerce_ai_os.runtime.execution import BusinessWorkRequest
+from ecommerce_ai_os.runtime.execution import (
+    BusinessWorkRequest,
+    PreExecutionRejection,
+    TaskExecutionResponse,
+    TerminalReturn,
+)
 
 
 class BusinessWorkRequestTests(unittest.TestCase):
@@ -25,6 +31,22 @@ class BusinessWorkRequestTests(unittest.TestCase):
     def test_is_a_frozen_stable_value(self) -> None:
         with self.assertRaises(FrozenInstanceError):
             self.request.market = "CA"  # type: ignore[misc]
+
+    def test_c1_response_family_distinguishes_rejection_from_terminal_return(
+        self,
+    ) -> None:
+        rejection = PreExecutionRejection(
+            reason="required First-Slice request context is incomplete"
+        )
+
+        self.assertEqual(
+            set(get_args(TaskExecutionResponse)),
+            {PreExecutionRejection, TerminalReturn},
+        )
+        self.assertIsInstance(rejection, PreExecutionRejection)
+        self.assertNotIsInstance(rejection, TerminalReturn)
+        self.assertFalse(hasattr(rejection, "execution_id"))
+        self.assertFalse(hasattr(rejection, "record_ref"))
 
 
 if __name__ == "__main__":

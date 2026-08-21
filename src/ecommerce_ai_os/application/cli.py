@@ -8,7 +8,10 @@ from typing import Sequence
 from uuid import uuid4
 
 from ecommerce_ai_os.composition import build_fake_first_slice_runtime
-from ecommerce_ai_os.runtime.execution import BusinessWorkRequest
+from ecommerce_ai_os.runtime.execution import (
+    BusinessWorkRequest,
+    PreExecutionRejection,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,17 +47,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         research_question=args.research_question,
     )
     runtime = build_fake_first_slice_runtime(args.output_root)
-    terminal_return = runtime.execute(work_request)
+    response = runtime.execute(work_request)
+    if isinstance(response, PreExecutionRejection):
+        print(f"Request Rejected: {response.reason}")
+        return 1
 
-    result = terminal_return.business_result
-    print(f"Execution Outcome: {terminal_return.execution_outcome}")
-    print(f"Execution ID: {terminal_return.execution_id}")
+    result = response.business_result
+    print(f"Execution Outcome: {response.execution_outcome}")
+    print(f"Execution ID: {response.execution_id}")
     print(
         "Research Result: "
         f"{len(result.evidence)} synthetic evidence item(s); "
         f"sample size {result.actual_sample_boundary.returned_item_count}"
     )
-    print(f"Record Ref: {terminal_return.record_ref}")
+    print(f"Record Ref: {response.record_ref}")
     return 0
 
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 from ecommerce_ai_os.research.models import ResearchResult, SkillDeclaration
 
@@ -23,6 +23,13 @@ class BusinessWorkRequest:
     research_question: str
 
 
+@dataclass(frozen=True, slots=True)
+class PreExecutionRejection:
+    """C1 rejection returned before any Execution identity exists."""
+
+    reason: str
+
+
 @dataclass(slots=True)
 class ExecutionContext:
     """Mutable execution-scoped state used for runtime coordination."""
@@ -40,3 +47,6 @@ class TerminalReturn:
     execution_outcome: str
     business_result: ResearchResult
     record_ref: ExecutionRecordRef
+
+
+TaskExecutionResponse: TypeAlias = PreExecutionRejection | TerminalReturn
