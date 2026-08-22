@@ -5,8 +5,8 @@
 - **文档类型**：Project Baseline / 项目总地图
 - **项目名称**：Ecommerce AI OS
 - **项目仓库**：`/Volumes/projects/andy/0813/ecommerce-ai-os`
-- **当前阶段**：Walking Implementation — WI-1 COMPLETE / PASS；WI-2 NEXT / NOT STARTED
-- **最后更新**：2026-08-20
+- **当前阶段**：Walking Implementation — WI-1 COMPLETE / PASS；WI-2 COMPLETE / PASS；WI-03 NEXT / NOT STARTED
+- **最后更新**：2026-08-22
 
 ---
 
@@ -756,12 +756,33 @@ P0-P5
 = COMPLETE
 
 WI-2 Execution Lifecycle
-= NEXT / NOT STARTED
+= COMPLETE / PASS
+
+WI-02 P0-P5
+= COMPLETE / PASS
+
+WI-02 G1-G16
+= ALL PASS
+
+WI-02 Architecture Deviation
+= NONE
+
+WI-02 Architecture Assumption Conflict
+= NONE
+
+Current Next
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Implementation
+= NOT STARTED / NOT AUTHORIZED
 ```
 
 WI-1 establishes a First-Slice implementation baseline. It does not mean the
 full Ecommerce AI OS, full Software Architecture, or Candidate System
 Architecture is complete or promoted.
+
+WI-02 completes the bounded Execution Lifecycle round. It does not start WI-03,
+promote Candidate Architecture, or authorize broader Search implementation.
 
 ## 10.1 已建立的 Baseline 文档
 
@@ -869,7 +890,7 @@ System Placement Under Review
 
 当前阶段是：
 
-# **Walking Implementation — WI-1 COMPLETE / PASS；WI-2 NEXT / NOT STARTED**
+# **Walking Implementation — WI-1 COMPLETE / PASS；WI-2 COMPLETE / PASS；WI-03 NEXT / NOT STARTED**
 
 当前不进入：
 
@@ -889,13 +910,8 @@ System Placement Under Review
 
 > **Architecture big, implementation small.**
 
-当前可以开始：
-
-- WI-2 document audit；
-- WI-2 Round Planning；
-- Human Review of the planned WI-2 scope and evidence requirements。
-
-WI-2 implementation 尚未开始，也未由本动态状态同步自动授权。
+当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`。本动态状态同步不表示
+WI-03 planning 或 implementation 已开始，也不授权 WI-03 implementation。
 
 当前仍然不进入：
 
@@ -916,11 +932,26 @@ WI-2 implementation 尚未开始，也未由本动态状态同步自动授权。
 WI-1
 = COMPLETE / PASS
 
-Current Next
-= WI-2 Execution Lifecycle — NEXT / NOT STARTED
+WI-2 Execution Lifecycle
+= COMPLETE / PASS
 
-Next Action
-= WI-2 document audit + Round Planning
+WI-02 P0-P5
+= COMPLETE / PASS
+
+WI-02 G1-G16
+= ALL PASS
+
+WI-02 Architecture Deviation
+= NONE
+
+WI-02 Architecture Assumption Conflict
+= NONE
+
+Current Next
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Implementation
+= NOT STARTED / NOT AUTHORIZED
 ```
 
 项目级演进顺序仍为：

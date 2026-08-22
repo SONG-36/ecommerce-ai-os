@@ -8,9 +8,10 @@
 - **Authorized Scope**: US / Car Vacuum / TikTok Content Research First Slice ONLY
 - **Walking Implementation**: AUTHORIZED
 - **Architecture Expansion**: NOT AUTHORIZED
-- **Current Round**: WI-1
+- **Current Round**: WI-02 — Execution Lifecycle
 - **Current Round Status**: COMPLETE / PASS
-- **Current Next**: WI-2 — Execution Lifecycle / NEXT / NOT STARTED
+- **Current Next**: WI-03 — Search Semantics / NEXT / NOT STARTED
+- **WI-03 Implementation**: NOT STARTED / NOT AUTHORIZED
 
 ---
 
@@ -275,8 +276,8 @@ Architecture is correct
 | Round | 中文名称 | 核心目标 | 主要实现 | 主要验证 | 学习重点 | 当前状态 |
 |---|---|---|---|---|---|---|
 | WI-1 | Fake 第一条可执行纵向切片 | 第一次跑通内部完整闭环 | CLI / C1 / C2b / C2a / Fake C3 / ResearchCompletion / C6 / JSON | 一条 CLI 真正形成 TerminalReturn + Record Ref + Bundle | Vertical Slice / Protocol / DI / Runtime vs Business Method | COMPLETE / PASS |
-| WI-2 | 执行生命周期与失败闭环 | 把 Execution semantics 做正确 | PreExecutionRejection / Establishment / ExecutionAbort / failure closure | success / rejection / runtime failure / closure failure | Lifecycle / State / Failure / Exception | NEXT / NOT STARTED |
-| WI-3 | C3 Search 数据契约 | 建立真实的 provider-neutral Search semantics | SearchRequest / Result / Failure / Context / Provenance | duplicates / missingness / partial retrieval / continuation | Data Contract / Missingness / Bounded Completeness | PLANNED |
+| WI-2 | 执行生命周期与失败闭环 | 把 Execution semantics 做正确 | PreExecutionRejection / Establishment / ExecutionAbort / failure closure | success / rejection / runtime failure / closure failure | Lifecycle / State / Failure / Exception | COMPLETE / PASS |
+| WI-3 | C3 Search 数据契约 | 建立真实的 provider-neutral Search semantics | SearchRequest / Result / Failure / Context / Provenance | duplicates / missingness / partial retrieval / continuation | Data Contract / Missingness / Bounded Completeness | NEXT / NOT STARTED / NOT AUTHORIZED |
 | WI-4 | Scrape Creators Adapter | 把外部 Provider schema 隔离在 C4b 下 | Adapter / Access Protocol / real TT-17 fixtures | Raw TT-17 → provider-neutral SearchResult | Adapter / Ports & Adapters / Anti-Corruption Layer | PLANNED |
 | WI-5 | Live TT-17 | 第一次真正访问外部 Provider | HttpClient / AppConfig / secret / raw capture / live smoke | 实际 TT-17 → SearchResult → provenance | HTTP / I-O / Config / Secrets / Integration | PLANNED |
 | WI-6 | Research Method | 第一次产生真实 Research Result | Sampling / Evidence / Finding / Hypothesis / ResearchCompletion | SearchResult → ResearchResult | Sampling / Evidence / Causal Discipline | PLANNED |
@@ -1716,7 +1717,7 @@ Architecture Expansion
 = NOT AUTHORIZED
 
 Current Round
-= WI-1
+= WI-02 — Execution Lifecycle
 
 Current Round Status
 = COMPLETE / PASS
@@ -1737,8 +1738,31 @@ WI-1 Runtime Evidence
 WI-1 Final Verdict
 = PASS
 
+WI-02 Internal Checkpoints
+= P0-P5 COMPLETE / PASS
+
+WI-02 G1-G16
+= ALL PASS
+
+WI-02 Architecture Deviation
+= NONE
+
+WI-02 Architecture Assumption Conflict
+= NONE
+
+WI-02 Milestone Commits
+= P3 9b098e208d25a46f9057f2e63b7b6ce07b190a4f
+= P4 e4d35da7b3476e0463b88fd2ea280fe0191246b4
+= closure cbbfe276d37852e5b21dae182c30f0bccfb3e0d1
+
+WI-02 Final Verdict
+= COMPLETE / PASS
+
 Current Next
-= WI-2 — Execution Lifecycle / NEXT / NOT STARTED
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Implementation
+= NOT STARTED / NOT AUTHORIZED
 ```
 
 授权仅适用于：
@@ -1839,7 +1863,7 @@ Architecture Expansion
 = NOT AUTHORIZED
 
 Current Round
-= WI-1
+= WI-02 — Execution Lifecycle
 
 Current Round Status
 = COMPLETE / PASS
@@ -1850,6 +1874,24 @@ WI-1 Runtime Evidence
 WI-1 Final Verdict
 = PASS
 
+WI-02 P0-P5
+= COMPLETE / PASS
+
+WI-02 G1-G16
+= ALL PASS
+
+WI-02 Final Verdict
+= COMPLETE / PASS
+
+WI-02 Architecture Deviation
+= NONE
+
+WI-02 Architecture Assumption Conflict
+= NONE
+
 Current Next
-= WI-2 — Execution Lifecycle / NEXT / NOT STARTED
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Implementation
+= NOT STARTED / NOT AUTHORIZED
 ```
