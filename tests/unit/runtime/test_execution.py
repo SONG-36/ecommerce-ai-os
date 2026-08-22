@@ -8,6 +8,7 @@ from ecommerce_ai_os.runtime.execution import (
     TaskExecutionResponse,
     TerminalReturn,
 )
+from ecommerce_ai_os.runtime.execution_record import ExecutionRecordRef
 
 
 class BusinessWorkRequestTests(unittest.TestCase):
@@ -47,6 +48,19 @@ class BusinessWorkRequestTests(unittest.TestCase):
         self.assertNotIsInstance(rejection, TerminalReturn)
         self.assertFalse(hasattr(rejection, "execution_id"))
         self.assertFalse(hasattr(rejection, "record_ref"))
+
+    def test_terminal_return_allows_failure_without_a_business_result(self) -> None:
+        terminal_return = TerminalReturn(
+            execution_id="execution-failed-001",
+            execution_outcome="FAILED",
+            business_result=None,
+            record_ref=ExecutionRecordRef(execution_id="execution-failed-001"),
+        )
+
+        self.assertIsNone(terminal_return.business_result)
+        self.assertEqual(terminal_return.execution_outcome, "FAILED")
+        self.assertIsInstance(terminal_return, TerminalReturn)
+        self.assertNotIsInstance(terminal_return, PreExecutionRejection)
 
 
 if __name__ == "__main__":

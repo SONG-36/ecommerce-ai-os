@@ -41,11 +41,11 @@ class ExecutionContext:
 
 @dataclass(frozen=True, slots=True)
 class TerminalReturn:
-    """Successful C1 return after the established Execution is published."""
+    """C1 return after an established Execution reaches terminal closure."""
 
     execution_id: str
     execution_outcome: str
-    business_result: ResearchResult
+    business_result: ResearchResult | None
     record_ref: ExecutionRecordRef
 
 

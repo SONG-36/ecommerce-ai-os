@@ -188,6 +188,15 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
             port.search(SearchRequest(query="car vacuum", market="US"))
 
         self.assertEqual(captured_abort.exception.execution_id, context.execution_id)
+        self.assertEqual(captured_abort.exception.actual_capability, "Search")
+        self.assertEqual(
+            captured_abort.exception.failure_code,
+            "SEARCH_OUTCOME_NOT_RESULT",
+        )
+        self.assertEqual(
+            captured_abort.exception.failure_reason,
+            "Search invocation did not produce a contract-valid SearchResult",
+        )
         self.assertEqual(controlled_failure.calls, 1)
         self.assertIsNotNone(controlled_failure.last_context)
         self.assertEqual(

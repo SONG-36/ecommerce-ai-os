@@ -14,7 +14,7 @@ from ecommerce_ai_os.runtime.execution import (
     TerminalReturn,
 )
 from ecommerce_ai_os.runtime.retention import LocalJsonRetention
-from ecommerce_ai_os.runtime.task_runtime import TaskRuntime, _ExecutionAbort
+from ecommerce_ai_os.runtime.task_runtime import TaskRuntime
 from ecommerce_ai_os.search.models import (
     SearchInvocationContext,
     SearchRequest,
@@ -183,7 +183,7 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             observed_search_invocation.assert_not_called()
             self.assertFalse(execution_root.exists())
 
-    def test_established_failure_unwinds_privately_to_task_runtime_owner(
+    def test_established_failure_closes_with_path_sensitive_record(
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -217,35 +217,92 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                     "_abort_execution",
                     wraps=runtime._abort_execution,
                 ) as observed_abort,
-                self.assertRaisesRegex(
-                    RuntimeError,
-                    "failure reached TaskRuntime; failure terminalization is not "
-                    "implemented in P2",
-                ) as captured_owner_boundary,
             ):
-                runtime.execute(request)
+                terminal_return = runtime.execute(request)
 
             established_context = observed_skill_run.call_args.args[0]
             self.assertTrue(established_context.execution_id)
             self.assertIs(established_context.work_request, request)
+            self.assertIsInstance(terminal_return, TerminalReturn)
+            self.assertEqual(
+                terminal_return.execution_id,
+                established_context.execution_id,
+            )
+            self.assertEqual(terminal_return.execution_outcome, "FAILED")
+            self.assertIsNone(terminal_return.business_result)
+            self.assertIsNotNone(terminal_return.record_ref)
             self.assertEqual(controlled_failure.calls, 1)
             self.assertIsNotNone(controlled_failure.last_context)
             self.assertEqual(
                 controlled_failure.last_context.execution_id,
                 established_context.execution_id,
             )
-            observed_abort.assert_called_once_with(established_context)
-            self.assertNotIsInstance(captured_owner_boundary.exception, _ExecutionAbort)
-            self.assertIsNone(captured_owner_boundary.exception.__context__)
+            observed_abort.assert_called_once_with(
+                established_context,
+                actual_capability="Search",
+                failure_code="SEARCH_OUTCOME_NOT_RESULT",
+                failure_reason=(
+                    "Search invocation did not produce a contract-valid SearchResult"
+                ),
+            )
 
             staging_bundle = (
                 execution_root / ".staging" / established_context.execution_id
             )
             final_bundle = execution_root / established_context.execution_id
-            self.assertTrue(staging_bundle.is_dir())
-            self.assertEqual(len(list((staging_bundle / "inputs").glob("*.json"))), 1)
-            self.assertFalse((staging_bundle / "execution_record.json").exists())
-            self.assertFalse(final_bundle.exists())
+            self.assertFalse(staging_bundle.exists())
+            self.assertTrue(final_bundle.is_dir())
+
+            retention = LocalJsonRetention(execution_root)
+            record_path = retention.resolve_record_ref(terminal_return.record_ref)
+            self.assertEqual(record_path.parent, final_bundle)
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(record["execution_id"], terminal_return.execution_id)
+            self.assertEqual(record["terminal_outcome"], "FAILED")
+            self.assertEqual(
+                record["actual_skill"],
+                {
+                    "skill_id": skill.declaration.skill_id,
+                    "skill_version": skill.declaration.skill_version,
+                },
+            )
+            self.assertEqual(
+                record["actual_participation"],
+                {"capabilities": ["Search"]},
+            )
+            self.assertEqual(
+                record["failure"],
+                {
+                    "code": "SEARCH_OUTCOME_NOT_RESULT",
+                    "reason": (
+                        "Search invocation did not produce a contract-valid "
+                        "SearchResult"
+                    ),
+                },
+            )
+            self.assertEqual(
+                record["required_references"],
+                [record["work_request_ref"]],
+            )
+            for relative_ref in record["required_references"]:
+                self.assertTrue((final_bundle / relative_ref).is_file())
+
+            retained_request = json.loads(
+                (final_bundle / record["work_request_ref"]).read_text(encoding="utf-8")
+            )
+            self.assertEqual(retained_request["request_id"], request.request_id)
+
+            self.assertNotIn("search_result_refs", record["actual_participation"])
+            self.assertNotIn("actual_sample_boundary_ref", record)
+            self.assertNotIn("evidence_refs", record)
+            self.assertNotIn("research_result_ref", record)
+            self.assertNotIn("business_result", record)
+            self.assertFalse((final_bundle / "search_results").exists())
+            self.assertFalse((final_bundle / "sample_boundaries").exists())
+            self.assertFalse((final_bundle / "evidence").exists())
+            self.assertFalse((final_bundle / "research_results").exists())
+            self.assertFalse((final_bundle / "provider_raw").exists())
 
     def test_sequential_executions_are_isolated_with_deterministic_fake_id(
         self,

@@ -37,7 +37,7 @@ Walking Implementation
 **Document Maturity**
 
 ```text
-HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS
+HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS / P3 ACTUAL EVIDENCE RECORDED
 ```
 
 **Repository Materialization**
@@ -49,31 +49,31 @@ PERFORMED
 **Round Status**
 
 ```text
-P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P3 IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
 ```
 
 **Current Internal Checkpoint**
 
 ```text
-P2 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P3 — IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
 ```
 
 **Implementation**
 
 ```text
-P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P3 IMPLEMENTED / TESTED / UNCOMMITTED
 ```
 
 **Python Changes**
 
 ```text
-P2 ACTUAL / TESTED / PASS
+P3 ACTUAL / UNCOMMITTED
 ```
 
 **Test Changes**
 
 ```text
-P2 ACTUAL / TESTED / PASS
+P3 ACTUAL / UNCOMMITTED
 ```
 
 **Architecture Expansion**
@@ -2005,6 +2005,214 @@ D02 — failure Record Ref / referenceability
 
 P3 不升级为 full WI-07 C6 implementation。
 
+## 19.5 P3 Actual Evidence
+
+### Status
+
+```text
+P3
+= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+
+P3 Human PASS
+= NOT YET
+
+P4
+= NOT AUTHORIZED
+```
+
+### Existing P2 Failure Path Before P3
+
+```text
+established Execution
+→ controlled non-result Search outcome
+→ private _ExecutionAbort(execution_id)
+→ TaskRuntime owner catches the unwind
+→ temporary RuntimeError
+→ no failure C6
+→ no Record Ref
+→ no TerminalReturn
+```
+
+### Actual Files and Symbols
+
+```text
+src/ecommerce_ai_os/runtime/execution.py
+→ TerminalReturn.business_result permits absence on failed Execution closure
+
+src/ecommerce_ai_os/runtime/task_runtime.py
+→ _ExecutionAbort bounded stable failure fields
+→ TaskRuntime.execute failure catch / finalization / publication / return
+→ TaskRuntime._abort_execution
+
+src/ecommerce_ai_os/runtime/execution_record.py
+→ StableExecutionFacts.record_execution_failure
+→ StableExecutionFacts.finalize_failure
+→ FinalizedExecutionRecord path-sensitive optional facts
+→ serialize_finalized_execution_record path-sensitive output
+
+tests/unit/runtime/test_execution.py
+→ BusinessWorkRequestTests.test_terminal_return_allows_failure_without_a_business_result
+
+tests/unit/runtime/test_task_runtime.py
+→ TaskRuntimeCoordinationTests.test_non_result_search_outcome_triggers_private_execution_abort
+
+tests/integration/test_fake_first_slice.py
+→ FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record
+```
+
+`LocalJsonRetention` and `StagingExecutionBundle.publish` were reused without modification. No second writer, store, service, or response family was introduced.
+
+### Exact Actual Failure Closure Path
+
+```text
+valid BusinessWorkRequest
+→ admission succeeds
+→ execution_id allocated
+→ ExecutionContext constructed
+→ Execution Establishment Commit
+→ staging bundle created
+→ work request retained
+→ bound ResearchSkill enters Search
+→ controlled test-only non-result Search outcome
+→ TaskRuntime identifies non-continuable established failure
+→ _ExecutionAbort carries bounded stable failure facts
+→ Skill call unwinds
+→ TaskRuntime catches _ExecutionAbort
+→ StableExecutionFacts records actual Search participation + failure facts
+→ minimum path-sensitive FAILED C6 finalized
+→ required input reference validated
+→ failure bundle atomically published
+→ Record Ref exposed and resolves
+→ TerminalReturn(execution_outcome="FAILED", business_result=None, record_ref=...)
+```
+
+The private `_ExecutionAbort` remains an internal control mechanism. It is neither `TaskExecutionResponse` nor a public failure Contract and does not escape `TaskRuntime.execute`.
+
+### P2-YELLOW-1 Closure and Bounded Failure Facts
+
+```text
+P2-YELLOW-1
+= VERIFIED / CLOSED
+
+Facts carried across private _ExecutionAbort unwind
+= execution_id
+= actual_capability = Search
+= failure_code = SEARCH_OUTCOME_NOT_RESULT
+= failure_reason = Search invocation did not produce a contract-valid SearchResult
+
+Retained raw exception object = NO
+Retained stack trace = NO
+Retained logs = NO
+Retained raw Provider error = NO
+Retained observability payload = NO
+```
+
+After the unwind, `TaskRuntime` transferred these bounded facts into `StableExecutionFacts` before C6 finalization. The focused unit and integration tests verify that the same code and reason survive into the finalized failure record.
+
+### Failure C6 Contents and Path Sensitivity
+
+The actual failure C6 contains only facts established on the controlled path:
+
+```text
+record identity = present
+execution identity = present
+work request reference = present / required / resolvable
+actual Skill id/version = present
+actual Capability participation = Search
+bounded failure code/reason = present
+terminal outcome = FAILED
+
+SearchResult reference = absent
+ActualSampleBoundary reference = absent
+Evidence references = absent
+ResearchResult reference = absent
+Business Result = absent
+Provider fact = absent
+provider_raw = absent
+```
+
+The failure record's `required_references` contains only the retained work-request reference. It does not use empty or null success-only fields to imply facts that never formed.
+
+### Tests Executed
+
+```text
+PYTHONPATH=src python -m unittest \
+  tests.unit.runtime.test_task_runtime \
+  tests.unit.runtime.test_execution \
+  tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record -v
+→ 10 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+→ 21 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+→ 4 tests / PASS
+
+PYTHONPATH=src python -m unittest \
+  tests.unit.architecture.test_import_directions -v
+→ 1 test / PASS
+
+python -m compileall -q src tests
+→ PASS
+
+git diff --check
+→ PASS
+```
+
+### Actual Runtime Evidence
+
+```text
+Runtime evidence root
+= /tmp/ecommerce-ai-os-WI2-P3-runtime.aSqVYc/executions
+
+execution_id
+= b81bcde3-d32b-4245-9e93-236b1581336d
+
+TerminalReturn type
+= TerminalReturn
+
+Execution outcome
+= FAILED
+
+Business Result
+= None
+
+Record Ref
+= execution://b81bcde3-d32b-4245-9e93-236b1581336d/execution_record.json
+
+Record Ref resolves
+= YES
+
+required references resolve
+= YES
+
+staging bundle after publication
+= absent
+
+success-only C6 keys
+= absent
+
+Provider facts
+= absent
+```
+
+The `/tmp` path is inspectable review evidence only and is not a repository artifact or a durability guarantee.
+
+### Architecture Mapping and Review Result
+
+```text
+A03 — established failure returns the existing TerminalReturn family
+A09 — private ExecutionAbort carries bounded facts and does not escape Runtime
+D01 — minimum path-sensitive failure Execution Record finalized and published
+D02 — failure Record Ref exists only after publication and resolves
+
+Architecture Deviation = NONE
+Architecture Assumption Conflict = NONE
+
+P4 closure failure = NOT IMPLEMENTED
+P4 = NOT AUTHORIZED
+```
+
 ---
 
 # 20. P4 — Business Completion + Closure Failure
@@ -2924,7 +3132,7 @@ Materialization
 
 ```text
 WI-02
-= P2 Complete / Implemented / Tested / Human Reviewed / Pass
+= P3 Implemented / Tested / Ready for Human Review
 
 P0
 = COMPLETE / HUMAN REVIEWED / PASS
@@ -2942,10 +3150,10 @@ Architecture Assumption Conflict
 = NONE
 
 Python
-= P2 ACTUAL / TESTED / PASS
+= P3 ACTUAL / UNCOMMITTED
 
 Tests
-= P2 ACTUAL / PASS
+= P3 ACTUAL / UNCOMMITTED
 
 P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -3018,7 +3226,7 @@ Blocking Contradiction
 
 ```text
 Current Next
-= P3 — NEXT / NOT AUTHORIZED
+= P3 — HUMAN REVIEW
 ```
 
 但必须保持：
@@ -3031,7 +3239,13 @@ P2 Human PASS
 = PASS
 
 P3
-= NEXT / NOT AUTHORIZED
+= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+
+P3 Human PASS
+= NOT YET
+
+P4
+= NOT AUTHORIZED
 ```
 
 P1 已实现范围：
@@ -3094,7 +3308,7 @@ P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Current Next
-= P3 — NEXT / NOT AUTHORIZED
+= P3 — HUMAN REVIEW
 
 P1 Implementation
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -3115,13 +3329,19 @@ P2 Final Verdict
 = PASS
 
 P3
-= NEXT / NOT AUTHORIZED
+= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+
+P3 Human PASS
+= NOT YET
+
+P4
+= NOT AUTHORIZED
 
 Python Changes
-= P2 ACTUAL / TESTED / PASS
+= P3 ACTUAL / UNCOMMITTED
 
 Test Changes
-= P2 ACTUAL / PASS
+= P3 ACTUAL / UNCOMMITTED
 
 Architecture Reopen
 = NO
