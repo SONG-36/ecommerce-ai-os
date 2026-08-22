@@ -9,9 +9,9 @@
 | Business Capability | `NO` |
 | Runtime Architecture Change | `NO` |
 | Design Direction | `ACCEPTED` |
-| Current Status | `REVIEWED / IMPLEMENTATION-READY` |
-| Implementation | `AUTHORIZED` |
-| Current Next Implementation Step | `lifecycle_demo success scenario only` |
+| Current Status | `COMPLETE / HUMAN RUNTIME REVIEWED / PASS` |
+| Implementation | `COMPLETE` |
+| Current Next Implementation Step | `WI-03 — Search Semantics / NEXT / NOT STARTED / NOT AUTHORIZED` |
 | Related Milestone | `WI-02 — Execution Lifecycle / COMPLETE / PASS` |
 | Current Product Milestone | `WI-03 — Search Semantics / NEXT / NOT STARTED / NOT AUTHORIZED` |
 
@@ -680,7 +680,16 @@ Canonical Plan Wording
 = REVIEWED / IMPLEMENTATION-READY
 
 Implementation
-= AUTHORIZED
+= COMPLETE
+
+Human Runtime Review
+= PASS
+
+Four Individual Scenarios
+= PASS
+
+all
+= PASS
 ```
 
 Human Review result:
@@ -696,11 +705,14 @@ Architecture Assumption Conflict     = NONE
 Explicit Implementation Authorization= GRANTED
 
 Current Next Implementation Step
-= lifecycle_demo success scenario only
+= WI-03 — Search Semantics / NEXT / NOT STARTED / NOT AUTHORIZED
+
+Current Product Milestone
+= WI-03 — Search Semantics / NEXT / NOT STARTED / NOT AUTHORIZED
 ```
 
-After implementation, return the uncommitted Demo and evidence for Human Review.
-Do not commit or push without separate authorization.
+Implementation and Human Runtime Review are complete. This plan and tool do not
+authorize WI-03 implementation or a push.
 
 ## 18. Final boundary
 
