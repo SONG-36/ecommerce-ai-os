@@ -25,18 +25,20 @@ Step 6 最终审查后决定怎样表示？
 | Walking Implementation | `AUTHORIZED` |
 | Current Round | `WI-2` |
 | WI-1 | `COMPLETE / PASS` |
-| Current Internal Checkpoint | `WI-2 P4 - COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| Current Internal Checkpoint | `WI-2 - COMPLETE / PASS` |
 | P5 | `COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P1 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P2 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P3 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P4 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| WI-2 P5 | `COMPLETE / VERIFIED / HUMAN REVIEWED / PASS` |
+| WI-2 | `COMPLETE / PASS` |
 | Core Concepts | `9 TESTED` / `0 IMPLEMENTED` / `7 PLANNED` / `12 RUNTIME VERIFIED` |
-| Actual Code Evidence | `ESTABLISHED THROUGH WI-2 P4` |
-| Test Evidence | `ESTABLISHED THROUGH WI-2 P4` |
-| Runtime Evidence | `WI-1 SUCCESS + WI-2 P1 ADMISSION / ESTABLISHMENT + P2 PRIVATE UNWIND + P3 CLEAN FAILURE CLOSURE + P4 CLOSURE FAILURE` |
+| Actual Code Evidence | `VERIFIED THROUGH WI-2 P5 / NO NEW P5 PRODUCTION BEHAVIOR` |
+| Test Evidence | `VERIFIED THROUGH WI-2 P5` |
+| Runtime Evidence | `WI-1 SUCCESS + WI-2 FOUR-PATH MATRIX + SEQUENTIAL ISOLATION + P5 FAKE CLI` |
 | Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `WI-2 P5 - NEXT / NOT AUTHORIZED` |
+| Current Next | `WI-03 - SEARCH SEMANTICS / NEXT / NOT STARTED` |
 
 P1～P5 已完成。P5 的 AST import guard、sequential multi-Execution isolation、bundle inspection、
 Delete Test、真实 Fake CLI rerun 与 consistency gate 均通过，因此 WI-1 final verdict 为 `PASS`。
@@ -49,7 +51,9 @@ TaskRuntime-owner catch boundary 的 actual code/test evidence，并已 Human Re
 已建立 bounded failure facts、path-sensitive failure C6、published failure Record Ref 与 failed
 `TerminalReturn` 的 actual code/test/runtime evidence，并已 Human Review `PASS`。WI-2 P4 已建立
 Business Completion 后 closure failure、Business Result preservation 与 no-Record-Ref 的 actual evidence，
-并已 Human Review `PASS`；P5 为 next checkpoint，但尚未授权。
+并已 Human Review `PASS`。WI-2 P5 在不新增 production behavior 或 test 的前提下重新验证四条 lifecycle、
+sequential isolation、import DAG 与 Fake CLI success，并已 Human Review `PASS`。WI-02 Final Verdict 为 `COMPLETE / PASS`；
+当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`。
 
 ## 2. 本文职责与非职责
 
@@ -204,10 +208,11 @@ Traceability status 保持简单，并按证据成熟度递进：
 
 ## 8. Live Implementation Evidence Map
 
-以下 live map 按 WI-1 P1～P5 与 WI-2 P1 已确认的实际证据更新。WI-1 P4 把由实际 Fake CLI run、published bundle 与
+以下 live map 按 WI-1 P1～P5 与 WI-2 P1～P5 已确认的实际证据更新。WI-1 P4 把由实际 Fake CLI run、published bundle 与
 对应 tests 直接证明的八行升级为 `RUNTIME VERIFIED`；P5 再基于 final Fake CLI 与 sequential
 multi-Execution evidence 升级 B01、B03。WI-2 P1 又以 actual rejection / establishment runtime evidence
-升级 A02，当前共十一行。未由当前 checkpoints 直接建立的行继续保持
+升级 A02，WI-2 P4 以 Business Completion ordering 的直接 evidence 升级 A10，当前共十二行。
+WI-2 P5 重新验证现有 maturity，不机械升级任何行。未由当前 checkpoints 直接建立的行继续保持
 `PLANNED` 或既有 `TESTED`，不因整条路径曾被执行而机械升级全部 28 行。
 
 | ID | Actual Code | Test Evidence | Runtime Evidence | Current Status | Architecture Deviation |
@@ -240,6 +245,24 @@ multi-Execution evidence 升级 B01、B03。WI-2 P1 又以 actual rejection / es
 | D02 | `src/ecommerce_ai_os/runtime/execution.py → TerminalReturn.record_ref`（optional only when clean closure fails）<br>`src/ecommerce_ai_os/runtime/execution_record.py → ExecutionRecordRef`<br>`src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle.publish`<br>`src/ecommerce_ai_os/runtime/retention.py → LocalJsonRetention.resolve_record_ref` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_record_ref_is_available_only_after_successful_publish → PASS / WI-1 P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / WI-2 P4 regression`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record → PASS / WI-2 P4 regression`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_business_completion_survives_controlled_closure_failure → PASS / WI-2 P4` | `rounds/WI_02_EXECUTION_LIFECYCLE.md → P4 Actual Runtime / Test Evidence`；controlled publication failure returned `record_ref=None`; no final bundle existed and even a hypothetical Record Ref did not resolve | `RUNTIME VERIFIED` | `NONE` |
 | D03 | `src/ecommerce_ai_os/runtime/retention.py → LocalJsonRetention`<br>`src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle` | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_terminal_c6_record_resolves_every_required_reference → PASS / P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / P4` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P4 Actual Runtime Evidence`；one final local JSON bundle contained input, Search result, sample boundary, evidence, Research Result, and C6 | `RUNTIME VERIFIED` | `NONE` |
 | D04 | `src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle.write_json`<br>`src/ecommerce_ai_os/runtime/retention.py → StagingExecutionBundle.publish`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（bounded closure-failure recognition） | `tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_missing_required_reference_rejects_publish → PASS / WI-1 P4`<br>`tests/unit/runtime/test_retention.py → LocalJsonRetentionTests.test_record_ref_is_available_only_after_successful_publish → PASS / WI-1 P4`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / WI-2 P4 regression`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_business_completion_survives_controlled_closure_failure → PASS / WI-2 P4` | `rounds/WI_02_EXECUTION_LIFECYCLE.md → P4 Actual Runtime / Test Evidence`；publish was attempted exactly once, did not complete, final bundle stayed absent, and staging remained present as an observed fact without a new cleanup policy | `RUNTIME VERIFIED` | `NONE` |
+
+### 8.1 WI-2 P5 Verification Overlay
+
+P5 adds no production behavior and no verification-only test. It re-executed the existing evidence as one coherent lifecycle matrix:
+
+| ID | P5 actual verification | Final status |
+|---|---|---|
+| A03 | four response/result/reference combinations remained distinct inside `PreExecutionRejection | TerminalReturn` | `RUNTIME VERIFIED` |
+| A04 | success, established failure, and closure-failure paths remained owned and terminalized by `TaskRuntime` | `RUNTIME VERIFIED` |
+| A05 | rejection created no Execution; all other paths retained established execution identity | `RUNTIME VERIFIED` |
+| A09 | focused private-abort unit/integration evidence passed; no independent maturity upgrade was claimed | `TESTED` |
+| A10 | P4 `business_completion → closure_failure` ordering test passed again | `RUNTIME VERIFIED` |
+| D01 | success and failure C6 records remained path-sensitive; failure fabricated no success-only facts | `RUNTIME VERIFIED` |
+| D02 | success/failure refs resolved; closure-failure ref remained absent and hypothetical ref unresolved | `RUNTIME VERIFIED` |
+| D03 | P5 Fake CLI published one final local bundle with five resolvable required references | `RUNTIME VERIFIED` |
+| D04 | publish-before-reference, success staging removal, and no-final-bundle closure failure all passed | `RUNTIME VERIFIED` |
+
+The P5 import guard, sequential isolation test, full unit/integration regression, and `/tmp` Fake CLI evidence are recorded in `rounds/WI_02_EXECUTION_LIFECYCLE.md → P5 Actual Evidence`. Status counts remain unchanged.
 
 P3 Human Review identified one blocking implementation defect: Runtime did not prove that the actual
 bound `ResearchSkill.declaration` matched `ExecutionContext.skill_declaration` before capability
@@ -468,7 +491,7 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至 `WI-1` P5 final closure、`WI-2` P1、P2、P3 与 P4 actual evidence，coverage 为：
+截至 `WI-1` P5 final closure 与 `WI-2` P1～P5 actual evidence，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
@@ -479,15 +502,15 @@ Consequence
 | PLANNED | `B05`-`B09`, `C03`, `C04`（`7` 项） |
 | RUNTIME VERIFIED | `A01`, `A02`, `A03`, `A04`, `A05`, `A10`, `B01`, `B03`, `D01`, `D02`, `D03`, `D04`（`12` 项） |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `ESTABLISHED THROUGH WI-2 P4` |
-| Test Evidence | `ESTABLISHED THROUGH WI-2 P4` |
-| Runtime Evidence | `WI-1 SUCCESS + WI-2 P1 ADMISSION / ESTABLISHMENT + P2 PRIVATE UNWIND + P3 CLEAN FAILURE CLOSURE + P4 CLOSURE FAILURE` |
+| Actual Code | `VERIFIED THROUGH WI-2 P5 / NO NEW P5 PRODUCTION BEHAVIOR` |
+| Test Evidence | `VERIFIED THROUGH WI-2 P5` |
+| Runtime Evidence | `WI-1 SUCCESS + WI-2 FOUR-PATH MATRIX + SEQUENTIAL ISOLATION + P5 FAKE CLI` |
 | Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `WI-1 MINIMAL SHAPE + WI-2 P1/P2/P3/P4 BOUNDED SEMANTICS VERIFIED / P5 REMAINS PLANNED` |
+| Architecture conformity | `WI-1 MINIMAL SHAPE + WI-2 P1-P5 VERIFIED / WI-02 COMPLETE / PASS` |
 
 WI-2 P4 的 actual evidence 补强 A03、A10、D02 与 D04；A10 因直接观察到
 `business_completion → closure_failure` 与 Business Result preservation 而升级为 `RUNTIME VERIFIED`。
-其余行不因整条路径再次执行而机械升级。尤其 A09 的 private control mechanism 仍保持 `TESTED`，B03 的 deterministic Fake identity
+其余行不因 P5 重新执行整条路径而机械升级。尤其 A09 的 private control mechanism 仍保持 `TESTED`，B03 的 deterministic Fake identity
 不是 final SearchResult identity proof，B04/B05/B06 与完整 C3 semantics 仍由 WI-3 验证；Research
 与 C6 的 full semantics 仍分别保留给 WI-6 / WI-7。
 
@@ -499,12 +522,16 @@ P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 P3 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
-P5 NEXT / NOT AUTHORIZED
+P5 COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
+P5 FINAL VERDICT PASS
+WI-02 COMPLETE / PASS
+CURRENT NEXT WI-03 SEARCH SEMANTICS / NEXT / NOT STARTED
 ```
 
 WI-1 P0～P5 已完成，WI-1 final verdict 为 `PASS`。WI-2 P1 admission、rejection response 与
 Execution establishment 的 bounded actual evidence 已通过 Human Review。Focused audit 确认 actual
 ResearchSkill 在 composition time 已静态绑定，后续 declaration equality check 只是 defensive invariant；
-classification 为 `NO ISSUE`。WI-2 P3 已通过 Human Review。WI-2 P4 已建立 Business Completion
-先于 closure failure、Business Result survives、no valid Record Ref、single publish attempt 与 observed
-staging-state evidence，并已通过 Human Review。P5 为 next checkpoint，但尚未授权。
+classification 为 `NO ISSUE`。WI-2 P3 与 P4 已通过 Human Review。WI-2 P5 已重新验证
+four-path lifecycle matrix、path-sensitive C6 / referenceability、sequential isolation、import DAG 与 Fake CLI success，
+并已 Human Review `PASS`。无 production behavior 或 verification-only test 新增；WI-02 Final Verdict 为
+`COMPLETE / PASS`，当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`。

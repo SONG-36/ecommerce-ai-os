@@ -37,7 +37,7 @@ Walking Implementation
 **Document Maturity**
 
 ```text
-HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS / P3 PASS / P4 PASS
+HUMAN REVIEWED ROUND PLAN / P0-P5 PASS / WI-02 COMPLETE / PASS
 ```
 
 **Repository Materialization**
@@ -49,31 +49,31 @@ PERFORMED
 **Round Status**
 
 ```text
-P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+WI-02 COMPLETE / PASS
 ```
 
 **Current Internal Checkpoint**
 
 ```text
-P4 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P5 — COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
 ```
 
 **Implementation**
 
 ```text
-P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+P5 IMPLEMENTATION BEHAVIOR ADDED = NONE
 ```
 
 **Python Changes**
 
 ```text
-P4 ACTUAL / COMMITTED
+P5 PRODUCTION CHANGES = NONE
 ```
 
 **Test Changes**
 
 ```text
-P4 ACTUAL / COMMITTED
+P5 VERIFICATION-ONLY TESTS ADDED = NONE
 ```
 
 **Architecture Expansion**
@@ -2623,6 +2623,252 @@ Human Learning Review
 WI-02 Round Review
 ```
 
+## 21.1 P5 Actual Evidence
+
+### Status
+
+```text
+P5
+= COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
+
+P5 Human PASS
+= PASS
+
+P5 Runtime Evidence
+= ESTABLISHED
+
+P5 Final Verdict
+= PASS
+
+G1-G16
+= ALL PASS
+
+WI-02
+= COMPLETE / PASS
+
+WI-02 Final Verdict
+= COMPLETE / PASS
+
+Current Next
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+P5 implementation behavior added
+= NONE
+
+Verification-only tests added
+= NONE
+```
+
+### Four-path Lifecycle Matrix
+
+| Path | Execution | Business Result | Outcome | C6 / Closure | Record Ref |
+|---|---|---|---|---|---|
+| A — Normal Success | `YES` | `YES` | `SUCCEEDED` | success C6 finalized and published | `YES / resolvable` |
+| B — PreExecutionRejection | `NO` | `NO` | `N/A` | no C6 | `NO` |
+| C — Established Failure | `YES` | `NO` | `FAILED` | path-sensitive failure C6 published | `YES / resolvable` |
+| D — Closure Failure | `YES` | `YES`; Business Completion already occurred | `FAILED` | clean closure failed; no final publication | `NO` |
+
+The four existing integration tests directly preserve these distinct field combinations. No path creates a third C1 response family.
+
+### Core Distinction and Ownership Review
+
+```text
+BusinessWorkRequest != Execution
+PreExecutionRejection != Execution Failure
+Execution Failure != ExecutionAbort
+ExecutionAbort = private C2b control/unwind mechanism
+Business Completion precedes Execution Completion
+Business Result != Execution Outcome
+failed Execution != closure failure
+Runtime State != Stable Execution Facts != Finalized Execution Record
+successful publication precedes valid Record Ref exposure
+C6 finalization failure != Research Business Failure
+TaskExecutionResponse = PreExecutionRejection | TerminalReturn
+third public response family = absent
+
+TaskRuntime = Execution lifecycle / coordination owner
+ResearchSkill = Business Method owner
+Runtime = Search invocation controller
+Composition = concrete Skill / Search / Retention wiring owner
+_ExecutionAbort = runtime-private
+Retention = physical bundle placement / publication, not a second Runtime
+C6 = stable terminal facts and references, not logs / trace / Evidence dump
+```
+
+Actual code preserves the boundary by having `ResearchSkill.run()` return `ResearchCompletion`, while `TaskRuntime.execute()` owns establishment, private-abort catch, stable-fact accumulation, finalization, publication, and the C1 response.
+
+### Path-sensitive C6 and Referenceability Review
+
+```text
+Success C6
+= actual input, SearchResult, ActualSampleBoundary, Evidence, ResearchResult refs
+= final bundle present
+= every required ref resolves
+= Record Ref resolves
+
+Failure C6
+= actual input + actual Search invocation + bounded failure facts
+= terminal_outcome = FAILED
+= no fabricated SearchResult ref
+= no ActualSampleBoundary ref
+= no Evidence refs
+= no ResearchResult ref
+= no Provider fact
+= no raw Provider payload
+= final bundle present
+= Record Ref resolves
+
+Closure failure
+= Business Result preserved
+= Record Ref absent
+= hypothetical Record Ref does not resolve
+= final published bundle absent
+```
+
+Declared dependency remains distinct from actual invocation, and configured possibility remains distinct from actual execution fact.
+
+### Execution-isolation Regression
+
+`FakeFirstSliceIntegrationTests.test_sequential_executions_are_isolated_with_deterministic_fake_id` passed and verified:
+
+```text
+distinct execution IDs = YES
+distinct final bundles = YES
+cross-execution reference collision = NO
+request/state leakage = NO
+sequential-only scope preserved = YES
+```
+
+### Architecture Import Guard
+
+```text
+tests.unit.architecture.test_import_directions
+= 1 test / PASS
+
+research -> runtime = absent
+research -> providers = absent
+runtime -> concrete ResearchSkill = absent
+runtime -> concrete Provider = absent
+core -> application/composition forbidden directions = absent
+```
+
+### Delete Test / What-if Review
+
+```text
+A. PreExecutionRejection creates execution_id / C6
+=> breaks the establishment commit boundary and falsely turns rejected work into an Execution.
+
+B. ResearchSkill catches or owns _ExecutionAbort
+=> moves C2b lifecycle/failure-control ownership into the C2a Business Method and leaks a private mechanism.
+
+C. Failure C6 fabricates ResearchResult / Evidence
+=> violates path-sensitive stable facts and makes configured/declared possibility look like actual execution.
+
+D. Closure failure returns a precomputed Record Ref
+=> violates publication-before-reference and may expose an unresolvable or staging-only reference.
+
+E. Closure failure retries automatically
+=> silently introduces retry, idempotency, backoff, recovery, and duplicate-terminalization architecture.
+```
+
+### Tests Executed
+
+```text
+Focused four-path lifecycle + sequential isolation
+= 5 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+= 21 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+= 5 tests / PASS
+
+PYTHONPATH=src python -m unittest \
+  tests.unit.architecture.test_import_directions -v
+= 1 test / PASS
+
+python -m compileall -q src tests
+= PASS
+
+git diff --check
+= PASS
+```
+
+### Fake CLI Runtime Evidence
+
+```text
+Runtime root
+= /tmp/ecommerce-ai-os-WI2-P5-runtime.YCJzVn/executions
+
+Execution ID
+= 5b6161ad-0f52-47d4-9c8d-fd5f4e471a2f
+
+Execution Outcome
+= SUCCEEDED
+
+Business Result
+= present; 1 synthetic Evidence item; sample size 2
+
+Record Ref
+= execution://5b6161ad-0f52-47d4-9c8d-fd5f4e471a2f/execution_record.json
+
+Record Ref resolves
+= YES
+
+required references
+= 5 / all resolve
+
+final bundle
+= present
+
+success staging
+= absent
+```
+
+The runtime root is outside the repository and is evidence only, not a retention-duration or cleanup-policy decision.
+
+### Scope Audit
+
+```text
+real Provider / Scrape Creators / TT-17 = NO
+full Search semantics / SearchFailure taxonomy = NO
+full Research Method / Finding / Hypothesis = NO
+full WI-07 C6 semantics = NO
+Retry Engine / automatic retry = NO
+Checkpoint / Crash Recovery / Durable Execution = NO
+Async / Queue / Scheduler / parallel invocation = NO
+Database / Repository Layer / Event Bus = NO
+RecorderService / PersistenceService / ReferenceResolverService = NO
+Generic Task Framework / Agent / MCP Runtime = NO
+new Contract / new Service = NO
+CLOSURE_FAILED enum = NO
+third public C1 response family = NO
+```
+
+### Final Acceptance Gates
+
+```text
+G1  Four lifecycle paths distinguishable = PASS
+G2  Rejection before Execution establishment = PASS
+G3  Established failure cannot become rejection = PASS
+G4  ExecutionAbort remains private = PASS
+G5  Runtime owns lifecycle = PASS
+G6  Business Completion ordering preserved = PASS
+G7  Failure C6 is path-sensitive = PASS
+G8  Failure Record Ref resolves = PASS
+G9  Closure failure preserves Business Result = PASS
+G10 Closure failure exposes no Record Ref = PASS
+G11 At-most-once terminal semantics preserved = PASS
+G12 Sequential Execution isolation preserved = PASS
+G13 Architecture import guard passes = PASS
+G14 No deferred architecture silently introduced = PASS
+G15 Full regression passes = PASS
+G16 No unresolved Architecture Assumption Conflict = PASS
+
+Architecture Deviation = NONE
+Architecture Assumption Conflict = NONE
+```
+
 ---
 
 # 22. Traceability Coverage
@@ -3447,7 +3693,7 @@ Blocking Contradiction
 
 ```text
 Current Next
-= P5 — NEXT / NOT AUTHORIZED
+= WI-03 — Search Semantics / NEXT / NOT STARTED
 ```
 
 但必须保持：
@@ -3472,7 +3718,25 @@ P4 Human PASS
 = PASS
 
 P5
-= NEXT / NOT AUTHORIZED
+= COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
+
+P5 Human PASS
+= PASS
+
+P5 Runtime Evidence
+= ESTABLISHED
+
+P5 Final Verdict
+= PASS
+
+G1-G16
+= ALL PASS
+
+WI-02
+= COMPLETE / PASS
+
+WI-02 Final Verdict
+= COMPLETE / PASS
 ```
 
 P1 已实现范围：
@@ -3535,7 +3799,7 @@ P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Current Next
-= P5 — NEXT / NOT AUTHORIZED
+= WI-03 — Search Semantics / NEXT / NOT STARTED
 
 P1 Implementation
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -3577,13 +3841,31 @@ P4 Final Verdict
 = PASS
 
 P5
-= NEXT / NOT AUTHORIZED
+= COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
+
+P5 Human PASS
+= PASS
+
+P5 Runtime Evidence
+= ESTABLISHED
+
+P5 Final Verdict
+= PASS
+
+G1-G16
+= ALL PASS
+
+WI-02
+= COMPLETE / PASS
+
+WI-02 Final Verdict
+= COMPLETE / PASS
 
 Python Changes
-= P4 ACTUAL / COMMITTED
+= NONE / P5 VERIFICATION ONLY
 
 Test Changes
-= P4 ACTUAL / COMMITTED
+= NONE / EXISTING TESTS RE-EXECUTED
 
 Architecture Reopen
 = NO
