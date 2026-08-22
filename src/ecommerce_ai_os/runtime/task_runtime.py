@@ -159,11 +159,19 @@ class TaskRuntime:
             research_result_ref=research_result_ref,
         )
 
-        finalized_record = stable_facts.finalize_success()
-        record_ref = bundle.publish(
-            serialize_finalized_execution_record(finalized_record),
-            finalized_record.required_references,
-        )
+        try:
+            finalized_record = stable_facts.finalize_success()
+            record_ref = bundle.publish(
+                serialize_finalized_execution_record(finalized_record),
+                finalized_record.required_references,
+            )
+        except (OSError, RuntimeError):
+            return TerminalReturn(
+                execution_id=execution_id,
+                execution_outcome="FAILED",
+                business_result=research_result,
+                record_ref=None,
+            )
         return TerminalReturn(
             execution_id=execution_id,
             execution_outcome=finalized_record.terminal_outcome,

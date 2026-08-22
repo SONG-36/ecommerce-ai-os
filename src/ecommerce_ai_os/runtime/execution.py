@@ -41,12 +41,12 @@ class ExecutionContext:
 
 @dataclass(frozen=True, slots=True)
 class TerminalReturn:
-    """C1 return after an established Execution reaches terminal closure."""
+    """C1 terminal return for an already-established Execution."""
 
     execution_id: str
     execution_outcome: str
     business_result: ResearchResult | None
-    record_ref: ExecutionRecordRef
+    record_ref: ExecutionRecordRef | None
 
 
 TaskExecutionResponse: TypeAlias = PreExecutionRejection | TerminalReturn

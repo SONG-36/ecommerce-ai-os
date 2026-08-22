@@ -8,12 +8,14 @@ from ecommerce_ai_os.composition import build_fake_first_slice_runtime
 from ecommerce_ai_os.research.car_vacuum_tiktok import (
     CarVacuumTikTokResearchSkill,
 )
+from ecommerce_ai_os.research.models import ResearchCompletion
 from ecommerce_ai_os.runtime.execution import (
     BusinessWorkRequest,
     PreExecutionRejection,
     TerminalReturn,
 )
-from ecommerce_ai_os.runtime.retention import LocalJsonRetention
+from ecommerce_ai_os.runtime.execution_record import ExecutionRecordRef
+from ecommerce_ai_os.runtime.retention import LocalJsonRetention, StagingExecutionBundle
 from ecommerce_ai_os.runtime.task_runtime import TaskRuntime
 from ecommerce_ai_os.search.models import (
     SearchInvocationContext,
@@ -146,6 +148,117 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                 second_return.execution_id,
                 terminal_return.execution_id,
             )
+
+    def test_business_completion_survives_controlled_closure_failure(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            execution_root = Path(temporary_directory) / "executions"
+            runtime = build_fake_first_slice_runtime(execution_root)
+            request = BusinessWorkRequest(
+                request_id="request-closure-failure-001",
+                product_context="Car Vacuum",
+                market="US",
+                platform="TikTok",
+                business_goal="Commerce Content",
+                research_question="What content patterns merit human review?",
+            )
+            observed_completions: list[ResearchCompletion] = []
+            lifecycle_events: list[str] = []
+            publication_attempts: list[tuple[dict[str, object], tuple[str, ...]]] = []
+            run_research_skill = runtime._run_research_skill
+
+            def observe_business_completion(*args: object, **kwargs: object) -> object:
+                completion = run_research_skill(*args, **kwargs)  # type: ignore[arg-type]
+                observed_completions.append(completion)
+                lifecycle_events.append("business_completion")
+                return completion
+
+            def fail_publication(
+                bundle: StagingExecutionBundle,
+                execution_record_payload: dict[str, object],
+                required_references: tuple[str, ...],
+            ) -> None:
+                self.assertIsNone(bundle.record_ref)
+                publication_attempts.append(
+                    (execution_record_payload, required_references)
+                )
+                lifecycle_events.append("closure_failure")
+                raise RuntimeError("controlled closure publication failure")
+
+            with (
+                patch.object(
+                    runtime,
+                    "_run_research_skill",
+                    side_effect=observe_business_completion,
+                ) as observed_skill_run,
+                patch.object(
+                    StagingExecutionBundle,
+                    "publish",
+                    autospec=True,
+                    side_effect=fail_publication,
+                ) as observed_publish,
+                patch.object(
+                    runtime,
+                    "_abort_execution",
+                    wraps=runtime._abort_execution,
+                ) as observed_abort,
+            ):
+                terminal_return = runtime.execute(request)
+
+            self.assertEqual(lifecycle_events, ["business_completion", "closure_failure"])
+            observed_skill_run.assert_called_once()
+            observed_publish.assert_called_once()
+            observed_abort.assert_not_called()
+            self.assertEqual(len(observed_completions), 1)
+
+            completion = observed_completions[0]
+            self.assertIsInstance(completion, ResearchCompletion)
+            self.assertIsInstance(terminal_return, TerminalReturn)
+            self.assertNotIsInstance(terminal_return, PreExecutionRejection)
+            self.assertEqual(terminal_return.execution_outcome, "FAILED")
+            self.assertIs(terminal_return.business_result, completion.research_result)
+            self.assertIsNone(terminal_return.record_ref)
+
+            self.assertEqual(len(publication_attempts), 1)
+            attempted_record, attempted_references = publication_attempts[0]
+            self.assertEqual(attempted_record["terminal_outcome"], "SUCCEEDED")
+            self.assertEqual(
+                attempted_record["research_result_ref"],
+                f"research_results/{completion.research_result.research_result_id}.json",
+            )
+            self.assertIn(
+                attempted_record["research_result_ref"],
+                attempted_references,
+            )
+
+            staging_bundle = (
+                execution_root / ".staging" / terminal_return.execution_id
+            )
+            final_bundle = execution_root / terminal_return.execution_id
+            self.assertTrue(staging_bundle.is_dir())
+            self.assertFalse(final_bundle.exists())
+            self.assertFalse((staging_bundle / "execution_record.json").exists())
+            self.assertEqual(len(list((staging_bundle / "inputs").glob("*.json"))), 1)
+            self.assertEqual(
+                len(list((staging_bundle / "search_results").glob("*.json"))),
+                1,
+            )
+            self.assertEqual(
+                len(list((staging_bundle / "sample_boundaries").glob("*.json"))),
+                1,
+            )
+            self.assertEqual(len(list((staging_bundle / "evidence").glob("*.json"))), 1)
+            self.assertEqual(
+                len(list((staging_bundle / "research_results").glob("*.json"))),
+                1,
+            )
+
+            hypothetical_ref = ExecutionRecordRef(
+                execution_id=terminal_return.execution_id
+            )
+            with self.assertRaises(FileNotFoundError):
+                LocalJsonRetention(execution_root).resolve_record_ref(hypothetical_ref)
 
     def test_incomplete_request_is_rejected_before_execution_establishment(
         self,

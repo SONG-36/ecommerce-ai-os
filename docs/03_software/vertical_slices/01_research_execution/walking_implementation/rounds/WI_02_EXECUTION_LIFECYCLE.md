@@ -37,7 +37,7 @@ Walking Implementation
 **Document Maturity**
 
 ```text
-HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS / P3 ACTUAL EVIDENCE RECORDED
+HUMAN REVIEWED ROUND PLAN / P0 PASS / P1 PASS / P2 PASS / P3 PASS / P4 PASS
 ```
 
 **Repository Materialization**
@@ -49,31 +49,31 @@ PERFORMED
 **Round Status**
 
 ```text
-P3 IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Current Internal Checkpoint**
 
 ```text
-P3 — IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+P4 — COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Implementation**
 
 ```text
-P3 IMPLEMENTED / TESTED / UNCOMMITTED
+P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 ```
 
 **Python Changes**
 
 ```text
-P3 ACTUAL / UNCOMMITTED
+P4 ACTUAL / COMMITTED
 ```
 
 **Test Changes**
 
 ```text
-P3 ACTUAL / UNCOMMITTED
+P4 ACTUAL / COMMITTED
 ```
 
 **Architecture Expansion**
@@ -2011,13 +2011,16 @@ P3 不升级为 full WI-07 C6 implementation。
 
 ```text
 P3
-= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 P3 Human PASS
-= NOT YET
+= PASS
+
+P3 Final Verdict
+= PASS
 
 P4
-= NOT AUTHORIZED
+= NEXT / NOT AUTHORIZED
 ```
 
 ### Existing P2 Failure Path Before P3
@@ -2209,8 +2212,8 @@ D02 — failure Record Ref exists only after publication and resolves
 Architecture Deviation = NONE
 Architecture Assumption Conflict = NONE
 
-P4 closure failure = NOT IMPLEMENTED
-P4 = NOT AUTHORIZED
+P4 closure failure = NOT IMPLEMENTED AT P3 CHECKPOINT
+P4 = NEXT / NOT AUTHORIZED AT P3 CHECKPOINT
 ```
 
 ---
@@ -2324,6 +2327,224 @@ restart recovery policy
 not successfully published
 → no valid Record Ref
 → no fake clean closure
+```
+
+## 20.6 P4 Actual Evidence
+
+### Status
+
+```text
+P4
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P4 Human PASS
+= PASS
+
+P4 Runtime Evidence
+= ESTABLISHED
+
+P4 Final Verdict
+= PASS
+
+P5
+= NEXT / NOT AUTHORIZED
+```
+
+### Reviewed Closure-Failure Representation Used
+
+```text
+TaskExecutionResponse
+= PreExecutionRejection | TerminalReturn
+
+TerminalReturn
+= execution_id
+= execution_outcome
+= business_result = ResearchResult | None
+= record_ref = ExecutionRecordRef | None
+
+P4 partial TerminalReturn
+= execution_outcome = FAILED
+= business_result = present
+= record_ref = absent
+```
+
+P4 does not add a third response family or a new lifecycle enum. The existing `FAILED` outcome plus the independent presence of Business Result and absence of Record Ref distinguishes closure failure from P3's failed business execution with clean closure.
+
+### Selected Failure-Injection Strategy
+
+The deterministic P4 test patches the existing `StagingExecutionBundle.publish()` method to raise one controlled `RuntimeError`. The patch is test-only and is installed after composition without adding a production flag, Protocol, service, repository, or fault-injection API.
+
+The selected seam is after Business Completion because `TaskRuntime.execute` has already:
+
+```text
+received ResearchCompletion
+→ retained ActualSampleBoundary
+→ retained Evidence
+→ retained ResearchResult
+→ recorded Research completion facts
+→ finalized the in-memory success C6 candidate
+→ entered StagingExecutionBundle.publish()
+```
+
+The failure is not injected in Search, Research Method, Provider, TT-17, or `_ExecutionAbort`.
+
+### Actual Files and Symbols
+
+```text
+src/ecommerce_ai_os/runtime/execution.py
+→ TerminalReturn.record_ref permits absence on failed closure
+
+src/ecommerce_ai_os/runtime/task_runtime.py
+→ TaskRuntime.execute bounded success-closure failure handling
+
+tests/integration/test_fake_first_slice.py
+→ FakeFirstSliceIntegrationTests.test_business_completion_survives_controlled_closure_failure
+```
+
+`LocalJsonRetention` and `StagingExecutionBundle` production behavior were reused without modification.
+
+### Exact Actual P4 Control Path
+
+```text
+valid BusinessWorkRequest
+→ Execution established
+→ ResearchSkill runs successfully
+→ SearchResult returned and retained
+→ ResearchCompletion returned
+→ Business Completion reached
+→ Business Result retained and remains available
+→ StableExecutionFacts records Research completion
+→ successful C6 candidate finalized in memory
+→ StagingExecutionBundle.publish() entered
+→ controlled test-only RuntimeError
+→ TaskRuntime recognizes clean closure did not complete
+→ partial TerminalReturn(
+     execution_outcome="FAILED",
+     business_result=<existing ResearchResult>,
+     record_ref=None
+   )
+```
+
+### Required Semantic Proof
+
+```text
+Execution established = YES
+ResearchSkill completed = YES
+ResearchCompletion exists = YES
+Business Completion reached = YES
+Business Result exists = YES
+closure attempt entered = YES
+controlled closure failure occurred = YES
+clean closure = NO
+successful publication = NO
+valid Record Ref = NO
+Business Result erased = NO
+PreExecutionRejection used = NO
+P3 ExecutionAbort path used = NO
+publication attempts = 1
+automatic retry = NO
+```
+
+The attempted in-memory C6 candidate had `terminal_outcome = SUCCEEDED` and a real `research_result_ref`, proving business completion facts existed before publication failed. No finalized C6 record was published and no Record Ref was exposed.
+
+### Observed Staging Behavior
+
+```text
+staging bundle = present
+staged input = present
+staged SearchResult = present
+staged ActualSampleBoundary = present
+staged Evidence = present
+staged ResearchResult = present
+staging execution_record.json = absent
+final bundle = absent
+```
+
+This is an observed fact only. P4 does not establish deletion, retention, quarantine, cleanup, restart, or recovery policy for failed staging material.
+
+### Tests Executed
+
+```text
+PYTHONPATH=src python -m unittest \
+  tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_business_completion_survives_controlled_closure_failure \
+  tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record \
+  tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_incomplete_request_is_rejected_before_execution_establishment \
+  tests.integration.test_fake_first_slice.FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle -v
+→ 4 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+→ 21 tests / PASS
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+→ 5 tests / PASS
+
+PYTHONPATH=src python -m unittest \
+  tests.unit.architecture.test_import_directions -v
+→ 1 test / PASS
+
+python -m compileall -q src tests
+→ PASS
+
+git diff --check
+→ PASS
+```
+
+### Actual Runtime / Test Evidence
+
+```text
+Runtime evidence root
+= /tmp/ecommerce-ai-os-WI2-P4-runtime.ziIk6j/executions
+
+execution_id
+= dea75b2e-6a07-461b-ae76-632e34d9bd56
+
+lifecycle event order
+= business_completion
+→ closure_failure
+
+response type
+= TerminalReturn
+
+Execution outcome
+= FAILED
+
+Business Result exists / preserved
+= YES / YES
+
+Record Ref
+= None
+
+publication attempts
+= 1
+
+P3 ExecutionAbort calls
+= 0
+
+staging bundle
+= present
+
+final bundle
+= absent
+
+hypothetical Record Ref resolves
+= NO
+```
+
+The `/tmp` path is inspectable review evidence only and is not a repository artifact, cleanup-policy decision, or durability guarantee.
+
+### Architecture Mapping and Review Result
+
+```text
+A03 — existing TerminalReturn carries partial closure-failure result
+A10 — ResearchCompletion / Business Completion occurred before closure failure
+D02 — failed publication exposed no Record Ref and a hypothetical ref did not resolve
+D04 — publish was attempted once, did not complete, final bundle stayed absent
+
+Observed Contradictions = NONE
+Architecture Deviation = NONE
+Architecture Assumption Conflict = NONE
+
+P5 = NEXT / NOT AUTHORIZED
 ```
 
 ---
@@ -3132,7 +3353,7 @@ Materialization
 
 ```text
 WI-02
-= P3 Implemented / Tested / Ready for Human Review
+= P4 Complete / Implemented / Tested / Human Reviewed / Pass
 
 P0
 = COMPLETE / HUMAN REVIEWED / PASS
@@ -3150,10 +3371,10 @@ Architecture Assumption Conflict
 = NONE
 
 Python
-= P3 ACTUAL / UNCOMMITTED
+= P4 ACTUAL / COMMITTED
 
 Tests
-= P3 ACTUAL / UNCOMMITTED
+= P4 ACTUAL / COMMITTED
 
 P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -3226,7 +3447,7 @@ Blocking Contradiction
 
 ```text
 Current Next
-= P3 — HUMAN REVIEW
+= P5 — NEXT / NOT AUTHORIZED
 ```
 
 但必须保持：
@@ -3239,13 +3460,19 @@ P2 Human PASS
 = PASS
 
 P3
-= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 P3 Human PASS
-= NOT YET
+= PASS
 
 P4
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P4 Human PASS
+= PASS
+
+P5
+= NEXT / NOT AUTHORIZED
 ```
 
 P1 已实现范围：
@@ -3308,7 +3535,7 @@ P1
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Current Next
-= P3 — HUMAN REVIEW
+= P5 — NEXT / NOT AUTHORIZED
 
 P1 Implementation
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -3329,19 +3556,34 @@ P2 Final Verdict
 = PASS
 
 P3
-= IMPLEMENTED / TESTED / READY FOR HUMAN REVIEW
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 P3 Human PASS
-= NOT YET
+= PASS
+
+P3 Final Verdict
+= PASS
 
 P4
-= NOT AUTHORIZED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P4 Human PASS
+= PASS
+
+P4 Runtime Evidence
+= ESTABLISHED
+
+P4 Final Verdict
+= PASS
+
+P5
+= NEXT / NOT AUTHORIZED
 
 Python Changes
-= P3 ACTUAL / UNCOMMITTED
+= P4 ACTUAL / COMMITTED
 
 Test Changes
-= P3 ACTUAL / UNCOMMITTED
+= P4 ACTUAL / COMMITTED
 
 Architecture Reopen
 = NO
