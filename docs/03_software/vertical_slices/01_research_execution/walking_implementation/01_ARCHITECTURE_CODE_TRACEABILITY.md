@@ -23,9 +23,9 @@ Step 6 最终审查后决定怎样表示？
 | 项目 | 当前值 |
 |---|---|
 | Walking Implementation | `AUTHORIZED` |
-| Current Round | `WI-2` |
+| Last Completed Round | `WI-02 - EXECUTION LIFECYCLE / COMPLETE / PASS` |
 | WI-1 | `COMPLETE / PASS` |
-| Current Internal Checkpoint | `WI-2 - COMPLETE / PASS` |
+| Last Completed Internal Checkpoint | `WI-2 P5 - COMPLETE / VERIFIED / HUMAN REVIEWED / PASS` |
 | P5 | `COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P1 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P2 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
@@ -39,6 +39,8 @@ Step 6 最终审查后决定怎样表示？
 | Runtime Evidence | `WI-1 SUCCESS + WI-2 FOUR-PATH MATRIX + SEQUENTIAL ISOLATION + P5 FAKE CLI` |
 | Known Architecture Deviations | `NONE OBSERVED` |
 | Current Next | `WI-03 - SEARCH SEMANTICS / NEXT / NOT STARTED` |
+| WI-03 Planning | `NOT STARTED / NOT AUTHORIZED` |
+| WI-03 Implementation | `NOT STARTED / NOT AUTHORIZED` |
 
 P1～P5 已完成。P5 的 AST import guard、sequential multi-Execution isolation、bundle inspection、
 Delete Test、真实 Fake CLI rerun 与 consistency gate 均通过，因此 WI-1 final verdict 为 `PASS`。
@@ -53,7 +55,8 @@ TaskRuntime-owner catch boundary 的 actual code/test evidence，并已 Human Re
 Business Completion 后 closure failure、Business Result preservation 与 no-Record-Ref 的 actual evidence，
 并已 Human Review `PASS`。WI-2 P5 在不新增 production behavior 或 test 的前提下重新验证四条 lifecycle、
 sequential isolation、import DAG 与 Fake CLI success，并已 Human Review `PASS`。WI-02 Final Verdict 为 `COMPLETE / PASS`；
-当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`。
+当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`；WI-03 planning 与
+implementation 均为 `NOT STARTED / NOT AUTHORIZED`。
 
 ## 2. 本文职责与非职责
 
@@ -517,7 +520,7 @@ WI-2 P4 的 actual evidence 补强 A03、A10、D02 与 D04；A10 因直接观察
 ## 21. Current Next
 
 ```text
-WI-2 - Execution Lifecycle
+LAST COMPLETED ROUND WI-02 - EXECUTION LIFECYCLE / COMPLETE / PASS
 P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 P3 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -526,6 +529,8 @@ P5 COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
 P5 FINAL VERDICT PASS
 WI-02 COMPLETE / PASS
 CURRENT NEXT WI-03 SEARCH SEMANTICS / NEXT / NOT STARTED
+WI-03 PLANNING NOT STARTED / NOT AUTHORIZED
+WI-03 IMPLEMENTATION NOT STARTED / NOT AUTHORIZED
 ```
 
 WI-1 P0～P5 已完成，WI-1 final verdict 为 `PASS`。WI-2 P1 admission、rejection response 与

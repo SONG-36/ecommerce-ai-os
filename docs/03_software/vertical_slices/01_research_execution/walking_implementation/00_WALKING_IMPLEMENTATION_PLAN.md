@@ -8,9 +8,9 @@
 - **Authorized Scope**: US / Car Vacuum / TikTok Content Research First Slice ONLY
 - **Walking Implementation**: AUTHORIZED
 - **Architecture Expansion**: NOT AUTHORIZED
-- **Current Round**: WI-02 — Execution Lifecycle
-- **Current Round Status**: COMPLETE / PASS
+- **Last Completed Round**: WI-02 — Execution Lifecycle / COMPLETE / PASS
 - **Current Next**: WI-03 — Search Semantics / NEXT / NOT STARTED
+- **WI-03 Planning**: NOT STARTED / NOT AUTHORIZED
 - **WI-03 Implementation**: NOT STARTED / NOT AUTHORIZED
 
 ---
@@ -1716,11 +1716,8 @@ Walking Implementation
 Architecture Expansion
 = NOT AUTHORIZED
 
-Current Round
-= WI-02 — Execution Lifecycle
-
-Current Round Status
-= COMPLETE / PASS
+Last Completed Round
+= WI-02 — Execution Lifecycle / COMPLETE / PASS
 
 WI-1 Internal Checkpoints
 = P0-P5 COMPLETE
@@ -1760,6 +1757,9 @@ WI-02 Final Verdict
 
 Current Next
 = WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning
+= NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation
 = NOT STARTED / NOT AUTHORIZED
@@ -1862,11 +1862,8 @@ Walking Implementation
 Architecture Expansion
 = NOT AUTHORIZED
 
-Current Round
-= WI-02 — Execution Lifecycle
-
-Current Round Status
-= COMPLETE / PASS
+Last Completed Round
+= WI-02 — Execution Lifecycle / COMPLETE / PASS
 
 WI-1 Runtime Evidence
 = ESTABLISHED
@@ -1891,6 +1888,9 @@ WI-02 Architecture Assumption Conflict
 
 Current Next
 = WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning
+= NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation
 = NOT STARTED / NOT AUTHORIZED

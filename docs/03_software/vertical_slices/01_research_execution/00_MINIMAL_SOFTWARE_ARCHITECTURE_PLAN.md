@@ -9,9 +9,14 @@
 - Minimal Software Architecture: REVIEWED / IMPLEMENTATION-READY FOR FIRST SLICE
 - Architecture Authority: No
 - Current Phase: Walking Implementation
-- Walking Implementation: AUTHORIZED
+- Walking Implementation: IN PROGRESS / AUTHORIZED
 - Authorization Scope: US / Car Vacuum / TikTok Content Research First Slice ONLY
-- Current Next: Walking Implementation — First Executable Vertical Slice
+- WI-01: COMPLETE / PASS
+- WI-02: COMPLETE / PASS
+- Current Next: WI-03 — Search Semantics / NEXT / NOT STARTED
+- WI-03 Planning: NOT STARTED / NOT AUTHORIZED
+- WI-03 Implementation: NOT STARTED / NOT AUTHORIZED
+- Current Execution Navigation: `walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md`
 - Upstream:
   - `01_MINIMAL_SOFTWARE_ARCHITECTURE_PHASE_HANDOFF.md`
   - `06_ARCHITECTURE_REVIEW.md`
@@ -627,15 +632,31 @@ Walking Implementation
 
 Walking Implementation:
 
-AUTHORIZED
+IN PROGRESS / AUTHORIZED
 
 Authorized Scope:
 
 US / Car Vacuum / TikTok Content Research First Slice ONLY
 
+WI-01:
+
+COMPLETE / PASS
+
+WI-02:
+
+COMPLETE / PASS
+
 Current Next:
 
-Walking Implementation — First Executable Vertical Slice
+WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning:
+
+NOT STARTED / NOT AUTHORIZED
+
+WI-03 Implementation:
+
+NOT STARTED / NOT AUTHORIZED
 
 Architecture Status:
 
@@ -655,7 +676,9 @@ Step 7 — PASS
 
 Next Action:
 
-Begin the First Executable Vertical Slice within the authorized scope.
+Await explicit WI-03 planning authorization. Use
+`walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md` for current Walking
+Implementation navigation.
 
 ### Walking Implementation Authorization Decision
 
@@ -845,8 +868,23 @@ Walking Implementation
 Authorized Scope
 = US / Car Vacuum / TikTok Content Research First Slice ONLY
 
+WI-01
+= COMPLETE / PASS
+
+WI-02
+= COMPLETE / PASS
+
 Current Next
-= Walking Implementation — First Executable Vertical Slice
+= WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning
+= NOT STARTED / NOT AUTHORIZED
+
+WI-03 Implementation
+= NOT STARTED / NOT AUTHORIZED
+
+Current Execution Navigation
+= walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md
 ```
 
 ---

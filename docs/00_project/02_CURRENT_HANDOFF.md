@@ -4,7 +4,7 @@
 - Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
 - Document role: Current navigation and handoff state
 - Authority status: Navigation only; this file is not an Architecture Authority
-- Last synchronized: 2026-08-22
+- Last synchronized: 2026-08-23
 
 ## 0. How To Use This Handoff
 
@@ -120,8 +120,11 @@ Authorization Scope
 Architecture Expansion
 = NOT AUTHORIZED
 
-Current Round
-= WI-02 — Execution Lifecycle
+Last Completed Round
+= WI-02 — Execution Lifecycle / COMPLETE / PASS
+
+WI-01 Status
+= COMPLETE / PASS
 
 WI-02 Status
 = COMPLETE / PASS
@@ -138,8 +141,32 @@ WI-02 Architecture Deviation
 WI-02 Architecture Assumption Conflict
 = NONE
 
+Lifecycle Demo Harness
+= COMPLETE / HUMAN RUNTIME REVIEWED / PASS
+
+Lifecycle Demo Tool
+= tools/lifecycle_demo.py
+
+Lifecycle Demo Commit
+= e3b57383c2289795e662e57bde6f8529bf1fa4ae
+
+Lifecycle Demo Role
+= Developer / Learning Tool
+
+Lifecycle Demo Architecture Authority
+= NO
+
+Lifecycle Demo Business Capability
+= NO
+
+Lifecycle Demo Runtime Architecture Change
+= NO
+
 Current Next
 = WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning
+= NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation
 = NOT STARTED / NOT AUTHORIZED
@@ -1010,14 +1037,17 @@ duplicate occurrence != automatic noise
 Current Phase
 = Walking Implementation
 
-Current Round
-= WI-02 — Execution Lifecycle
+Last Completed Round
+= WI-02 — Execution Lifecycle / COMPLETE / PASS
 
 WI-02 Status
 = COMPLETE / PASS
 
 Current Next
 = WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning
+= NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation
 = NOT STARTED / NOT AUTHORIZED
@@ -1333,25 +1363,27 @@ obligations.
 Use these real repository paths. The order is intentionally staged and keeps
 the Current Handoff as the single new-chat entry.
 
-### Tier 1 — Walking Implementation Orientation
+### Tier 1 — Mandatory Walking Implementation Orientation
 
 1. `docs/00_project/02_CURRENT_HANDOFF.md`
 2. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md`
 3. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/01_ARCHITECTURE_CODE_TRACEABILITY.md`
+4. Completed WI-01 and WI-02 Round Records as historical implementation baselines:
+   - `docs/03_software/vertical_slices/01_research_execution/walking_implementation/rounds/WI_01_FAKE_VERTICAL_SLICE.md`
+   - `docs/03_software/vertical_slices/01_research_execution/walking_implementation/rounds/WI_02_EXECUTION_LIFECYCLE.md`
 
-### Tier 2 — WI-1 Closure Baseline / WI-2 Audit Inputs
+### Tier 2 — Direct WI-03 Inputs
 
-4. `docs/03_software/vertical_slices/01_research_execution/00_MINIMAL_SOFTWARE_ARCHITECTURE_PLAN.md`
-5. `docs/03_software/vertical_slices/01_research_execution/01_SOFTWARE_RESPONSIBILITY_MAPPING.md`
-6. `docs/03_software/vertical_slices/01_research_execution/02_EXECUTION_SPINE_SOFTWARE_DESIGN.md`
-7. `docs/03_software/vertical_slices/01_research_execution/06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
-8. `docs/03_software/vertical_slices/01_research_execution/07_MINIMAL_SOFTWARE_ARCHITECTURE_REVIEW.md`
+Read these only after WI-03 planning is explicitly authorized:
+
+5. `docs/03_software/vertical_slices/01_research_execution/03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md`
+6. `docs/03_software/vertical_slices/01_research_execution/06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
 
 ### Tier 3 — Read On Demand
 
 Upstream Product Architecture, System Architecture, D1–D5, Deferred Register,
-Provider Lab facts and other Contract docs are read only when the WI-2 audit
-question genuinely requires them.
+Provider Lab facts, other Contract docs, and the Lifecycle Demo Plan/tool are
+read only when the current question genuinely requires them.
 
 The upstream package guide is:
 `docs/02_system/vertical_slices/01_research_execution/00_READ_ME_FIRST.md`.
@@ -1378,11 +1410,14 @@ AUTHORIZED
 Authorized Scope:
 US / Car Vacuum / TikTok Content Research First Slice ONLY
 
-Current Round:
-WI-02 — Execution Lifecycle
-
-Status:
+WI-01:
 COMPLETE / PASS
+
+WI-02:
+COMPLETE / PASS
+
+Last Completed Round:
+WI-02 — Execution Lifecycle / COMPLETE / PASS
 
 WI-02 P0-P5:
 COMPLETE / PASS
@@ -1396,8 +1431,23 @@ NONE
 WI-02 Architecture Assumption Conflict:
 NONE
 
+Lifecycle Demo Harness:
+COMPLETE / HUMAN RUNTIME REVIEWED / PASS
+
+Lifecycle Demo Tool:
+tools/lifecycle_demo.py
+
+Lifecycle Demo Role:
+Developer / Learning Tool
+
+Lifecycle Demo Architecture Authority:
+NO
+
 Current Next:
 WI-03 — Search Semantics / NEXT / NOT STARTED
+
+WI-03 Planning:
+NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation:
 NOT STARTED / NOT AUTHORIZED
@@ -1432,7 +1482,8 @@ WI-03 remains `NEXT / NOT STARTED`, and its implementation remains
 
 Do not redesign Steps 1–7.
 Do not add a 10th Contract.
-Do not start live TT-17 as part of WI-2 planning.
+Do not start live TT-17 merely because WI-03 is next. Live TT-17 remains
+governed by its later authorized Walking Round / Provider integration scope.
 
 Minimum Endpoint Selection:
 CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
@@ -1452,6 +1503,9 @@ NOT AUTHORIZED
 The following hashes were read from the current Ecommerce AI OS Git history:
 
 ```text
+Lifecycle Demo  e3b57383c2289795e662e57bde6f8529bf1fa4ae chore: add lifecycle demo harness
+Demo Plan       87a98817fed103b3d390b6509346a24ba42cd998 docs: approve lifecycle demo harness plan
+WI-02 sync      3491f4bd1ae4024aa569b015711eb9fe431aaab1 docs: sync project state after wi-2
 WI-02 closure  cbbfe276d37852e5b21dae182c30f0bccfb3e0d1 docs: close wi-2 execution lifecycle
 WI-02 P4       e4d35da7b3476e0463b88fd2ea280fe0191246b4 feat: establish wi-2 p4 closure failure
 WI-02 P3       9b098e208d25a46f9057f2e63b7b6ce07b190a4f feat: establish wi-2 p3 failure closure
@@ -1503,8 +1557,8 @@ Minimal Software Architecture
 Walking Implementation
     = AUTHORIZED
 
-Current Round
-    = WI-02 — Execution Lifecycle
+Last Completed Round
+    = WI-02 — Execution Lifecycle / COMPLETE / PASS
 
 WI-1
     = COMPLETE / PASS
@@ -1523,6 +1577,15 @@ WI-02 Architecture Deviation
 
 WI-02 Architecture Assumption Conflict
     = NONE
+
+Lifecycle Demo Harness
+    = COMPLETE / HUMAN RUNTIME REVIEWED / PASS
+
+Lifecycle Demo Role
+    = Developer / Learning Tool
+
+Lifecycle Demo Architecture Authority
+    = NO
 
 Detailed Contract Design Package
     = COMPLETE / CONSISTENCY REVIEWED
@@ -1544,6 +1607,9 @@ Current Phase / Current Next
 
 WI-03
     = NEXT / NOT STARTED
+
+WI-03 Planning
+    = NOT STARTED / NOT AUTHORIZED
 
 WI-03 Implementation
     = NOT STARTED / NOT AUTHORIZED
