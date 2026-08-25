@@ -197,6 +197,18 @@ class SearchResult:
             raise ValueError(
                 "returned_item_count must match the number of occurrences"
             )
+        if (
+            self.continuation is ContinuationState.AVAILABLE
+            and self.provider_exhaustion is ProviderExhaustionState.EXHAUSTED
+        ):
+            raise ValueError(
+                "continuation AVAILABLE contradicts provider exhaustion EXHAUSTED"
+            )
+        if (
+            self.stopping_reason is SearchStopReason.NO_MATCHES
+            and self.returned_item_count > 0
+        ):
+            raise ValueError("stopping reason NO_MATCHES requires an empty result")
         if not isinstance(self.limitations, tuple):
             raise TypeError("limitations must be a tuple")
         for limitation in self.limitations:

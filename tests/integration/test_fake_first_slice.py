@@ -17,9 +17,17 @@ from ecommerce_ai_os.runtime.execution import (
 from ecommerce_ai_os.runtime.execution_record import ExecutionRecordRef
 from ecommerce_ai_os.runtime.retention import LocalJsonRetention, StagingExecutionBundle
 from ecommerce_ai_os.runtime.task_runtime import TaskRuntime
+from ecommerce_ai_os.search.fake import FakeSearchCapability
 from ecommerce_ai_os.search.models import (
+    ContinuationState,
+    GlobalCompletenessState,
+    ProviderExhaustionState,
+    SearchCompletionState,
     SearchInvocationContext,
     SearchRequest,
+    SearchResult,
+    SearchResultOccurrence,
+    SearchStopReason,
 )
 
 
@@ -44,6 +52,89 @@ class ControlledFailureSearchCapability:
 
 
 class FakeFirstSliceIntegrationTests(unittest.TestCase):
+    def test_rich_fake_result_traverses_existing_execution_path(self) -> None:
+        occurrence_a = SearchResultOccurrence(
+            item_ref="item-a",
+            source_ref="source-a",
+            known_missing_fields=frozenset({"description"}),
+        )
+        occurrence_b = SearchResultOccurrence(
+            item_ref="item-b",
+            source_ref="source-b",
+        )
+        rich_result = SearchResult(
+            search_result_id="search-rich-fake",
+            returned_item_count=3,
+            occurrences=(occurrence_a, occurrence_b, occurrence_a),
+            requested_item_count=3,
+            stopping_reason=SearchStopReason.REQUEST_BOUND_SATISFIED,
+            continuation=ContinuationState.AVAILABLE,
+            completion=SearchCompletionState.COMPLETE_FOR_REQUEST,
+            provider_exhaustion=ProviderExhaustionState.NOT_EXHAUSTED,
+            global_completeness=GlobalCompletenessState.UNKNOWN,
+            limitations=(
+                "US was requested; the bounded returned set does not establish "
+                "exact US population membership or complete market coverage.",
+            ),
+        )
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            execution_root = Path(temporary_directory) / "executions"
+            fake = FakeSearchCapability(configured_result=rich_result)
+            skill = CarVacuumTikTokResearchSkill(
+                search_request=SearchRequest(
+                    query="car vacuum",
+                    market="US",
+                    platform="TikTok",
+                    requested_item_count=3,
+                )
+            )
+            runtime = TaskRuntime(
+                search_capability=fake,
+                research_skill=skill,
+                retention=LocalJsonRetention(execution_root),
+            )
+            request = BusinessWorkRequest(
+                request_id="request-rich-fake-001",
+                product_context="Car Vacuum",
+                market="US",
+                platform="TikTok",
+                business_goal="Commerce Content",
+                research_question="What content patterns merit human review?",
+            )
+            observed_results: list[SearchResult] = []
+            invoke_search = runtime._invoke_search
+
+            def observe_search_result(*args: object, **kwargs: object) -> SearchResult:
+                result = invoke_search(*args, **kwargs)  # type: ignore[arg-type]
+                observed_results.append(result)
+                return result
+
+            with patch.object(
+                runtime,
+                "_invoke_search",
+                side_effect=observe_search_result,
+            ):
+                terminal_return = runtime.execute(request)
+
+            self.assertIsInstance(terminal_return, TerminalReturn)
+            self.assertEqual(terminal_return.execution_outcome, "SUCCEEDED")
+            self.assertEqual(observed_results, [rich_result])
+            self.assertIs(observed_results[0], rich_result)
+            self.assertEqual(
+                tuple(item.item_ref for item in observed_results[0].occurrences),
+                ("item-a", "item-b", "item-a"),
+            )
+            self.assertEqual(
+                observed_results[0].occurrences[0].known_missing_fields,
+                frozenset({"description"}),
+            )
+            self.assertIsNotNone(terminal_return.business_result)
+            self.assertEqual(
+                terminal_return.business_result.actual_sample_boundary.returned_item_count,
+                3,
+            )
+
     def test_successful_fake_execution_publishes_resolvable_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             execution_root = Path(temporary_directory) / "executions"

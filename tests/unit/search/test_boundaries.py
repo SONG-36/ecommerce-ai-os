@@ -3,6 +3,7 @@ from datetime import UTC, datetime, timedelta, timezone
 from typing import get_type_hints
 import unittest
 
+from ecommerce_ai_os.search.fake import FakeSearchCapability
 from ecommerce_ai_os.search.models import (
     ContinuationState,
     GlobalCompletenessState,
@@ -54,6 +55,16 @@ def invoke_search(
     )
 
 
+def make_occurrences(count: int) -> tuple[SearchResultOccurrence, ...]:
+    return tuple(
+        SearchResultOccurrence(
+            item_ref=f"item-{index}",
+            source_ref=f"source-{index}",
+        )
+        for index in range(1, count + 1)
+    )
+
+
 class SearchBoundaryTests(unittest.TestCase):
     def test_request_is_frozen_provider_neutral_and_can_be_bounded(self) -> None:
         request = SearchRequest(
@@ -72,54 +83,115 @@ class SearchBoundaryTests(unittest.TestCase):
             request.market = "CA"  # type: ignore[misc]
 
     def test_result_preserves_bounded_retrieval_states(self) -> None:
-        occurrences = (
-            SearchResultOccurrence(item_ref="item-a", source_ref="source-a"),
-            SearchResultOccurrence(item_ref="item-b", source_ref="source-b"),
-        )
+        occurrences = make_occurrences(12)
         result = SearchResult(
-            search_result_id="search-001",
-            returned_item_count=2,
+            search_result_id="search-partial",
+            returned_item_count=12,
             occurrences=occurrences,
-            requested_item_count=5,
+            requested_item_count=30,
             stopping_reason=SearchStopReason.LIMITATION_REACHED,
-            continuation=ContinuationState.AVAILABLE,
+            continuation=ContinuationState.UNKNOWN,
             completion=SearchCompletionState.KNOWN_INCOMPLETE,
-            provider_exhaustion=ProviderExhaustionState.NOT_EXHAUSTED,
+            provider_exhaustion=ProviderExhaustionState.UNKNOWN,
             limitations=("Only the observed bounded returned set is represented.",),
         )
 
         self.assertNotIsInstance(result, list)
         self.assertEqual(result.occurrences, occurrences)
-        self.assertEqual(result.requested_item_count, 5)
-        self.assertEqual(result.returned_item_count, 2)
+        self.assertEqual(result.requested_item_count, 30)
+        self.assertEqual(result.returned_item_count, 12)
         self.assertEqual(result.stopping_reason, SearchStopReason.LIMITATION_REACHED)
-        self.assertEqual(result.continuation, ContinuationState.AVAILABLE)
+        self.assertEqual(result.continuation, ContinuationState.UNKNOWN)
         self.assertEqual(result.completion, SearchCompletionState.KNOWN_INCOMPLETE)
         self.assertEqual(
             result.provider_exhaustion,
-            ProviderExhaustionState.NOT_EXHAUSTED,
+            ProviderExhaustionState.UNKNOWN,
         )
         self.assertEqual(result.global_completeness, GlobalCompletenessState.UNKNOWN)
+
+    def test_fake_returns_bound_satisfied_us_result_with_more_available(self) -> None:
+        request = SearchRequest(
+            query="car vacuum",
+            market="US",
+            platform="TikTok",
+            requested_item_count=30,
+        )
+        expected_result = SearchResult(
+            search_result_id="search-bound-satisfied",
+            returned_item_count=30,
+            occurrences=make_occurrences(30),
+            requested_item_count=30,
+            stopping_reason=SearchStopReason.REQUEST_BOUND_SATISFIED,
+            continuation=ContinuationState.AVAILABLE,
+            completion=SearchCompletionState.COMPLETE_FOR_REQUEST,
+            provider_exhaustion=ProviderExhaustionState.NOT_EXHAUSTED,
+            global_completeness=GlobalCompletenessState.UNKNOWN,
+            limitations=(
+                "US was requested; the bounded returned set does not establish "
+                "exact US population membership or complete market coverage.",
+            ),
+        )
+
+        actual_result = invoke_search(
+            FakeSearchCapability(configured_result=expected_result),
+            request,
+        )
+
+        self.assertIs(actual_result, expected_result)
+        self.assertEqual(request.market, "US")
+        self.assertEqual(actual_result.requested_item_count, 30)
+        self.assertEqual(actual_result.returned_item_count, 30)
+        self.assertEqual(
+            actual_result.stopping_reason,
+            SearchStopReason.REQUEST_BOUND_SATISFIED,
+        )
+        self.assertEqual(actual_result.continuation, ContinuationState.AVAILABLE)
+        self.assertEqual(
+            actual_result.completion,
+            SearchCompletionState.COMPLETE_FOR_REQUEST,
+        )
+        self.assertEqual(
+            actual_result.provider_exhaustion,
+            ProviderExhaustionState.NOT_EXHAUSTED,
+        )
+        self.assertEqual(
+            actual_result.global_completeness,
+            GlobalCompletenessState.UNKNOWN,
+        )
+        self.assertIn("bounded", actual_result.limitations[0])
 
     def test_duplicate_occurrences_remain_ordered_without_dedupe(self) -> None:
         occurrence_a = SearchResultOccurrence(
             item_ref="item-a",
             source_ref="source-a",
+            known_missing_fields=frozenset({"description"}),
         )
         occurrence_b = SearchResultOccurrence(
             item_ref="item-b",
             source_ref="source-b",
         )
-        result = SearchResult(
+        expected_result = SearchResult(
             search_result_id="search-duplicates",
             returned_item_count=3,
             occurrences=(occurrence_a, occurrence_b, occurrence_a),
         )
+        actual_result = invoke_search(
+            FakeSearchCapability(configured_result=expected_result),
+            SearchRequest(query="car vacuum", market="US"),
+        )
 
         self.assertEqual(
-            tuple(occurrence.item_ref for occurrence in result.occurrences),
+            tuple(occurrence.item_ref for occurrence in actual_result.occurrences),
             ("item-a", "item-b", "item-a"),
         )
+        self.assertIs(actual_result, expected_result)
+        self.assertEqual(actual_result.returned_item_count, 3)
+        self.assertEqual(len(actual_result.occurrences), 3)
+        self.assertEqual(
+            actual_result.occurrences[0].known_missing_fields,
+            frozenset({"description"}),
+        )
+        self.assertIs(actual_result.occurrences[0], actual_result.occurrences[2])
 
     def test_known_missingness_is_explicit_without_a_fake_value(self) -> None:
         occurrence = SearchResultOccurrence(
@@ -144,6 +216,59 @@ class SearchBoundaryTests(unittest.TestCase):
 
         self.assertEqual(result.occurrences, ())
         self.assertNotIsInstance(result, SearchFailure)
+
+    def test_provider_exhaustion_before_max_can_complete_bounded_request(self) -> None:
+        result = SearchResult(
+            search_result_id="search-provider-exhausted",
+            returned_item_count=42,
+            occurrences=make_occurrences(42),
+            requested_item_count=100,
+            stopping_reason=SearchStopReason.CONTINUATION_UNAVAILABLE,
+            continuation=ContinuationState.UNAVAILABLE,
+            completion=SearchCompletionState.COMPLETE_FOR_REQUEST,
+            provider_exhaustion=ProviderExhaustionState.EXHAUSTED,
+            global_completeness=GlobalCompletenessState.UNKNOWN,
+        )
+
+        self.assertEqual(result.requested_item_count, 100)
+        self.assertEqual(result.returned_item_count, 42)
+        self.assertEqual(
+            result.stopping_reason,
+            SearchStopReason.CONTINUATION_UNAVAILABLE,
+        )
+        self.assertEqual(result.continuation, ContinuationState.UNAVAILABLE)
+        self.assertEqual(result.completion, SearchCompletionState.COMPLETE_FOR_REQUEST)
+        self.assertEqual(
+            result.provider_exhaustion,
+            ProviderExhaustionState.EXHAUSTED,
+        )
+        self.assertEqual(result.global_completeness, GlobalCompletenessState.UNKNOWN)
+
+    def test_available_continuation_rejects_exhausted_provider(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError,
+            "AVAILABLE.*EXHAUSTED",
+        ):
+            SearchResult(
+                search_result_id="search-contradictory-continuation",
+                returned_item_count=0,
+                continuation=ContinuationState.AVAILABLE,
+                provider_exhaustion=ProviderExhaustionState.EXHAUSTED,
+            )
+
+    def test_no_matches_rejects_nonzero_returned_count(self) -> None:
+        with self.assertRaisesRegex(ValueError, "NO_MATCHES.*empty"):
+            SearchResult(
+                search_result_id="search-contradictory-no-matches",
+                returned_item_count=1,
+                occurrences=(
+                    SearchResultOccurrence(
+                        item_ref="item-a",
+                        source_ref="source-a",
+                    ),
+                ),
+                stopping_reason=SearchStopReason.NO_MATCHES,
+            )
 
     def test_search_failure_is_a_distinct_frozen_c3_outcome(self) -> None:
         failure = SearchFailure(
