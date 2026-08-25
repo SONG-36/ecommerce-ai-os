@@ -48,12 +48,18 @@ class _ExecutionAbort(Exception):
         actual_capability: str,
         failure_code: str,
         failure_reason: str,
+        failure_kind: str | None = None,
+        resolved_provider_ref: str | None = None,
+        used_provider_ref: str | None = None,
     ) -> None:
         super().__init__(f"established Execution {execution_id} cannot continue")
         self.execution_id = execution_id
         self.actual_capability = actual_capability
         self.failure_code = failure_code
         self.failure_reason = failure_reason
+        self.failure_kind = failure_kind
+        self.resolved_provider_ref = resolved_provider_ref
+        self.used_provider_ref = used_provider_ref
 
 
 class TaskRuntime:
@@ -119,6 +125,9 @@ class TaskRuntime:
                 actual_capability=abort.actual_capability,
                 failure_code=abort.failure_code,
                 failure_reason=abort.failure_reason,
+                failure_kind=abort.failure_kind,
+                resolved_provider_ref=abort.resolved_provider_ref,
+                used_provider_ref=abort.used_provider_ref,
             )
             finalized_record = stable_facts.finalize_failure()
             record_ref = bundle.publish(
@@ -244,12 +253,18 @@ class TaskRuntime:
                     actual_capability="Search",
                     failure_code=result.failure_code,
                     failure_reason=result.reason,
+                    failure_kind=result.kind.value,
+                    resolved_provider_ref=result.provenance.resolved_provider_ref,
+                    used_provider_ref=result.provenance.used_provider_ref,
                 )
             self._abort_execution(
                 context,
                 actual_capability="Search",
                 failure_code=result.failure_code,
                 failure_reason=result.reason,
+                failure_kind=str(result.kind),
+                resolved_provider_ref=result.provenance.resolved_provider_ref,
+                used_provider_ref=result.provenance.used_provider_ref,
             )
 
         self._abort_execution(
@@ -268,12 +283,18 @@ class TaskRuntime:
         actual_capability: str,
         failure_code: str,
         failure_reason: str,
+        failure_kind: str | None = None,
+        resolved_provider_ref: str | None = None,
+        used_provider_ref: str | None = None,
     ) -> NoReturn:
         raise _ExecutionAbort(
             context.execution_id,
             actual_capability=actual_capability,
             failure_code=failure_code,
             failure_reason=failure_reason,
+            failure_kind=failure_kind,
+            resolved_provider_ref=resolved_provider_ref,
+            used_provider_ref=used_provider_ref,
         )
 
     @staticmethod

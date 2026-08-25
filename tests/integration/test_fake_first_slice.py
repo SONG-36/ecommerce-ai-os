@@ -1,4 +1,5 @@
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 import tempfile
 import unittest
@@ -57,24 +58,31 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             item_ref="item-a",
             source_ref="source-a",
             known_missing_fields=frozenset({"description"}),
+            publication_time=datetime(2026, 2, 1, 10, 0, tzinfo=UTC),
+            observation_time=datetime(2026, 2, 2, 11, 0, tzinfo=UTC),
         )
         occurrence_b = SearchResultOccurrence(
             item_ref="item-b",
             source_ref="source-b",
+            known_missing_fields=frozenset({"transcript"}),
         )
         rich_result = SearchResult(
             search_result_id="search-rich-fake",
             returned_item_count=3,
             occurrences=(occurrence_a, occurrence_b, occurrence_a),
-            requested_item_count=3,
-            stopping_reason=SearchStopReason.REQUEST_BOUND_SATISFIED,
+            requested_item_count=5,
+            stopping_reason=SearchStopReason.LIMITATION_REACHED,
             continuation=ContinuationState.AVAILABLE,
-            completion=SearchCompletionState.COMPLETE_FOR_REQUEST,
+            completion=SearchCompletionState.KNOWN_INCOMPLETE,
             provider_exhaustion=ProviderExhaustionState.NOT_EXHAUSTED,
             global_completeness=GlobalCompletenessState.UNKNOWN,
             limitations=(
                 "US was requested; the bounded returned set does not establish "
                 "exact US population membership or complete market coverage.",
+            ),
+            collection_time=datetime(2026, 2, 2, 12, 0, tzinfo=UTC),
+            provenance=SearchInvocationProvenance(
+                capability_result_ref="search_results/search-rich-fake.json",
             ),
         )
 
@@ -86,7 +94,7 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                     query="car vacuum",
                     market="US",
                     platform="TikTok",
-                    requested_item_count=3,
+                    requested_item_count=5,
                 )
             )
             runtime = TaskRuntime(
@@ -134,6 +142,72 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                 terminal_return.business_result.actual_sample_boundary.returned_item_count,
                 3,
             )
+            retained_search_result = json.loads(
+                (
+                    execution_root
+                    / terminal_return.execution_id
+                    / "search_results"
+                    / "search-rich-fake.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                [
+                    occurrence["item_ref"]
+                    for occurrence in retained_search_result["occurrences"]
+                ],
+                ["item-a", "item-b", "item-a"],
+            )
+            self.assertEqual(
+                retained_search_result["occurrences"][0],
+                {
+                    "item_ref": "item-a",
+                    "source_ref": "source-a",
+                    "known_missing_fields": ["description"],
+                    "publication_time": "2026-02-01T10:00:00+00:00",
+                    "observation_time": "2026-02-02T11:00:00+00:00",
+                },
+            )
+            self.assertEqual(
+                retained_search_result["occurrences"][1]["known_missing_fields"],
+                ["transcript"],
+            )
+            self.assertEqual(retained_search_result["requested_item_count"], 5)
+            self.assertEqual(retained_search_result["returned_item_count"], 3)
+            self.assertEqual(
+                retained_search_result["stopping_reason"],
+                "limitation_reached",
+            )
+            self.assertEqual(retained_search_result["continuation"], "available")
+            self.assertEqual(
+                retained_search_result["completion"],
+                "known_incomplete",
+            )
+            self.assertEqual(
+                retained_search_result["provider_exhaustion"],
+                "not_exhausted",
+            )
+            self.assertEqual(
+                retained_search_result["global_completeness"],
+                "unknown",
+            )
+            self.assertEqual(
+                retained_search_result["limitations"],
+                list(rich_result.limitations),
+            )
+            self.assertEqual(
+                retained_search_result["collection_time"],
+                "2026-02-02T12:00:00+00:00",
+            )
+            self.assertEqual(
+                retained_search_result["provenance"],
+                {
+                    "resolved_provider_ref": None,
+                    "used_provider_ref": None,
+                    "capability_result_ref": "search_results/search-rich-fake.json",
+                    "raw_result_refs": [],
+                },
+            )
+            self.assertNotIn("raw_payload", json.dumps(retained_search_result))
 
     def test_successful_fake_execution_publishes_resolvable_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -455,6 +529,9 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
                 actual_capability="Search",
                 failure_code="PROVIDER_REQUEST_FAILED",
                 failure_reason="the selected Provider invocation failed",
+                failure_kind="provider_invocation",
+                resolved_provider_ref="provider-binding:test-search",
+                used_provider_ref="provider-binding:test-search",
             )
 
             staging_bundle = (
@@ -480,16 +557,22 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             )
             self.assertEqual(
                 record["actual_participation"],
-                {"capabilities": ["Search"]},
+                {
+                    "capabilities": ["Search"],
+                    "resolved_provider_ref": "provider-binding:test-search",
+                    "used_provider_ref": "provider-binding:test-search",
+                },
             )
             self.assertEqual(
                 record["failure"],
                 {
                     "code": "PROVIDER_REQUEST_FAILED",
+                    "kind": "provider_invocation",
                     "reason": "the selected Provider invocation failed",
                 },
             )
             self.assertNotIn("provenance", record["failure"])
+            self.assertNotIn("raw_result_refs", record["actual_participation"])
             self.assertEqual(
                 record["required_references"],
                 [record["work_request_ref"]],

@@ -553,6 +553,128 @@ P4 Implementation
 = NOT AUTHORIZED BY THIS CLOSURE TASK
 ```
 
+### P4 Actual Evidence — Serialization / Retained Semantics
+
+```text
+P4 — Serialization / Retained Semantics
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P4 Implementation / Tests
+= COMPLETE / PASS
+
+P4 Human Review
+= PASS
+
+Human Representation Decision
+= SearchResult is the Search-owned retained artifact
+= SearchFailure is a typed Search outcome projected into C6 on terminal failure
+
+SearchFailure Separate Retained Artifact
+= NOT REQUIRED
+
+SearchResult Retained Semantics
+= PASS
+
+SearchFailure Owner-Local Serialization
+= PASS
+
+Failure C6 Path-Actual Projection
+= PASS
+
+Failure C6
+= path-actual projection of stable failure / provenance facts
+= kind / original code / original reason preserved
+= resolved Provider ref preserved only when supplied by SearchFailure provenance
+= used Provider ref preserved only when supplied by SearchFailure provenance
+= no fabricated capability result ref / RawProviderResultRef
+
+P4 Actual Production Files
+= src/ecommerce_ai_os/search/serialization.py
+= src/ecommerce_ai_os/runtime/task_runtime.py
+= src/ecommerce_ai_os/runtime/execution_record.py
+
+P4 Actual Test Files
+= tests/unit/search/test_serialization.py
+= tests/integration/test_fake_first_slice.py
+
+SearchResult Retained Shape
+= identity / returned boundary / requested bound
+= ordered duplicate-preserving occurrences with item / source refs
+= explicit known missingness
+= distinct UTC publication / observation / collection times
+= independent stop / continuation / completion / exhaustion / completeness states
+= limitations and provider-neutral provenance
+= RawProviderResultRef reference IDs only / no raw payload
+
+SearchFailure Owner-Local Serialization
+= kind / failure_code / reason / full provider-neutral provenance
+= no SearchFailure identity / directory / retained reference
+
+Representative Retained Runtime Evidence
+= search_results/search-rich-fake.json retained A / B / A unchanged
+= requested 5 / returned 3 remained distinct
+= explicit missingness / distinct UTC times / independent states preserved
+= actual capability_result_ref preserved; absent Provider/raw refs remained absent
+
+Focused Search Serialization Tests
+= PASS / 3 tests
+
+Focused Search Regression Tests
+= PASS / 21 tests
+
+Focused Runtime Regression Tests
+= PASS / 9 tests
+
+Full Unit Suite
+= PASS / 46 tests
+
+Integration Suite
+= PASS / 6 tests
+
+Fake CLI
+= PASS / exit 0 / SUCCEEDED / sample size 2 / published Record Ref
+
+python -m compileall -q src tests
+= PASS
+
+git diff --check
+= PASS
+
+Information-Loss Gap On Tested Retained Paths
+= NONE OBSERVED
+
+Bounded Future Evidence Note
+= failure-path capability_result_ref / raw_result_refs
+= NOT EXERCISED BY CURRENT P4 RUNTIME PATH
+= no fabricated refs
+= re-evaluate only when real Provider / raw-capture evidence establishes them
+= NOT A P4 BLOCKER
+
+F7
+= STILL DEFERRED / NOT YET PROVEN
+
+NB-02
+= untouched
+
+NB-03
+= untouched
+
+NB-04
+= untouched
+
+P4 Architecture Deviation
+= NONE OBSERVED
+
+Completed Baseline Architecture Deviation
+= FOUND / bounded deviations remain outside P4
+
+Architecture Assumption Conflict
+= NONE
+
+P5
+= NOT AUTHORIZED
+```
+
 ## 8. Allowed / Conditional / Forbidden Changes
 
 Primary allowed production surface:
@@ -712,7 +834,7 @@ minimal Runtime type handling
 
 ```text
 Current Next
-= P4 — Serialization / Retained Semantics
+= P5 — Full Verification / NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
 
 P1 — C3 Model Closure
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -724,10 +846,13 @@ P3 — Typed SearchFailure
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 P4 — Serialization / Retained Semantics
-= NEXT / NOT STARTED
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 P4 Implementation
-= NOT AUTHORIZED BY THIS CLOSURE TASK
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+P5 — Full Verification
+= NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
 
 Architecture Expansion
 = NOT AUTHORIZED

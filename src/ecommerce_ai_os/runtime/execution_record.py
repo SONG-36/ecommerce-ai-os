@@ -36,8 +36,11 @@ class StableExecutionFacts:
     actual_sample_boundary_ref: str | None = None
     evidence_refs: list[str] = field(default_factory=list)
     research_result_ref: str | None = None
+    failure_kind: str | None = None
     failure_code: str | None = None
     failure_reason: str | None = None
+    resolved_provider_ref: str | None = None
+    used_provider_ref: str | None = None
 
     def record_search_result(self, search_result_ref: str) -> None:
         """Record one actually completed Search invocation outcome."""
@@ -61,13 +64,21 @@ class StableExecutionFacts:
         actual_capability: str,
         failure_code: str,
         failure_reason: str,
+        failure_kind: str | None = None,
+        resolved_provider_ref: str | None = None,
+        used_provider_ref: str | None = None,
     ) -> None:
         """Retain the bounded execution-level facts carried by a private abort."""
         if self.failure_code is not None:
             raise RuntimeError("Execution failure facts are already recorded")
+        if used_provider_ref is not None and resolved_provider_ref is None:
+            raise ValueError("used Provider ref requires resolved Provider ref")
         self.actual_capabilities.append(actual_capability)
+        self.failure_kind = failure_kind
         self.failure_code = failure_code
         self.failure_reason = failure_reason
+        self.resolved_provider_ref = resolved_provider_ref
+        self.used_provider_ref = used_provider_ref
 
     def finalize_success(self) -> FinalizedExecutionRecord:
         """Create the logically immutable terminal C6 success representation."""
@@ -90,8 +101,11 @@ class StableExecutionFacts:
             evidence_refs=tuple(self.evidence_refs),
             research_result_ref=self.research_result_ref,
             terminal_outcome="SUCCEEDED",
+            failure_kind=None,
             failure_code=None,
             failure_reason=None,
+            resolved_provider_ref=None,
+            used_provider_ref=None,
         )
 
     def finalize_failure(self) -> FinalizedExecutionRecord:
@@ -111,8 +125,11 @@ class StableExecutionFacts:
             evidence_refs=(),
             research_result_ref=None,
             terminal_outcome="FAILED",
+            failure_kind=self.failure_kind,
             failure_code=self.failure_code,
             failure_reason=self.failure_reason,
+            resolved_provider_ref=self.resolved_provider_ref,
+            used_provider_ref=self.used_provider_ref,
         )
 
 
@@ -131,8 +148,11 @@ class FinalizedExecutionRecord:
     evidence_refs: tuple[str, ...]
     research_result_ref: str | None
     terminal_outcome: str
+    failure_kind: str | None
     failure_code: str | None
     failure_reason: str | None
+    resolved_provider_ref: str | None
+    used_provider_ref: str | None
 
     @property
     def required_references(self) -> tuple[str, ...]:
@@ -168,6 +188,10 @@ def serialize_finalized_execution_record(
     }
     if record.search_result_refs:
         actual_participation["search_result_refs"] = list(record.search_result_refs)
+    if record.resolved_provider_ref is not None:
+        actual_participation["resolved_provider_ref"] = record.resolved_provider_ref
+    if record.used_provider_ref is not None:
+        actual_participation["used_provider_ref"] = record.used_provider_ref
 
     payload: dict[str, object] = {
         "schema_version": 1,
@@ -189,8 +213,11 @@ def serialize_finalized_execution_record(
     if record.research_result_ref is not None:
         payload["research_result_ref"] = record.research_result_ref
     if record.failure_code is not None and record.failure_reason is not None:
-        payload["failure"] = {
+        failure: dict[str, object] = {
             "code": record.failure_code,
             "reason": record.failure_reason,
         }
+        if record.failure_kind is not None:
+            failure["kind"] = record.failure_kind
+        payload["failure"] = failure
     return payload
