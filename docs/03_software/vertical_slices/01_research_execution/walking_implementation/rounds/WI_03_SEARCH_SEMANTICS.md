@@ -16,10 +16,20 @@ Round Record
 = CREATED / REVIEWED
 
 P0
-= NEXT / READY
+= COMPLETE / HUMAN REVIEWED / PASS
+
+P0 Human Learning
+= SUFFICIENT TO PROCEED THROUGH IMPLEMENTATION-DRIVEN LEARNING
+= NOT CLAIMED AS COMPLETE MASTERY
+
+P1 — C3 Model Closure
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+WI-03
+= IN PROGRESS
 
 Implementation
-= NOT STARTED / NOT AUTHORIZED
+= P1 COMPLETE / P2+ NOT AUTHORIZED
 
 Architecture Expansion
 = NOT AUTHORIZED
@@ -28,7 +38,7 @@ Architecture Deviation
 = NONE OBSERVED
 
 Architecture Assumption Conflict
-= NONE OBSERVED
+= NONE
 ```
 
 This file is an implementation planning/history record. It is not Architecture
@@ -253,6 +263,134 @@ The exact minimal classification mechanism is not designed in this Round
 Record; P3 must determine it from actual code evidence while preserving the
 reviewed semantics.
 
+### P1 Actual Evidence — C3 Model Closure
+
+```text
+P1 — C3 Model Closure
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P2 — Rich Fake SearchResult
+= NEXT / NOT STARTED
+
+P2 Implementation
+= NOT AUTHORIZED
+```
+
+P1 Actual Production Files:
+
+```text
+src/ecommerce_ai_os/search/models.py
+src/ecommerce_ai_os/search/port.py
+src/ecommerce_ai_os/search/fake.py
+→ compatibility correction only
+```
+
+P1 Actual Test Files:
+
+```text
+tests/unit/search/test_boundaries.py
+tests/unit/runtime/test_task_runtime.py
+tests/unit/research/test_first_slice_skill.py
+```
+
+P1 Actual Symbols:
+
+```text
+SearchRequest
+SearchResultOccurrence
+SearchResult
+SearchFailure
+SearchFailureKind
+SearchStopReason
+ContinuationState
+SearchCompletionState
+ProviderExhaustionState
+GlobalCompletenessState
+SearchInvocationContext
+RawResultCapture
+SearchInvocationProvenance
+RawProviderResultRef
+SearchCapability.search
+```
+
+Actual B02-B06 symbols and bounded proof:
+
+| ID | Actual symbols | Executed invariant evidence |
+|---|---|---|
+| B02 | `SearchRequest` | `test_request_is_frozen_provider_neutral_and_can_be_bounded`; `test_provider_mechanics_do_not_leak_into_stable_models`; `test_negative_counts_and_bounds_are_rejected` |
+| B03 | `SearchResultOccurrence`; `SearchResult`; `SearchFailure`; `SearchFailureKind`; `SearchStopReason`; `ContinuationState`; `SearchCompletionState`; `ProviderExhaustionState`; `GlobalCompletenessState`; `FakeSearchCapability.search` | `test_result_preserves_bounded_retrieval_states`; `test_duplicate_occurrences_remain_ordered_without_dedupe`; `test_known_missingness_is_explicit_without_a_fake_value`; `test_valid_empty_result_is_not_a_search_failure`; `test_search_failure_is_a_distinct_frozen_c3_outcome`; `test_publication_observation_and_collection_times_remain_distinct`; `test_time_fields_reject_naive_datetimes`; `test_result_count_must_match_explicit_occurrences`; `test_nonzero_result_rejects_empty_occurrences` |
+| B04 | `RawResultCapture`; `SearchInvocationContext` | `test_invocation_context_is_narrow_and_carries_opaque_capture` |
+| B05 | `SearchInvocationProvenance` | `test_invocation_provenance_preserves_actual_path_facts`; `test_raw_result_refs_require_an_actually_used_provider` |
+| B06 | `RawProviderResultRef` | `test_raw_provider_result_ref_is_reference_only` |
+
+Port closure:
+
+```text
+SearchCapability.search(
+    SearchRequest,
+    SearchInvocationContext,
+) -> SearchResult | SearchFailure
+```
+
+Executed validation:
+
+```text
+PYTHONPATH=src python -m unittest tests.unit.search.test_boundaries -v
+= PASS / 17 tests
+
+PYTHONPATH=src python -m unittest discover -s tests/unit -v
+= PASS / 34 tests
+
+PYTHONPATH=src python -m unittest discover -s tests/integration -v
+= PASS / 5 tests
+
+python -m compileall -q src tests
+= PASS
+
+git diff --check
+= PASS
+
+PYTHONPATH=src python -m ecommerce_ai_os.application.cli \
+  --request-id request-wi3-p1-closure \
+  --product-context "Car Vacuum" \
+  --market US \
+  --platform TikTok \
+  --business-goal "Commerce Content" \
+  --research-question "What content patterns merit human review?" \
+  --output-root /tmp/ecommerce-ai-os-WI3-P1-closure.DJUOti/executions
+= PASS / exit 0 / SUCCEEDED / sample size 2 / published Record Ref
+```
+
+Compatibility evidence:
+
+```text
+Transitional compatibility gap
+= CLOSED
+
+SearchResult structural coherence
+= len(occurrences) == returned_item_count / ALWAYS REQUIRED
+
+FakeSearchCapability
+= deterministic provider-neutral occurrence count matches returned_item_count
+
+Existing non-Search unit tests
+= PASS / 17 tests
+
+Production Runtime / Research files changed
+= NO
+
+P2 rich Fake reality-matrix behavior / SearchFailure runtime control / serialization completion
+= NOT IMPLEMENTED / DEFERRED
+```
+
+```text
+Architecture Deviation
+= NONE OBSERVED
+
+Architecture Assumption Conflict
+= NONE
+```
+
 ## 8. Allowed / Conditional / Forbidden Changes
 
 Primary allowed production surface:
@@ -412,17 +550,14 @@ minimal Runtime type handling
 
 ```text
 Current Next
-= P0 — Pre-Code Search Semantics Review
+= P2 — Rich Fake SearchResult / NEXT / NOT STARTED
 
-P0
-= NO Python changes
-= NO test changes
-= NO Provider work
-```
+P1 — C3 Model Closure
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
-```text
-P0
-→ Human Review
-→ explicit P1 authorization
-→ implementation only after P1 authorization
+P2 Implementation
+= NOT AUTHORIZED BY THIS TASK
+
+Architecture Expansion
+= NOT AUTHORIZED
 ```

@@ -1,10 +1,13 @@
 """The provider-neutral Search capability seam."""
 
-from __future__ import annotations
-
 from typing import Protocol
 
-from .models import SearchRequest, SearchResult
+from .models import (
+    SearchFailure,
+    SearchInvocationContext,
+    SearchRequest,
+    SearchResult,
+)
 
 
 class SearchCapability(Protocol):
@@ -17,7 +20,3 @@ class SearchCapability(Protocol):
     ) -> SearchResult | SearchFailure:
         """Return a provider-neutral Search outcome."""
         ...
-
-
-# SearchInvocationContext (B04) and SearchFailure remain postponed annotations
-# until WI-3 selects and implements their complete representations.

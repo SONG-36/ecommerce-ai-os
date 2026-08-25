@@ -4,7 +4,11 @@ from ecommerce_ai_os.research.car_vacuum_tiktok import (
     CarVacuumTikTokResearchSkill,
 )
 from ecommerce_ai_os.research.models import ResearchCompletion
-from ecommerce_ai_os.search.models import SearchRequest, SearchResult
+from ecommerce_ai_os.search.models import (
+    SearchRequest,
+    SearchResult,
+    SearchResultOccurrence,
+)
 
 
 class StubResearchExecutionPort:
@@ -26,6 +30,10 @@ class FirstSliceResearchSkillTests(unittest.TestCase):
             SearchResult(
                 search_result_id="search-result-001",
                 returned_item_count=2,
+                occurrences=(
+                    SearchResultOccurrence("item-1", "source-1"),
+                    SearchResultOccurrence("item-2", "source-2"),
+                ),
             )
         )
         skill = CarVacuumTikTokResearchSkill(search_request=request)

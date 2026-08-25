@@ -15,6 +15,7 @@ from ecommerce_ai_os.search.models import (
     SearchInvocationContext,
     SearchRequest,
     SearchResult,
+    SearchResultOccurrence,
 )
 
 
@@ -91,6 +92,10 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
         expected_result = SearchResult(
             search_result_id="search-result-001",
             returned_item_count=2,
+            occurrences=(
+                SearchResultOccurrence("item-1", "source-1"),
+                SearchResultOccurrence("item-2", "source-2"),
+            ),
         )
         fake_search = FakeSearchCapability(expected_result)
         runtime = TaskRuntime(search_capability=fake_search)
@@ -131,6 +136,10 @@ class TaskRuntimeCoordinationTests(unittest.TestCase):
         expected_result = SearchResult(
             search_result_id="search-result-001",
             returned_item_count=2,
+            occurrences=(
+                SearchResultOccurrence("item-1", "source-1"),
+                SearchResultOccurrence("item-2", "source-2"),
+            ),
         )
         fake_search = FakeSearchCapability(expected_result)
         runtime = TaskRuntime(search_capability=fake_search)

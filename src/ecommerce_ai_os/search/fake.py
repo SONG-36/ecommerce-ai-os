@@ -2,7 +2,12 @@
 
 from dataclasses import dataclass
 
-from .models import SearchInvocationContext, SearchRequest, SearchResult
+from .models import (
+    SearchInvocationContext,
+    SearchRequest,
+    SearchResult,
+    SearchResultOccurrence,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,4 +27,11 @@ class FakeSearchCapability:
         return SearchResult(
             search_result_id=self.search_result_id,
             returned_item_count=self.returned_item_count,
+            occurrences=tuple(
+                SearchResultOccurrence(
+                    item_ref=f"{self.search_result_id}-item-{index}",
+                    source_ref=f"{self.search_result_id}-source-{index}",
+                )
+                for index in range(1, self.returned_item_count + 1)
+            ),
         )
