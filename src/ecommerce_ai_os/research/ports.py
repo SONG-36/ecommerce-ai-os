@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from ecommerce_ai_os.search.models import SearchRequest, SearchResult
+from ecommerce_ai_os.search.models import SearchFailure, SearchRequest, SearchResult
 
 from .models import ResearchCompletion, SkillDeclaration
 
@@ -28,7 +28,3 @@ class ResearchSkill(Protocol):
     def run(self, port: ResearchExecutionPort) -> ResearchCompletion:
         """Perform the business method through an execution-scoped port."""
         ...
-
-
-# SearchFailure remains a postponed annotation until WI-3 implements its
-# complete representation.

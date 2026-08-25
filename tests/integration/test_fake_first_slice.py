@@ -23,7 +23,10 @@ from ecommerce_ai_os.search.models import (
     GlobalCompletenessState,
     ProviderExhaustionState,
     SearchCompletionState,
+    SearchFailure,
+    SearchFailureKind,
     SearchInvocationContext,
+    SearchInvocationProvenance,
     SearchRequest,
     SearchResult,
     SearchResultOccurrence,
@@ -31,12 +34,9 @@ from ecommerce_ai_os.search.models import (
 )
 
 
-class ControlledSearchFailure:
-    """Test-only non-result outcome for the established failure path."""
-
-
 class ControlledFailureSearchCapability:
-    def __init__(self) -> None:
+    def __init__(self, failure: SearchFailure) -> None:
+        self.failure = failure
         self.calls = 0
         self.last_context: SearchInvocationContext | None = None
 
@@ -44,11 +44,11 @@ class ControlledFailureSearchCapability:
         self,
         request: SearchRequest,
         context: SearchInvocationContext,
-    ) -> ControlledSearchFailure:
+    ) -> SearchFailure:
         del request
         self.calls += 1
         self.last_context = context
-        return ControlledSearchFailure()
+        return self.failure
 
 
 class FakeFirstSliceIntegrationTests(unittest.TestCase):
@@ -392,7 +392,16 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
     ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             execution_root = Path(temporary_directory) / "executions"
-            controlled_failure = ControlledFailureSearchCapability()
+            search_failure = SearchFailure(
+                kind=SearchFailureKind.PROVIDER_INVOCATION,
+                failure_code="PROVIDER_REQUEST_FAILED",
+                reason="the selected Provider invocation failed",
+                provenance=SearchInvocationProvenance(
+                    resolved_provider_ref="provider-binding:test-search",
+                    used_provider_ref="provider-binding:test-search",
+                ),
+            )
+            controlled_failure = ControlledFailureSearchCapability(search_failure)
             skill = CarVacuumTikTokResearchSkill(
                 search_request=SearchRequest(query="car vacuum", market="US")
             )
@@ -444,10 +453,8 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             observed_abort.assert_called_once_with(
                 established_context,
                 actual_capability="Search",
-                failure_code="SEARCH_OUTCOME_NOT_RESULT",
-                failure_reason=(
-                    "Search invocation did not produce a contract-valid SearchResult"
-                ),
+                failure_code="PROVIDER_REQUEST_FAILED",
+                failure_reason="the selected Provider invocation failed",
             )
 
             staging_bundle = (
@@ -478,13 +485,11 @@ class FakeFirstSliceIntegrationTests(unittest.TestCase):
             self.assertEqual(
                 record["failure"],
                 {
-                    "code": "SEARCH_OUTCOME_NOT_RESULT",
-                    "reason": (
-                        "Search invocation did not produce a contract-valid "
-                        "SearchResult"
-                    ),
+                    "code": "PROVIDER_REQUEST_FAILED",
+                    "reason": "the selected Provider invocation failed",
                 },
             )
+            self.assertNotIn("provenance", record["failure"])
             self.assertEqual(
                 record["required_references"],
                 [record["work_request_ref"]],

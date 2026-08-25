@@ -456,6 +456,103 @@ Architecture Assumption Conflict
 = NONE
 ```
 
+### P3 Actual Evidence — Typed SearchFailure
+
+```text
+P3 — Typed SearchFailure
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P3 Implementation / Tests
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P3 Human Review
+= PASS
+
+P3 Actual Production Files
+= src/ecommerce_ai_os/research/ports.py
+= src/ecommerce_ai_os/runtime/task_runtime.py
+
+P3 Actual Test Files
+= tests/unit/research/test_boundaries.py
+= tests/unit/runtime/test_task_runtime.py
+= tests/integration/test_fake_first_slice.py
+
+First-Slice Runtime Classification
+= INVALID_REQUEST → CONTINUABLE → original SearchFailure returned unchanged
+= PROVIDER_RESOLUTION → NON-CONTINUABLE → existing private _ExecutionAbort
+= PROVIDER_INVOCATION → NON-CONTINUABLE → existing private _ExecutionAbort
+= malformed / unsupported SearchFailure.kind → bounded defensive private
+  _ExecutionAbort → no uncontrolled RuntimeError escape
+
+Continuable Path
+= same caller / same execution id / exact SearchFailure object preserved
+= kind / failure_code / reason / provenance preserved
+= private _ExecutionAbort not invoked
+
+Non-Continuable Path
+= original failure_code / reason preserved through private _ExecutionAbort
+= existing WI-02 failed TerminalReturn / path-sensitive C6 / resolvable Record Ref
+= no fabricated ResearchResult / Evidence
+
+Contract-Invalid Outcome Defense
+= SEARCH_OUTCOME_NOT_RESULT preserved for non-SearchResult / non-SearchFailure values
+
+SearchFailure Provenance
+= preserved in memory on the continuable SearchFailure path
+= current failure C6 persistence NOT IMPLEMENTED / DEFERRED
+
+Focused Research Boundary Tests
+= PASS / 3 tests
+
+Focused Runtime Tests
+= PASS / 9 tests
+
+Focused Search Regression Tests
+= PASS / 21 tests
+
+Full Unit Suite
+= PASS / 43 tests
+
+Integration Suite
+= PASS / 6 tests
+
+Fake CLI
+= PASS / exit 0 / SUCCEEDED / sample size 2 / published Record Ref
+
+python -m compileall -q src tests
+= PASS
+
+git diff --check
+= PASS
+
+NB-01
+= CLOSED
+
+F7
+= STILL DEFERRED / NOT YET PROVEN
+
+NB-02
+= lifecycle hardening / untouched / required before final First-Slice acceptance
+
+NB-03
+= application presentation / untouched
+
+NB-04
+= P5 / final synchronization / untouched
+
+P3 Architecture Deviation
+= NONE OBSERVED
+
+Completed Baseline Architecture Deviation
+= FOUND / bounded deviations remain outside P3
+
+Architecture Assumption Conflict
+= NONE
+
+P4 Implementation
+= NOT AUTHORIZED BY THIS CLOSURE TASK
+```
+
 ## 8. Allowed / Conditional / Forbidden Changes
 
 Primary allowed production surface:
@@ -615,7 +712,7 @@ minimal Runtime type handling
 
 ```text
 Current Next
-= P3 — Typed SearchFailure / NEXT / NOT STARTED
+= P4 — Serialization / Retained Semantics
 
 P1 — C3 Model Closure
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -623,8 +720,14 @@ P1 — C3 Model Closure
 P2 — Rich Fake SearchResult
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
-P3 Implementation
-= NOT AUTHORIZED BY THIS TASK
+P3 — Typed SearchFailure
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P4 — Serialization / Retained Semantics
+= NEXT / NOT STARTED
+
+P4 Implementation
+= NOT AUTHORIZED BY THIS CLOSURE TASK
 
 Architecture Expansion
 = NOT AUTHORIZED

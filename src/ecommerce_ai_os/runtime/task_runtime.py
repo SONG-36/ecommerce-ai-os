@@ -11,6 +11,8 @@ from ecommerce_ai_os.research.serialization import (
 )
 from ecommerce_ai_os.research.ports import ResearchSkill
 from ecommerce_ai_os.search.models import (
+    SearchFailure,
+    SearchFailureKind,
     SearchInvocationContext,
     SearchRequest,
     SearchResult,
@@ -220,7 +222,7 @@ class TaskRuntime:
         self,
         context: ExecutionContext,
         request: SearchRequest,
-    ) -> SearchResult:
+    ) -> SearchResult | SearchFailure:
         if "Search" not in context.skill_declaration.declared_capabilities:
             raise RuntimeError("bound Skill did not declare Search capability")
 
@@ -228,17 +230,36 @@ class TaskRuntime:
             execution_id=context.execution_id,
         )
         result = self._search_capability.search(request, invocation_context)
-        if not isinstance(result, SearchResult):
+        if isinstance(result, SearchResult):
+            return result
+        if isinstance(result, SearchFailure):
+            if result.kind is SearchFailureKind.INVALID_REQUEST:
+                return result
+            if result.kind in {
+                SearchFailureKind.PROVIDER_RESOLUTION,
+                SearchFailureKind.PROVIDER_INVOCATION,
+            }:
+                self._abort_execution(
+                    context,
+                    actual_capability="Search",
+                    failure_code=result.failure_code,
+                    failure_reason=result.reason,
+                )
             self._abort_execution(
                 context,
                 actual_capability="Search",
-                failure_code="SEARCH_OUTCOME_NOT_RESULT",
-                failure_reason=(
-                    "Search invocation did not produce a contract-valid SearchResult"
-                ),
+                failure_code=result.failure_code,
+                failure_reason=result.reason,
             )
 
-        return result
+        self._abort_execution(
+            context,
+            actual_capability="Search",
+            failure_code="SEARCH_OUTCOME_NOT_RESULT",
+            failure_reason=(
+                "Search invocation did not produce a contract-valid SearchResult"
+            ),
+        )
 
     @staticmethod
     def _abort_execution(
@@ -275,9 +296,9 @@ class RuntimeResearchExecutionPort:
         self._context = context
         self._search_result_observer = search_result_observer
 
-    def search(self, request: SearchRequest) -> SearchResult:
-        """Return a provider-neutral Search result to the same caller."""
+    def search(self, request: SearchRequest) -> SearchResult | SearchFailure:
+        """Return a provider-neutral continuable Search outcome to the caller."""
         result = self._task_runtime._invoke_search(self._context, request)
-        if self._search_result_observer is not None:
+        if isinstance(result, SearchResult) and self._search_result_observer is not None:
             self._search_result_observer(result)
         return result

@@ -1,9 +1,10 @@
 from dataclasses import FrozenInstanceError
+from typing import get_type_hints
 import unittest
 
 from ecommerce_ai_os.research.models import SkillDeclaration
 from ecommerce_ai_os.research.ports import ResearchExecutionPort
-from ecommerce_ai_os.search.models import SearchRequest, SearchResult
+from ecommerce_ai_os.search.models import SearchFailure, SearchRequest, SearchResult
 
 
 class StubResearchExecutionPort:
@@ -19,6 +20,11 @@ def search_through(port: ResearchExecutionPort, request: SearchRequest) -> Searc
 
 
 class ResearchBoundaryTests(unittest.TestCase):
+    def test_search_return_type_hint_resolves_complete_c3_outcome(self) -> None:
+        return_type = get_type_hints(ResearchExecutionPort.search)["return"]
+
+        self.assertEqual(return_type, SearchResult | SearchFailure)
+
     def test_skill_declaration_preserves_declared_capability_identity(self) -> None:
         declaration = SkillDeclaration(
             skill_id="car-vacuum-tiktok-research",
