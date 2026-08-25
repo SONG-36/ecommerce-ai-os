@@ -1052,6 +1052,145 @@ Learn just before use
 
 ---
 
+## 16.1 语义先行、证据驱动开发（Semantic-First Evidence-Driven Development）
+
+这是所有 Round 可复用的方法，不替代 Architecture 或 Round-specific
+验收规则：围绕当前真实问题深入思考，先用最低成本把语义外显，用反例攻击它，
+显式保留未知；只有含义稳定、系统真实需要、且值得强制执行的部分，才提升为
+最小可执行约束，最终由 Test 和 Runtime Evidence 验证。
+
+```text
+Reality / Business Scenario
+→ Externalize Semantics
+→ Counterexample / Boundary Attack
+→ Classify
+→ Promotion Gate
+→ Minimal Executable Proof
+→ Test
+→ Runtime Evidence
+→ Human Review
+```
+
+真实起点可以是 Provider behavior、business decision、data ambiguity、failure
+path、missingness 或 state combination。语义不清时，编码前先选择最便宜且足够的
+表示：plain-language example、counterexample、Mermaid、state matrix、truth table、
+decision table 或 scenario walkthrough。Mermaid 是可选工具，不是固定要求。
+
+Human Semantic Review 必须把重要情况分类为：
+
+```text
+CLEARLY LEGAL
+CLEARLY ILLEGAL
+UNKNOWN / NOT YET PROVEN
+```
+
+关键规则：Unknown 必须保持 Unknown。不得静默转换：
+
+```text
+unknown → false
+unknown → zero
+unknown → empty
+unknown → inferred certainty
+```
+
+### Promotion Gate
+
+语义概念只有通过以下门槛，才获得 executable representation：
+
+```text
+Meaning Stable
++ Real System Need
++ Enforcement Valuable
+```
+
+未通过时，保留在 documentation、`UNKNOWN`、`NOT YET PROVEN` 或 deferred
+状态。通过也不意味着需要新 abstraction；优先使用最小合适机制，例如 invariant、
+type、schema、SQL constraint、test、configuration 或 workflow rule。Python 不是
+business semantics 的定义。
+
+决策规则：仅帮助 Human 理解的语义，documentation 可能已足够；running system
+绝不能违反的稳定语义，应最终获得 executable enforcement；仍不确定的语义不得
+hard-code。
+
+不得把每个语义概念机械翻译为 class、enum、service、framework、database table
+或 workflow component。可执行表示必须由“稳定含义 + 真实系统需要 + enforcement
+价值”共同赢得；`Deferred != backlog commitment`，Not Yet Proven 必须赢得提升。
+
+### Coding Readiness Gate
+
+满足以下条件时可以开始编码：
+
+1. 当前问题足够窄，能够被清楚陈述；
+2. 重要的 legal / illegal / unknown 情况已被理解；
+3. responsibility ownership 已足够清楚；
+4. 剩余重要不确定性更适合由 execution 而非继续讨论回答；
+5. 下一次 executable experiment 可以保持小且可逆。
+
+```text
+Think until execution becomes the cheaper source of truth.
+```
+
+当“继续讨论”已经不如“跑一次最小实验”更能获得事实时，应停止纸面推演并进入
+executable proof。编码前不要求所有不确定性消失。
+
+```text
+Deep locally, shallow globally.
+```
+
+深入当前真实 slice，但不试图完整设计遥远未来的 infrastructure 或 abstraction；
+这同时防止 premature coding 与 analysis paralysis / Big Design Up Front。
+
+### Learning 与 Evidence
+
+本方法保持 `Learn just before use`，并采用实践导向而非数学要求的 80/20：大约
+80% 来自真实项目工作、code、tests、runtime evidence、Provider/data facts 与具体
+问题；大约 20% 来自 just-in-time theory、diagrams、semantic models 与概念解释。
+比例只是学习方向，不是固定配额。
+
+```text
+Docs / Mermaid / Matrix = Meaning / Semantic Clarification
+Code / Type / Constraint = Enforcement
+Test = Controlled Executable Proof
+Runtime Evidence = Actual Observed Behavior
+
+Fake = proves semantics
+Real Provider Evidence = proves external assumptions
+```
+
+若 evidence 与已审查语义冲突，使用第 22 节 Architecture Change Rule：先区分
+Implementation Defect 与 Architecture Assumption Conflict，经 Human Review 后才可
+批准 Architecture Change。
+
+文档职责保持不变：
+
+```text
+00_WALKING_IMPLEMENTATION_PLAN.md
+= owns this reusable cross-round method
+
+Round Records
+= record how the method was applied in one specific Round
+
+Architecture documents
+= retain architecture authority
+
+01_ARCHITECTURE_CODE_TRACEABILITY.md
+= records Architecture → Code → Test → Runtime Evidence maturity
+```
+
+两个小例子：
+
+```text
+continuation = AVAILABLE + provider_exhaustion = EXHAUSTED
+→ CLEARLY ILLEGAL
+→ eligible for a minimal executable invariant
+
+publication_time <= observation_time <= collection_time
+→ plausible, but UNKNOWN / NOT YET PROVEN
+→ preserve distinct time semantics; do not add a strict ordering invariant
+```
+
+---
+
 # 17. Codex Implementation 规则
 
 Codex 的主要职责是：
