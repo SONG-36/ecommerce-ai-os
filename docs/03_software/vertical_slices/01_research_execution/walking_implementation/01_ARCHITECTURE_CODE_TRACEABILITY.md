@@ -23,24 +23,29 @@ Step 6 最终审查后决定怎样表示？
 | 项目 | 当前值 |
 |---|---|
 | Walking Implementation | `AUTHORIZED` |
-| Last Completed Round | `WI-02 - EXECUTION LIFECYCLE / COMPLETE / PASS` |
+| Last Completed Round | `WI-03 - SEARCH SEMANTICS / COMPLETE / HUMAN REVIEWED / PASS` |
 | WI-1 | `COMPLETE / PASS` |
-| Last Completed Internal Checkpoint | `WI-2 P5 - COMPLETE / VERIFIED / HUMAN REVIEWED / PASS` |
-| P5 | `COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
+| Last Completed Internal Checkpoint | `WI-3 P5 - COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P1 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P2 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P3 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P4 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
 | WI-2 P5 | `COMPLETE / VERIFIED / HUMAN REVIEWED / PASS` |
 | WI-2 | `COMPLETE / PASS` |
-| Core Concepts | `9 TESTED` / `0 IMPLEMENTED` / `7 PLANNED` / `12 RUNTIME VERIFIED` |
-| Actual Code Evidence | `VERIFIED THROUGH WI-2 P5 / NO NEW P5 PRODUCTION BEHAVIOR` |
-| Test Evidence | `VERIFIED THROUGH WI-2 P5` |
-| Runtime Evidence | `WI-1 SUCCESS + WI-2 FOUR-PATH MATRIX + SEQUENTIAL ISOLATION + P5 FAKE CLI` |
-| Known Architecture Deviations | `NONE OBSERVED` |
-| Current Next | `WI-03 - SEARCH SEMANTICS / NEXT / NOT STARTED` |
-| WI-03 Planning | `NOT STARTED / NOT AUTHORIZED` |
-| WI-03 Implementation | `NOT STARTED / NOT AUTHORIZED` |
+| WI-3 P1 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| WI-3 P2 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| WI-3 P3 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| WI-3 P4 | `COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS` |
+| WI-3 P5 | `COMPLETE / TESTED / HUMAN REVIEWED / PASS` |
+| WI-3 | `COMPLETE / HUMAN REVIEWED / PASS` |
+| Core Concepts | `11 TESTED` / `0 IMPLEMENTED` / `5 PLANNED` / `12 RUNTIME VERIFIED` |
+| Actual Code Evidence | `VERIFIED THROUGH WI-3 P4 / NO P5 PRODUCTION BEHAVIOR` |
+| Test Evidence | `VERIFIED THROUGH WI-3 P5` |
+| Runtime Evidence | `WI-1 SUCCESS + WI-2 LIFECYCLE + WI-3 SEARCH SEMANTICS + P5 FAKE BUNDLES` |
+| Known Architecture Deviations | `FOUND / BOUNDED: NB-02 + NB-03 CARRIED FORWARD` |
+| Architecture Assumption Conflict | `NONE` |
+| Current Next | `WI-04 - SCRAPE CREATORS ADAPTER / NEXT / NOT STARTED / NOT AUTHORIZED` |
+| WI-04 | `NEXT / NOT STARTED / NOT AUTHORIZED` |
 
 P1～P5 已完成。P5 的 AST import guard、sequential multi-Execution isolation、bundle inspection、
 Delete Test、真实 Fake CLI rerun 与 consistency gate 均通过，因此 WI-1 final verdict 为 `PASS`。
@@ -54,9 +59,13 @@ TaskRuntime-owner catch boundary 的 actual code/test evidence，并已 Human Re
 `TerminalReturn` 的 actual code/test/runtime evidence，并已 Human Review `PASS`。WI-2 P4 已建立
 Business Completion 后 closure failure、Business Result preservation 与 no-Record-Ref 的 actual evidence，
 并已 Human Review `PASS`。WI-2 P5 在不新增 production behavior 或 test 的前提下重新验证四条 lifecycle、
-sequential isolation、import DAG 与 Fake CLI success，并已 Human Review `PASS`。WI-02 Final Verdict 为 `COMPLETE / PASS`；
-当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`；WI-03 planning 与
-implementation 均为 `NOT STARTED / NOT AUTHORIZED`。
+sequential isolation、import DAG 与 Fake CLI success，并已 Human Review `PASS`。WI-02 Final Verdict 为 `COMPLETE / PASS`。
+WI-03 P1-P4 已建立并完成人类审查：完整 C3 models、rich Fake SearchResult、typed SearchFailure
+两条 lifecycle path，以及 Search-owned serialization / retained semantics。WI-03 P5 已重新执行
+focused/full regression、five representative paths、Delete Test、Fake CLI 与 rich bundle inspection，
+没有新增 production behavior，并已 Human Review `PASS`。WI-03 Final Verdict 为 `COMPLETE / HUMAN REVIEWED / PASS`。
+NB-04 已通过同步本 living map 与 Current Handoff 关闭；NB-02、NB-03 继续作为 bounded
+implementation deviations carried forward，F7 继续 deferred。WI-04 为 next，但尚未开始且未授权。
 
 ## 2. 本文职责与非职责
 
@@ -227,15 +236,15 @@ WI-2 P5 重新验证现有 maturity，不机械升级任何行。未由当前 ch
 | A05 | `src/ecommerce_ai_os/composition.py → build_fake_first_slice_runtime`（static concrete ResearchSkill injection）<br>`src/ecommerce_ai_os/runtime/execution.py → ExecutionContext`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（successful `ExecutionContext` construction is the WI-2 P1 establishment commit）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill`（post-establishment declaration consistency invariant） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / WI-1 P2`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / WI-1 P3 defensive invariant`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_successful_fake_execution_publishes_resolvable_bundle → PASS / WI-2 P3 regression`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_incomplete_request_is_rejected_before_execution_establishment → PASS / WI-2 P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record → PASS / WI-2 P3` | `rounds/WI_02_EXECUTION_LIFECYCLE.md → P3 Actual Runtime Evidence`；the controlled path retained the established identity/context/input fact through unwind and clean failure closure | `RUNTIME VERIFIED` | `NONE` |
 | A06 | `src/ecommerce_ai_os/research/ports.py → ResearchSkill`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill` | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_mismatched_bound_skill_declaration_is_rejected_before_search → PASS / P3` | `NOT YET VERIFIED`；concrete Research business method exercised under unit test only | `TESTED` | `NONE` |
 | A07 | `src/ecommerce_ai_os/research/models.py → SkillDeclaration` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_skill_declaration_preserves_declared_capability_identity → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
-| A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort.search` | `tests/unit/research/test_boundaries.py → ResearchBoundaryTests.test_structural_port_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2`<br>Independent static type-check evidence `NOT YET ESTABLISHED` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
-| A09 | `src/ecommerce_ai_os/runtime/task_runtime.py → _ExecutionAbort`（execution id + actual capability + bounded code/reason）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._abort_execution`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（private catch and semantic-fact transfer） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_non_result_search_outcome_triggers_private_execution_abort → PASS / WI-2 P3`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record → PASS / WI-2 P3` | `rounds/WI_02_EXECUTION_LIFECYCLE.md → P3 Actual Runtime Evidence`；the clean failure path completed without leaking `_ExecutionAbort`; the private mechanism remains directly established by focused tests rather than mechanically promoted | `TESTED` | `NONE` |
+| A08 | `src/ecommerce_ai_os/research/ports.py → ResearchExecutionPort.search -> SearchResult \| SearchFailure`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → RuntimeResearchExecutionPort.search` | `tests/unit/research/test_boundaries.py → test_search_return_type_hint_resolves_complete_c3_outcome + test_structural_port_stub_satisfies_the_callable_seam → 3/3 PASS / WI-3 P5`<br>`tests/unit/runtime/test_task_runtime.py → success and continuable-failure same-caller/same-Execution tests → PASS / WI-3 P3/P5` | C2b decides continuability; the exact continuable SearchFailure returns through the existing port to the same Research caller and Execution | `TESTED` | `NONE` |
+| A09 | `src/ecommerce_ai_os/runtime/task_runtime.py → _ExecutionAbort`（execution id + actual capability + bounded kind/code/reason + path-actual Provider refs）<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._abort_execution / execute private catch` | `tests/unit/runtime/test_task_runtime.py → provider invocation/resolution, malformed kind, and contract-invalid defensive abort tests → 9/9 PASS / WI-3 P5`<br>`tests/integration/test_fake_first_slice.py → test_established_failure_closes_with_path_sensitive_record → PASS / WI-3 P5` | private unwind remained distinct from SearchFailure and did not leak; failure C6 preserved bounded path-actual facts | `TESTED` | `NONE` |
 | A10 | `src/ecommerce_ai_os/research/models.py → ResearchCompletion`<br>`src/ecommerce_ai_os/research/car_vacuum_tiktok.py → CarVacuumTikTokResearchSkill.run`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._run_research_skill`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime.execute`（Business Result retained before closure） | `tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_forms_synthetic_business_completion_from_bounded_search → PASS / WI-1 P3`<br>`tests/unit/research/test_first_slice_skill.py → FirstSliceResearchSkillTests.test_empty_search_is_insufficient_evidence_not_execution_failure → PASS / WI-1 P3`<br>`tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_runtime_receives_business_completion_without_terminalization → PASS / WI-1 P3`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_business_completion_survives_controlled_closure_failure → PASS / WI-2 P4` | `rounds/WI_02_EXECUTION_LIFECYCLE.md → P4 Actual Runtime / Test Evidence`；observed event order was `business_completion → closure_failure`, and the exact `ResearchCompletion.research_result` survived in the partial `TerminalReturn` | `RUNTIME VERIFIED` | `NONE` |
 | B01 | `src/ecommerce_ai_os/search/port.py → SearchCapability`<br>`src/ecommerce_ai_os/search/fake.py → FakeSearchCapability`（WI-1 Fake implementation only） | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_structural_search_stub_satisfies_the_callable_seam → PASS / P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_sequential_executions_are_isolated_with_deterministic_fake_id → PASS / P5`<br>Runtime structural behavior demonstrated; static type-check evidence `NOT YET ESTABLISHED` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P5 Final Fake CLI Runtime Evidence`；the injected Fake implementation was actually invoked through the provider-neutral seam | `RUNTIME VERIFIED`（WI-1 Fake only） | `NONE` |
-| B02 | `src/ecommerce_ai_os/search/models.py → SearchRequest` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_request_is_a_frozen_provider_neutral_value → PASS / P1` | `NOT YET VERIFIED` | `TESTED` | `NONE` |
-| B03 | `src/ecommerce_ai_os/search/models.py → SearchResult`<br>P1 minimal representation; full C3 semantics deferred to `WI-3` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_has_identity_and_returned_set_boundary → PASS / P1`<br>`tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_result_rejects_a_negative_returned_item_count → PASS / P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_sequential_executions_are_isolated_with_deterministic_fake_id → PASS / P5` | `rounds/WI_01_FAKE_VERTICAL_SLICE.md → P5 Sequential Multi-Execution Evidence`；the deterministic `wi1-fake-search-result` existed independently inside two execution-scoped bundles without cross-execution collision | `RUNTIME VERIFIED`（WI-1 minimal only；full semantics remain `WI-3`） | `NONE` |
-| B04 | `src/ecommerce_ai_os/search/models.py → SearchInvocationContext`（P2 minimal representation only；WI-3 full semantics / main verification） | `tests/unit/runtime/test_task_runtime.py → TaskRuntimeCoordinationTests.test_search_traverses_runtime_and_returns_to_the_business_caller → PASS / P2` | `NOT YET VERIFIED`；P2 internal coordination path exercised under unit test only | `TESTED` | `NONE` |
-| B05 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
-| B06 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
+| B02 | `src/ecommerce_ai_os/search/models.py → SearchRequest` | `tests/unit/search/test_boundaries.py → SearchBoundaryTests.test_request_is_frozen_provider_neutral_and_can_be_bounded → PASS / WI-3 P1`<br>`tests/integration/test_fake_first_slice.py → FakeFirstSliceIntegrationTests.test_rich_fake_result_traverses_existing_execution_path → PASS / WI-3 P5 regression` | bounded `US / TikTok / requested_item_count=5` entered the existing Fake execution without becoming a Provider request or a completeness claim | `TESTED` | `NONE` |
+| B03 | `src/ecommerce_ai_os/search/models.py → SearchResultOccurrence / SearchResult / SearchFailure / bounded state enums`<br>`src/ecommerce_ai_os/search/serialization.py → serialize_search_result / serialize_search_failure` | `tests/unit/search/test_boundaries.py → rich result, duplicate, missingness, valid-empty, typed-failure, time, and invariant tests → PASS / WI-3 P1-P3`<br>`tests/unit/search/test_serialization.py → SearchSerializationTests → 3/3 PASS / WI-3 P4`<br>`tests/integration/test_fake_first_slice.py → test_rich_fake_result_traverses_existing_execution_path + test_established_failure_closes_with_path_sensitive_record → PASS / WI-3 P5` | `rounds/WI_03_SEARCH_SEMANTICS.md → P5 Actual Evidence`；rich A/B/A SearchResult survived the full retained Fake path; typed non-continuable SearchFailure produced path-sensitive failure C6 | `RUNTIME VERIFIED`（WI-3 bounded Fake semantics; real Provider deferred） | `NONE` |
+| B04 | `src/ecommerce_ai_os/search/models.py → RawResultCapture / SearchInvocationContext`<br>`src/ecommerce_ai_os/runtime/task_runtime.py → TaskRuntime._invoke_search` | `tests/unit/search/test_boundaries.py → test_invocation_context_is_narrow_and_carries_opaque_capture → PASS / WI-3 P1`<br>`tests/unit/runtime/test_task_runtime.py → same-Execution success/failure coordination tests → PASS / WI-3 P3/P5` | execution identity crossed the narrowed Search-owned invocation context; no GlobalContext or Runtime dump was introduced | `TESTED` | `NONE` |
+| B05 | `src/ecommerce_ai_os/search/models.py → SearchInvocationProvenance`<br>`src/ecommerce_ai_os/search/serialization.py → _serialize_provenance`<br>`src/ecommerce_ai_os/runtime/task_runtime.py + runtime/execution_record.py → path-actual failure C6 projection` | `tests/unit/search/test_boundaries.py → test_invocation_provenance_preserves_actual_path_facts + test_raw_result_refs_require_an_actually_used_provider → PASS / WI-3 P1`<br>`tests/unit/search/test_serialization.py → result/failure provenance serialization → PASS / WI-3 P4`<br>`tests/integration/test_fake_first_slice.py → rich retained result + failure C6 projection → PASS / WI-3 P5` | bounded Fake/runtime evidence preserves actual capability and supplied resolved/used refs without fabrication; live Provider verification remains WI-5 | `TESTED` | `NONE` |
+| B06 | `src/ecommerce_ai_os/search/models.py → RawProviderResultRef`<br>`src/ecommerce_ai_os/search/serialization.py → _serialize_provenance` | `tests/unit/search/test_boundaries.py → test_raw_provider_result_ref_is_reference_only + test_raw_result_refs_require_an_actually_used_provider → PASS / WI-3 P1`<br>`tests/unit/search/test_serialization.py → raw reference IDs survive without raw payload → PASS / WI-3 P4` | owner-local serialization is proved; current P5 Fake runtime establishes no real raw capture and fabricates no raw ref; live verification remains WI-5 | `TESTED` | `NONE` |
 | B07 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B08 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
 | B09 | `NOT YET IMPLEMENTED` | `NOT YET VERIFIED` | `NOT YET VERIFIED` | `PLANNED` | `NONE` |
@@ -266,6 +275,37 @@ P5 adds no production behavior and no verification-only test. It re-executed the
 | D04 | publish-before-reference, success staging removal, and no-final-bundle closure failure all passed | `RUNTIME VERIFIED` |
 
 The P5 import guard, sequential isolation test, full unit/integration regression, and `/tmp` Fake CLI evidence are recorded in `rounds/WI_02_EXECUTION_LIFECYCLE.md → P5 Actual Evidence`. Status counts remain unchanged.
+
+### 8.2 WI-3 P5 Verification Overlay
+
+WI-03 P5 adds no production behavior and no verification-only test. It
+re-executed the existing Search semantics evidence, inspected one fresh rich
+Fake bundle, and synchronized this living index:
+
+| ID | WI-3 P5 actual verification | Final status |
+|---|---|---|
+| A08 | `ResearchExecutionPort` exposes the full `SearchResult \| SearchFailure` C3 outcome; continuable failure returns unchanged to the same caller and Execution | `TESTED` |
+| A09 | typed non-continuable and defensive invalid outcomes still use the private Runtime unwind; no maturity upgrade is claimed | `TESTED` |
+| B02 | provider-neutral bounded request facts remained distinct from Provider mechanics and population-completeness claims | `TESTED` |
+| B03 | rich A/B/A result, valid empty, typed failure, bounded states, time, missingness, serialization, retained JSON, and failure C6 all passed | `RUNTIME VERIFIED` |
+| B04 | execution-scoped narrowed invocation context remained Search-owned and carried no Runtime dump | `TESTED` |
+| B05 | result/failure provenance and path-actual C6 projection passed; real Provider provenance remains deferred to WI-5 | `TESTED` |
+| B06 | opaque raw-result reference IDs serialize without raw payload; real raw capture remains deferred to WI-5 | `TESTED` |
+| D01 | terminal failure C6 retained kind/code/reason and supplied resolved/used Provider refs without fabricating success-only or raw-reference facts | `RUNTIME VERIFIED` |
+
+WI-03 changes B05 and B06 from `PLANNED` to `TESTED`; no row is promoted
+merely because the full suite ran. The final counts are `11 TESTED / 0
+IMPLEMENTED / 5 PLANNED / 12 RUNTIME VERIFIED`.
+
+```text
+NB-02 = OPEN / CARRIED FORWARD / not a WI-03 Search-semantics blocker
+NB-03 = OPEN / CARRIED FORWARD
+NB-04 = CLOSED / living Current Handoff + Traceability synchronized
+F7 = NOT YET PROVEN / DEFERRED
+P5 Architecture Deviation = NONE
+Completed Baseline Architecture Deviation = FOUND / bounded NB-02 + NB-03
+Architecture Assumption Conflict = NONE
+```
 
 P3 Human Review identified one blocking implementation defect: Runtime did not prove that the actual
 bound `ResearchSkill.declaration` matched `ExecutionContext.skill_declaration` before capability
@@ -494,43 +534,47 @@ Consequence
 
 ## 20. Current Coverage State
 
-截至 `WI-1` P5 final closure 与 `WI-2` P1～P5 actual evidence，coverage 为：
+截至 `WI-03` P5 full verification actual evidence，coverage 为：
 
 | 维度 | 当前状态 |
 |---|---|
 | Architecture baseline | `28 core concepts` |
-| Current Status Count | `9 TESTED` / `0 IMPLEMENTED` / `7 PLANNED` / `12 RUNTIME VERIFIED` |
-| TESTED | `A06`, `A07`, `A08`, `A09`, `B02`, `B04`, `C01`, `C02`, `C05`（`9` 项） |
+| Current Status Count | `11 TESTED` / `0 IMPLEMENTED` / `5 PLANNED` / `12 RUNTIME VERIFIED` |
+| TESTED | `A06`, `A07`, `A08`, `A09`, `B02`, `B04`, `B05`, `B06`, `C01`, `C02`, `C05`（`11` 项） |
 | IMPLEMENTED | `NONE` |
-| PLANNED | `B05`-`B09`, `C03`, `C04`（`7` 项） |
+| PLANNED | `B07`-`B09`, `C03`, `C04`（`5` 项） |
 | RUNTIME VERIFIED | `A01`, `A02`, `A03`, `A04`, `A05`, `A10`, `B01`, `B03`, `D01`, `D02`, `D03`, `D04`（`12` 项） |
 | Reviewed Software Representation | 已冻结为本文第 7 节内容 |
-| Actual Code | `VERIFIED THROUGH WI-2 P5 / NO NEW P5 PRODUCTION BEHAVIOR` |
-| Test Evidence | `VERIFIED THROUGH WI-2 P5` |
-| Runtime Evidence | `WI-1 SUCCESS + WI-2 FOUR-PATH MATRIX + SEQUENTIAL ISOLATION + P5 FAKE CLI` |
-| Architecture Deviation | `NONE OBSERVED` |
-| Architecture conformity | `WI-1 MINIMAL SHAPE + WI-2 P1-P5 VERIFIED / WI-02 COMPLETE / PASS` |
+| Actual Code | `VERIFIED THROUGH WI-3 P4 / NO WI-3 P5 PRODUCTION BEHAVIOR` |
+| Test Evidence | `VERIFIED THROUGH WI-3 P5` |
+| Runtime Evidence | `WI-1 SUCCESS + WI-2 LIFECYCLE + WI-3 RICH SUCCESS / FAILURE + P5 FAKE BUNDLES` |
+| Architecture Deviation | `FOUND / BOUNDED NB-02 + NB-03 CARRIED FORWARD; NONE INTRODUCED BY WI-3 P5` |
+| Architecture Assumption Conflict | `NONE` |
+| Architecture conformity | `WI-03 SEARCH SEMANTICS COMPLETE / HUMAN REVIEWED / PASS` |
 
 WI-2 P4 的 actual evidence 补强 A03、A10、D02 与 D04；A10 因直接观察到
 `business_completion → closure_failure` 与 Business Result preservation 而升级为 `RUNTIME VERIFIED`。
-其余行不因 P5 重新执行整条路径而机械升级。尤其 A09 的 private control mechanism 仍保持 `TESTED`，B03 的 deterministic Fake identity
-不是 final SearchResult identity proof，B04/B05/B06 与完整 C3 semantics 仍由 WI-3 验证；Research
-与 C6 的 full semantics 仍分别保留给 WI-6 / WI-7。
+其余行不因 P5 重新执行整条路径而机械升级。尤其 A09 的 private control mechanism 仍保持 `TESTED`。
+WI-03 已验证 bounded Fake C3 semantics；B05/B06 的 live Provider / raw-capture 验证仍保留给 WI-5，
+Research 与 C6 的 full semantics 仍分别保留给 WI-6 / WI-7。
 
 ## 21. Current Next
 
 ```text
-LAST COMPLETED ROUND WI-02 - EXECUTION LIFECYCLE / COMPLETE / PASS
-P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
-P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
-P3 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
-P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
-P5 COMPLETE / VERIFIED / HUMAN REVIEWED / PASS
-P5 FINAL VERDICT PASS
-WI-02 COMPLETE / PASS
-CURRENT NEXT WI-03 SEARCH SEMANTICS / NEXT / NOT STARTED
-WI-03 PLANNING NOT STARTED / NOT AUTHORIZED
-WI-03 IMPLEMENTATION NOT STARTED / NOT AUTHORIZED
+LAST COMPLETED ROUND WI-03 - SEARCH SEMANTICS / COMPLETE / HUMAN REVIEWED / PASS
+WI-03 P1 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+WI-03 P2 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+WI-03 P3 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+WI-03 P4 COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+WI-03 P5 COMPLETE / TESTED / HUMAN REVIEWED / PASS
+WI-03 COMPLETE / HUMAN REVIEWED / PASS
+CURRENT NEXT WI-04 SCRAPE CREATORS ADAPTER / NEXT / NOT STARTED / NOT AUTHORIZED
+NB-02 OPEN / CARRIED FORWARD
+NB-03 OPEN / CARRIED FORWARD
+NB-04 CLOSED
+F7 NOT YET PROVEN / DEFERRED
+ARCHITECTURE ASSUMPTION CONFLICT NONE
+WI-04 NEXT / NOT STARTED / NOT AUTHORIZED
 ```
 
 WI-1 P0～P5 已完成，WI-1 final verdict 为 `PASS`。WI-2 P1 admission、rejection response 与
@@ -538,5 +582,6 @@ Execution establishment 的 bounded actual evidence 已通过 Human Review。Foc
 ResearchSkill 在 composition time 已静态绑定，后续 declaration equality check 只是 defensive invariant；
 classification 为 `NO ISSUE`。WI-2 P3 与 P4 已通过 Human Review。WI-2 P5 已重新验证
 four-path lifecycle matrix、path-sensitive C6 / referenceability、sequential isolation、import DAG 与 Fake CLI success，
-并已 Human Review `PASS`。无 production behavior 或 verification-only test 新增；WI-02 Final Verdict 为
-`COMPLETE / PASS`，当前导航为 WI-03 Search Semantics `NEXT / NOT STARTED`。
+并已 Human Review `PASS`。WI-03 P1-P5 已全部 Human Review `PASS`；P5 无 production
+behavior 或 verification-only test 新增。WI-03 为 `COMPLETE / HUMAN REVIEWED / PASS`；
+WI-04 为 next，但尚未开始且未授权。

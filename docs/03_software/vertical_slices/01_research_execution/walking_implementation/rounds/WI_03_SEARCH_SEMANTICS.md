@@ -26,10 +26,13 @@ P1 — C3 Model Closure
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 WI-03
-= IN PROGRESS
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
 
 Implementation
-= P1 COMPLETE / P2 COMPLETE + HUMAN REVIEWED + PASS / P3+ NOT AUTHORIZED
+= P1-P4 COMPLETE / HUMAN REVIEWED / PASS
+
+P5
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
 
 Architecture Expansion
 = NOT AUTHORIZED
@@ -675,6 +678,193 @@ P5
 = NOT AUTHORIZED
 ```
 
+### P5 Actual Evidence — Full Verification
+
+```text
+P5 — Full Verification
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+P5 Human Review
+= PASS
+
+WI-03 — Search Semantics
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+P5 Production Changes
+= NONE
+
+P5 Test Changes
+= NONE
+```
+
+Final Gates:
+
+| Gate | Actual evidence | Result |
+|---|---|---|
+| G1 — P1-P4 regression | focused Search / serialization / Research / Runtime and full unit / integration suites passed | `PASS` |
+| G2 — Representative runtime paths | rich success, valid empty, continuable failure, non-continuable failure, and contract-invalid outcome all have executable evidence | `PASS` |
+| G3 — Rich retained SearchResult | fresh rich Fake bundle retained reviewed C3 facts and resolved all five C6 references | `PASS` |
+| G4 — Typed SearchFailure lifecycle | exact continuable failure returned unchanged; non-continuable failure used private unwind and path-sensitive C6 | `PASS` |
+| G5 — Information integrity | no loss or false strengthening observed on tested paths | `PASS` |
+| G6 — Delete Test / boundary | all eight reviewed mechanisms remain justified; no premature generic framework exists | `PASS` |
+| G7 — Documentation / debt sync | NB-04 closed; NB-02/NB-03 carried; F7 deferred | `PASS` |
+| G8 — Architecture review | P5 introduced no deviation; Architecture Assumption Conflict remains none | `PASS` |
+
+Five representative paths:
+
+| Path | Exact executable evidence | Runtime meaning | Result |
+|---|---|---|---|
+| A — Rich Success | `FakeFirstSliceIntegrationTests.test_rich_fake_result_traverses_existing_execution_path`; `test_successful_fake_execution_publishes_resolvable_bundle`; fresh P5 rich Fake bundle | Research → Search → rich A/B/A SearchResult → Research completion → retained rich JSON → successful C6 / resolvable Record Ref | `PASS` |
+| B — Valid Empty | `SearchBoundaryTests.test_valid_empty_result_is_not_a_search_failure`; `SearchSerializationTests.test_valid_empty_result_serializes_zero_without_invented_facts` | zero occurrences remains a valid SearchResult and is never strengthened into SearchFailure | `PASS` |
+| C — Continuable SearchFailure | `TaskRuntimeCoordinationTests.test_invalid_request_failure_returns_unchanged_to_same_execution` | `INVALID_REQUEST` returns as the exact same SearchFailure to the same caller / Execution; private abort is not called | `PASS` |
+| D — Non-continuable SearchFailure | `test_provider_invocation_failure_triggers_private_execution_abort`; `test_provider_resolution_failure_triggers_private_execution_abort`; `FakeFirstSliceIntegrationTests.test_established_failure_closes_with_path_sensitive_record` | provider invocation/resolution failure crosses the private unwind, closes the established Execution, and publishes resolvable failure C6 | `PASS` |
+| E — Contract-invalid outcome | `TaskRuntimeCoordinationTests.test_contract_invalid_search_outcome_keeps_defensive_abort` | non-SearchResult / non-SearchFailure becomes bounded `SEARCH_OUTCOME_NOT_RESULT` defensive failure, not typed SearchFailure | `PASS` |
+
+Cross-layer information-conservation review:
+
+| Fact | In-memory representation | Runtime behavior | Serialized form | Retained form | Verdict |
+|---|---|---|---|---|---|
+| ordered occurrences | ordered tuple | same SearchResult crosses C3/C2b | ordered JSON array | same order in `search_results` | `PRESERVED` |
+| duplicates | repeated occurrence allowed | A/B/A is not deduplicated | repeated array entries | A/B/A retained | `PRESERVED` |
+| known missingness | `frozenset[str]` | remains absence knowledge, not a fake value | deterministic string list | explicit list per occurrence | `PRESERVED` |
+| requested retrieval bound | optional positive integer | remains request bound only | `requested_item_count` | `5` distinct from returned `3` | `PRESERVED` |
+| returned boundary | non-negative count equal to occurrences | drives bounded sample only | `returned_item_count` | `3` | `PRESERVED` |
+| stopping reason | provider-neutral enum | limitation remains bounded stop | stable enum value | `limitation_reached` | `PRESERVED` |
+| continuation | independent enum | availability does not imply completeness | stable enum value | `available` | `PRESERVED` |
+| Search completion | bounded-request enum | known incomplete remains explicit | stable enum value | `known_incomplete` | `PRESERVED` |
+| Provider exhaustion | independent enum | not exhausted remains distinct | stable enum value | `not_exhausted` | `PRESERVED` |
+| global completeness | `UNKNOWN` only | no TikTok population claim | `unknown` | `unknown` | `PRESERVED` |
+| publication time | optional UTC-aware datetime | remains distinct from observation | UTC ISO-8601 / null | exact UTC value | `PRESERVED` |
+| observation time | optional UTC-aware datetime | remains distinct from publication | UTC ISO-8601 / null | exact UTC value | `PRESERVED` |
+| collection time | optional UTC-aware datetime | remains result-level collection fact | UTC ISO-8601 / null | exact UTC value | `PRESERVED` |
+| limitations | non-empty tuple entries | bounded caveat remains attached | JSON list | retained list | `PRESERVED` |
+| resolved Provider | optional provenance fact | transferred only when actually supplied | value / null | result JSON or failure C6 only when established | `PRESERVED` |
+| used Provider | optional provenance fact requiring resolved ref | never inferred from configured/resolved alone | value / null | result JSON or failure C6 only when established | `PRESERVED` |
+| capability result ref | optional provenance fact | rich Fake supplies actual retained result ref | value / null | retained on rich result; failure runtime path does not exercise it | `PRESERVED / FAILURE PATH DEFERRED` |
+| RawProviderResultRef | opaque reference tuple requiring used Provider | no real P5 raw capture occurred | reference IDs only; no payload | no fabricated runtime raw refs | `TESTED / LIVE EVIDENCE DEFERRED` |
+| SearchFailure kind | bounded C3 enum | drives continuable vs private-abort path | stable enum value | continuable in memory; terminal kind in C6 | `PRESERVED` |
+| SearchFailure code/reason | non-empty typed facts | exact facts return or cross private unwind | exact strings | exact terminal C6 facts | `PRESERVED` |
+
+False-strengthening audit:
+
+```text
+requested market = US != proven complete US population
+Provider exhausted != global TikTok completeness
+known missing field != empty string / false / zero
+configured Provider != resolved Provider
+resolved Provider != used Provider
+SearchResult != Evidence
+SearchFailure != ExecutionAbort
+= PASS
+```
+
+Read-only Delete Test:
+
+| Mechanism | DELETE? | Reviewed semantic lost if removed |
+|---|---|---|
+| `SearchResultOccurrence` | `NO` | ordered occurrence-level item/source identity, duplicates, missingness, and times collapse |
+| explicit known missingness | `NO` | known absence becomes indistinguishable from false/empty/invented values |
+| SearchResult bounded states | `NO` | stop, continuation, request completion, Provider exhaustion, and global completeness collapse into false certainty |
+| `SearchInvocationProvenance` | `NO` | actual resolved/used/result/raw-reference facts cannot remain path-sensitive |
+| `RawProviderResultRef` | `NO` | Search loses provider-neutral raw referenceability without copying Provider payload |
+| typed `SearchFailure` | `NO` | valid empty, typed failure, private unwind, and raw Provider errors can no longer remain distinct |
+| `RuntimeResearchExecutionPort` | `NO` | the same-Research-caller / same-Execution C2a↔C2b seam disappears |
+| Search-owned serialization | `NO` | retained C3 facts regress to lossy Runtime-owned or ad hoc representation |
+
+Absent-framework audit:
+
+```text
+SearchService = ABSENT
+SearchRepository = ABSENT
+SearchOrchestrator = ABSENT
+ProviderRouter = ABSENT
+ProviderRegistry = ABSENT
+RetryPolicy = ABSENT
+FailurePolicyEngine = ABSENT
+ContinuabilityService = ABSENT
+universal error taxonomy = ABSENT
+schema registry = ABSENT
+serializer registry = ABSENT
+new persistence service = ABSENT
+```
+
+Deferred / debt review:
+
+```text
+NB-01
+= CLOSED
+
+NB-02
+= OPEN / CARRIED FORWARD
+= post-establishment unexpected software exception closure gap
+= required before comprehensive / final First-Slice acceptance
+= not a WI-03 blocker
+
+NB-03
+= OPEN / CARRIED FORWARD
+= application presentation
+= not a WI-03 blocker
+
+NB-04
+= CLOSED
+= living Current Handoff + Architecture-Code Traceability synchronized
+
+F7
+= NOT YET PROVEN / DEFERRED
+= no backlog commitment is created by this status
+```
+
+Executed P5 evidence:
+
+```text
+Search focused = PASS / 21 tests
+Serialization focused = PASS / 3 tests
+Research focused = PASS / 3 tests
+Runtime focused = PASS / 9 tests
+Full unit = PASS / 46 tests
+Integration = PASS / 6 tests
+Architecture import direction = PASS / 1 test
+Fake CLI = PASS / SUCCEEDED / exit 0 / 5 of 5 required refs resolve
+compileall = PASS
+git diff --check = PASS
+```
+
+Fresh external bundle inspection:
+
+```text
+CLI C6
+= /tmp/ecommerce-ai-os-WI3-P5-cli.Nlyh6G/executions/c3a0a204-6a68-4794-977a-fa2a4ab062e4/execution_record.json
+= required refs 5 / resolved 5
+
+Rich Fake C6
+= /tmp/ecommerce-ai-os-WI3-P5-rich.sqkekI/executions/7cade270-948a-4772-8593-6496552b46de/execution_record.json
+= required refs 5 / resolved 5
+= execution_record / search result / sample boundary / evidence / research result all resolve
+= A/B/A order, missingness, requested 5 / returned 3, bounded states,
+  distinct UTC times, limitations, and Fake provenance preserved
+= resolved Provider / used Provider / raw refs absent because not established
+```
+
+```text
+P5-introduced Architecture Deviation
+= NONE
+
+WI-03-introduced unresolved Architecture Deviation
+= NONE
+
+Completed-baseline bounded Architecture Deviations
+= NB-02 and NB-03 remain
+
+Architecture Assumption Conflict
+= NONE
+
+NB-04
+= CLOSED
+
+WI-04 — Scrape Creators Adapter
+= NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
+```
+
 ## 8. Allowed / Conditional / Forbidden Changes
 
 Primary allowed production surface:
@@ -834,7 +1024,7 @@ minimal Runtime type handling
 
 ```text
 Current Next
-= P5 — Full Verification / NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
+= WI-04 — Scrape Creators Adapter / NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
 
 P1 — C3 Model Closure
 = COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
@@ -852,6 +1042,34 @@ P4 Implementation
 = COMPLETE / TESTED / HUMAN REVIEWED / PASS
 
 P5 — Full Verification
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+P5 Human Review
+= PASS
+
+WI-03 — Search Semantics
+= COMPLETE / IMPLEMENTED / TESTED / HUMAN REVIEWED / PASS
+
+NB-01
+= CLOSED
+
+NB-02
+= OPEN / CARRIED FORWARD
+= required before comprehensive final First-Slice acceptance
+= not a WI-03 blocker
+
+NB-03
+= OPEN / CARRIED FORWARD
+= application presentation
+= not a WI-03 blocker
+
+NB-04
+= CLOSED
+
+F7
+= NOT YET PROVEN / DEFERRED
+
+WI-04 — Scrape Creators Adapter
 = NEXT / NOT STARTED / NOT AUTHORIZED BY THIS CLOSURE TASK
 
 Architecture Expansion

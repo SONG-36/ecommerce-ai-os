@@ -4,7 +4,7 @@
 - Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
 - Document role: Current navigation and handoff state
 - Authority status: Navigation only; this file is not an Architecture Authority
-- Last synchronized: 2026-08-23
+- Last synchronized: 2026-08-25
 
 ## 0. How To Use This Handoff
 
@@ -121,7 +121,7 @@ Architecture Expansion
 = NOT AUTHORIZED
 
 Last Completed Round
-= WI-02 — Execution Lifecycle / COMPLETE / PASS
+= WI-03 — Search Semantics / COMPLETE / HUMAN REVIEWED / PASS
 
 WI-01 Status
 = COMPLETE / PASS
@@ -140,6 +140,48 @@ WI-02 Architecture Deviation
 
 WI-02 Architecture Assumption Conflict
 = NONE
+
+WI-03 P1
+= COMPLETE / PASS
+
+WI-03 P2
+= COMPLETE / PASS
+
+WI-03 P3
+= COMPLETE / PASS
+
+WI-03 P4
+= COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 P5
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+WI-03
+= COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 Architecture Assumption Conflict
+= NONE
+
+P5-introduced Architecture Deviation
+= NONE
+
+WI-03-introduced unresolved Architecture Deviation
+= NONE
+
+Completed-baseline bounded Architecture Deviations
+= NB-02 and NB-03 remain carried forward
+
+NB-02
+= OPEN / CARRIED FORWARD / required before comprehensive final First-Slice acceptance
+
+NB-03
+= OPEN / CARRIED FORWARD
+
+NB-04
+= CLOSED / Current Handoff and living Traceability synchronized in WI-03 P5
+
+F7
+= NOT YET PROVEN / DEFERRED
 
 Lifecycle Demo Harness
 = COMPLETE / HUMAN RUNTIME REVIEWED / PASS
@@ -163,13 +205,16 @@ Lifecycle Demo Runtime Architecture Change
 = NO
 
 Current Next
-= WI-03 — Search Semantics / NEXT / NOT STARTED
+= WI-04 — Scrape Creators Adapter / NEXT / NOT STARTED / NOT AUTHORIZED
 
 WI-03 Planning
-= NOT STARTED / NOT AUTHORIZED
+= COMPLETE / HUMAN REVIEWED / PASS
 
 WI-03 Implementation
-= NOT STARTED / NOT AUTHORIZED
+= COMPLETE / HUMAN REVIEWED / PASS
+
+WI-04 — Scrape Creators Adapter
+= NEXT / NOT STARTED / NOT AUTHORIZED
 ```
 
 This is an implementation phase for the reviewed architecture, not a new
@@ -1038,19 +1083,28 @@ Current Phase
 = Walking Implementation
 
 Last Completed Round
-= WI-02 — Execution Lifecycle / COMPLETE / PASS
+= WI-03 — Search Semantics / COMPLETE / HUMAN REVIEWED / PASS
 
 WI-02 Status
 = COMPLETE / PASS
 
 Current Next
-= WI-03 — Search Semantics / NEXT / NOT STARTED
+= WI-04 — Scrape Creators Adapter / NEXT / NOT STARTED / NOT AUTHORIZED
 
 WI-03 Planning
-= NOT STARTED / NOT AUTHORIZED
+= COMPLETE / HUMAN REVIEWED / PASS
 
 WI-03 Implementation
-= NOT STARTED / NOT AUTHORIZED
+= COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 P5
+= COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+WI-03
+= COMPLETE / HUMAN REVIEWED / PASS
+
+WI-04 — Scrape Creators Adapter
+= NEXT / NOT STARTED / NOT AUTHORIZED
 ```
 
 ### Walking Implementation Entry
@@ -1086,13 +1140,13 @@ Architecture
 
 ```text
 28 Core Concepts
-= 9 TESTED / 0 IMPLEMENTED / 7 PLANNED / 12 RUNTIME VERIFIED
+= 11 TESTED / 0 IMPLEMENTED / 5 PLANNED / 12 RUNTIME VERIFIED
 
 Actual Implementation Evidence
-= VERIFIED THROUGH WI-02 P5
+= VERIFIED THROUGH WI-03 P4
 
 Runtime Evidence
-= ESTABLISHED FOR WI-1 + WI-02 FOUR-PATH EXECUTION LIFECYCLE
+= ESTABLISHED FOR WI-1 + WI-02 LIFECYCLE + WI-03 SEARCH SEMANTICS
 ```
 
 Walking Implementation Plan 与 Traceability Map 是本阶段的执行与学习
@@ -1193,9 +1247,8 @@ Focus 与 Traceability Coverage。实施后追加 Actual Files、Actual Symbols�
 Actual Call Path、Tests、Runtime Evidence、Architecture Mapping、
 Discovered Contradictions、Learning Review 与 Final Verdict。
 
-The WI-1 and WI-02 Round Records are complete. WI-03 is next but has not
-started, and this status synchronization does not authorize WI-03 planning or
-implementation.
+The WI-1, WI-02, and WI-03 Round Records are complete and Human reviewed.
+WI-04 — Scrape Creators Adapter is next, not started, and not authorized.
 
 ### Architecture–Code Learning Method
 
@@ -1368,13 +1421,15 @@ the Current Handoff as the single new-chat entry.
 1. `docs/00_project/02_CURRENT_HANDOFF.md`
 2. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/00_WALKING_IMPLEMENTATION_PLAN.md`
 3. `docs/03_software/vertical_slices/01_research_execution/walking_implementation/01_ARCHITECTURE_CODE_TRACEABILITY.md`
-4. Completed WI-01 and WI-02 Round Records as historical implementation baselines:
+4. Completed WI-01, WI-02, and WI-03 Round Records as historical baselines:
    - `docs/03_software/vertical_slices/01_research_execution/walking_implementation/rounds/WI_01_FAKE_VERTICAL_SLICE.md`
    - `docs/03_software/vertical_slices/01_research_execution/walking_implementation/rounds/WI_02_EXECUTION_LIFECYCLE.md`
+   - `docs/03_software/vertical_slices/01_research_execution/walking_implementation/rounds/WI_03_SEARCH_SEMANTICS.md`
 
-### Tier 2 — Direct WI-03 Inputs
+### Tier 2 — WI-03 Architecture Inputs
 
-Read these only after WI-03 planning is explicitly authorized:
+These remain the direct reviewed inputs for inspecting the implemented WI-03
+Search semantics; they are not reopened by P5 verification:
 
 5. `docs/03_software/vertical_slices/01_research_execution/03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md`
 6. `docs/03_software/vertical_slices/01_research_execution/06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md`
@@ -1417,7 +1472,7 @@ WI-02:
 COMPLETE / PASS
 
 Last Completed Round:
-WI-02 — Execution Lifecycle / COMPLETE / PASS
+WI-03 — Search Semantics / COMPLETE / HUMAN REVIEWED / PASS
 
 WI-02 P0-P5:
 COMPLETE / PASS
@@ -1444,13 +1499,37 @@ Lifecycle Demo Architecture Authority:
 NO
 
 Current Next:
-WI-03 — Search Semantics / NEXT / NOT STARTED
+WI-04 — Scrape Creators Adapter / NEXT / NOT STARTED / NOT AUTHORIZED
 
 WI-03 Planning:
-NOT STARTED / NOT AUTHORIZED
+COMPLETE / HUMAN REVIEWED / PASS
 
 WI-03 Implementation:
-NOT STARTED / NOT AUTHORIZED
+COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 P5:
+COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+WI-03:
+COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 Architecture Assumption Conflict:
+NONE
+
+P5-introduced Architecture Deviation:
+NONE
+
+WI-03-introduced unresolved Architecture Deviation:
+NONE
+
+Completed-baseline bounded Architecture Deviations:
+NB-02 and NB-03 remain carried forward
+
+NB-04:
+CLOSED / Current Handoff and living Traceability synchronized
+
+F7:
+NOT YET PROVEN / DEFERRED
 
 Then read:
 
@@ -1460,7 +1539,7 @@ docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 01_ARCHITECTURE_CODE_TRACEABILITY.md
 
-Read the completed WI-1 and WI-02 Round Records as implementation baselines:
+Read the completed WI-1, WI-02, and WI-03 Round Records as implementation baselines:
 
 docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 rounds/WI_01_FAKE_VERTICAL_SLICE.md
@@ -1468,22 +1547,25 @@ rounds/WI_01_FAKE_VERTICAL_SLICE.md
 docs/03_software/vertical_slices/01_research_execution/walking_implementation/
 rounds/WI_02_EXECUTION_LIFECYCLE.md
 
-Use these Architecture inputs only after a future WI-03 planning task is
-separately authorized:
+docs/03_software/vertical_slices/01_research_execution/walking_implementation/
+rounds/WI_03_SEARCH_SEMANTICS.md
+
+Use these Architecture inputs when reviewing the completed WI-03 evidence:
 
 03_SEARCH_PROVIDER_SPINE_SOFTWARE_DESIGN.md
 06_MINIMAL_SOFTWARE_ARCHITECTURE_ASSEMBLY.md
 
 Do not write code immediately.
 
-Do not start WI-03 planning or implementation from this handoff synchronization.
-WI-03 remains `NEXT / NOT STARTED`, and its implementation remains
-`NOT STARTED / NOT AUTHORIZED`.
+WI-03 is `COMPLETE / HUMAN REVIEWED / PASS`.
 
 Do not redesign Steps 1–7.
 Do not add a 10th Contract.
-Do not start live TT-17 merely because WI-03 is next. Live TT-17 remains
-governed by its later authorized Walking Round / Provider integration scope.
+Do not start WI-04 or live TT-17. Both remain governed by a later explicitly
+authorized Walking Round / Provider integration scope.
+
+WI-04:
+NEXT / NOT STARTED / NOT AUTHORIZED
 
 Minimum Endpoint Selection:
 CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
@@ -1503,6 +1585,12 @@ NOT AUTHORIZED
 The following hashes were read from the current Ecommerce AI OS Git history:
 
 ```text
+WI-03 P4       ee06f87d6e1a35e4c1314a3d529c22e435b81683 feat: establish wi-3 p4 retained search semantics
+WI-03 P3       9c1673e5aa1c2db5ded6a8de378a3b5d9bb0035e feat: establish wi-3 p3 typed search failure
+WI-03 method   1240c0c5753e06ca30ab917beb0ec753c43a9157 docs: add semantic-first validation method
+WI-03 P2       382eab7 feat: establish wi-3 p2 rich search semantics
+WI-03 P1       edeb08a feat: establish wi-3 p1 search models
+WI-03 plan     5c153a1 docs: approve wi-3 search semantics plan
 Lifecycle Demo  e3b57383c2289795e662e57bde6f8529bf1fa4ae chore: add lifecycle demo harness
 Demo Plan       87a98817fed103b3d390b6509346a24ba42cd998 docs: approve lifecycle demo harness plan
 WI-02 sync      3491f4bd1ae4024aa569b015711eb9fe431aaab1 docs: sync project state after wi-2
@@ -1603,16 +1691,34 @@ Minimum Endpoint Selection
     = CLOSED / SUFFICIENT FOR CURRENT FIRST SLICE
 
 Current Phase / Current Next
-    = Walking Implementation / WI-03 Search Semantics
+    = Walking Implementation / WI-04 Scrape Creators Adapter
 
 WI-03
-    = NEXT / NOT STARTED
+    = COMPLETE / HUMAN REVIEWED / PASS
 
 WI-03 Planning
-    = NOT STARTED / NOT AUTHORIZED
+    = COMPLETE / HUMAN REVIEWED / PASS
 
 WI-03 Implementation
-    = NOT STARTED / NOT AUTHORIZED
+    = COMPLETE / HUMAN REVIEWED / PASS
+
+WI-03 P5
+    = COMPLETE / TESTED / HUMAN REVIEWED / PASS
+
+NB-02
+    = OPEN / CARRIED FORWARD
+
+NB-03
+    = OPEN / CARRIED FORWARD
+
+NB-04
+    = CLOSED
+
+F7
+    = NOT YET PROVEN / DEFERRED
+
+WI-04
+    = NEXT / NOT STARTED / NOT AUTHORIZED
 ```
 
 ## 21. Authority Boundary
