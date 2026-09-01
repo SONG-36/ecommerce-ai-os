@@ -465,6 +465,18 @@ Future Contract Input
 
 这些必须等 System Architecture 和 Software Architecture 进一步收敛。
 
+## 14.1 TT-17 recovered evidence navigation
+
+TT-17 Search by Keyword 的历史 runtime raw response 已于 2026-09-01 以
+present-day evidence recovery action 纳入 canonical repository。入口见：
+
+- [`04_TT17_RUNTIME_EVIDENCE_RECOVERY.md`](04_TT17_RUNTIME_EVIDENCE_RECOVERY.md)；
+- [`tt17/PROVENANCE.json`](tt17/PROVENANCE.json)；
+- [`tt17/SANITIZATION_REPORT.md`](tt17/SANITIZATION_REPORT.md)。
+
+这些材料是 Provider Runtime Evidence，不是 Architecture Authority，也不
+构成历史 standalone TT-17 admission / endpoint-selection closure document。
+
 ---
 
 # 15. Current Frozen Facts

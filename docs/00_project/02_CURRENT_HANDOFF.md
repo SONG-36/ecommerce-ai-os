@@ -4,7 +4,7 @@
 - Repository: `/Volumes/projects/andy/0813/ecommerce-ai-os`
 - Document role: Current navigation and handoff state
 - Authority status: Navigation only; this file is not an Architecture Authority
-- Last synchronized: 2026-08-25
+- Last synchronized: 2026-09-01
 
 ## 0. How To Use This Handoff
 
@@ -215,6 +215,15 @@ WI-03 Implementation
 
 WI-04 — Scrape Creators Adapter
 = NEXT / NOT STARTED / NOT AUTHORIZED
+
+TT-17 Canonical Runtime Evidence
+= RECOVERED / PENDING HUMAN REVIEW
+
+TT-17 Evidence Navigation
+= docs/05_references/provider_lab/04_TT17_RUNTIME_EVIDENCE_RECOVERY.md
+
+WI-04 Entry Audit
+= NOT STARTED / NOT AUTHORIZED BY EVIDENCE RECOVERY
 ```
 
 This is an implementation phase for the reviewed architecture, not a new

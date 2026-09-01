@@ -1,0 +1,86 @@
+{
+  "evidence_record_version": "1.0",
+  "provider": "Scrape Creators",
+  "endpoint_identity": "TT-17 Search by Keyword",
+  "provider_endpoint_path": "/v1/tiktok/search/keyword",
+  "original_observation_date": "2026-08-08",
+  "original_source_kind": "historical local runtime artifacts",
+  "original_source_was_committed_to_ecommerce_ai_os": false,
+  "canonical_fixture_relationship": "original runtime raw source != canonical sanitized fixture",
+  "request_sequence": [
+    {
+      "sequence": 1,
+      "request_id": "RT-001_TT-17_request_01",
+      "request_semantics": {
+        "query": "car vacuum",
+        "region": "US"
+      },
+      "observed_transport": {
+        "http_status": 200,
+        "transport_error": null
+      },
+      "original_source_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/responses_raw/TT-17/rt-001-tt-17-request-01.raw.json",
+      "original_sha256": "82c20c3596659e5fa883458dfae81627c55ded610704042633e5db04c0e29166",
+      "historical_request_summary_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/evidence/redacted/rt-001-tt-17-request-01.redacted-summary.json",
+      "historical_request_summary_sha256": "130f316f7d207144916efb0573f713c2272e311f86d7faf22e7b8b890bde4a71",
+      "canonical_fixture_path": "tests/fixtures/providers/scrape_creators/tt17/search_keyword/region_us_page_01.json",
+      "canonical_fixture_sha256": "aaa15a37bd17f8e1f6cb0e648b6addf59d4fda89ed0938a12ae7fc9509f767e4",
+      "sanitization_status": "sanitized",
+      "sanitization_report": "docs/05_references/provider_lab/tt17/SANITIZATION_REPORT.md"
+    },
+    {
+      "sequence": 2,
+      "request_id": "RT-001_TT-17_request_02",
+      "request_semantics": {
+        "query": "car vacuum",
+        "region": "US",
+        "cursor": "30",
+        "continuation_of_sequence": 1
+      },
+      "observed_transport": {
+        "http_status": 200,
+        "transport_error": null
+      },
+      "original_source_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/responses_raw/TT-17/rt-001-tt-17-request-02.raw.json",
+      "original_sha256": "63206bb7134f414812066d044334ec7677ed9ee906e04e5b36009058b4b17be6",
+      "historical_request_summary_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/evidence/redacted/rt-001-tt-17-request-02.redacted-summary.json",
+      "historical_request_summary_sha256": "1a997044a213d49ad0e877868944ce203488e9bf7abaefadaf9698d1858f4811",
+      "canonical_fixture_path": "tests/fixtures/providers/scrape_creators/tt17/search_keyword/region_us_page_02.json",
+      "canonical_fixture_sha256": "f189caeb07e1197d6226025922a926feff9b8a06c23b2519ed69f4b7fa23430f",
+      "sanitization_status": "sanitized",
+      "sanitization_report": "docs/05_references/provider_lab/tt17/SANITIZATION_REPORT.md"
+    },
+    {
+      "sequence": 3,
+      "request_id": "RT-001_TT-17_request_03",
+      "request_semantics": {
+        "query": "car vacuum",
+        "region": "US",
+        "date_posted": "last-3-months"
+      },
+      "observed_transport": {
+        "http_status": null,
+        "transport_error": "URLError / SSLEOFError"
+      },
+      "semantic_interpretation": "UNKNOWN",
+      "original_source_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/responses_raw/TT-17/rt-001-tt-17-request-03.raw.json",
+      "original_sha256": "356ba81f741393a1862f2a5154c910d32111eb5391f30a719c8b53f053c0505c",
+      "historical_request_summary_path": "/Volumes/projects/andy/0803/video-direction-workbench/research/scrape_creators/campaigns/2026-08-08-runtime-recon/evidence/redacted/rt-001-tt-17-request-03.redacted-summary.json",
+      "historical_request_summary_sha256": "5c8b723ba25061154c2ceed28fbb1c50e36cf331565a0dde56ee612d8ced8b5b",
+      "canonical_fixture_path": null,
+      "canonical_fixture_sha256": null,
+      "sanitization_status": "not copied; bounded transport-error fact recorded in provenance and recovery record",
+      "sanitization_report": "docs/05_references/provider_lab/tt17/SANITIZATION_REPORT.md"
+    }
+  ],
+  "recovered_at": "2026-09-01T08:33:14+08:00",
+  "recovery_source_repository_workspace": "/Volumes/projects/andy/0803/video-direction-workbench",
+  "canonical_repository": "/Volumes/projects/andy/0813/ecommerce-ai-os",
+  "limitations": [
+    "The original raw files were historical local runtime artifacts and were not originally committed into Ecommerce AI OS.",
+    "The canonical fixtures are sanitized derivatives and are not byte-identical to the original raw responses.",
+    "No standalone historical TT-17 admission or endpoint-selection closure document exists; this recovery record is not a substitute historical authority.",
+    "Request 03 proves only a transport failure; Provider behavior for date_posted remains unknown.",
+    "The evidence does not prove a Provider hard cap, pagination termination, global completeness, full enumeration, sort_by behavior, ranking semantics or stability, or the exact effect of region=US."
+  ]
+}
