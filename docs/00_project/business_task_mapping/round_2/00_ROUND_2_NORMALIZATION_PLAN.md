@@ -2,13 +2,25 @@
 
 - **Document type**: Project / Business Task Normalization Plan
 - **Round**: Round 2 — Normalize & Deduplicate
-- **Status**: IN PROGRESS / FULL 2A CLASSIFICATION COMPLETE / V1.1 TARGETED RE-REVIEW COMPLETE
+- **Status**: IN PROGRESS / PASS 2A COMPLETE / HUMAN REVIEWED / READY FOR 2B
 - **Input authority**: Round 1 materialized Candidate inventory and evidence records
 - **Architecture authority**: No
 - **Structural disposition authority**: Round 2
 - **Downstream consumer**: Round 3 Prioritization
 - **2A ruleset status**: Classification Ruleset V1.1 — CALIBRATED / POST-CLASSIFICATION AUDIT REVISION
 - **Calibration record**: `01_ROUND_2A_CLASSIFICATION_CALIBRATION_RECORD.md`
+- **Human Review evidence**: `03_ROUND_2A_HUMAN_REVIEW_EVIDENCE.md`
+- **Pass 2A closure**: `04_ROUND_2A_CLASSIFICATION_CLOSURE.md`
+
+## Round 2A Navigation
+
+```text
+00_ROUND_2_NORMALIZATION_PLAN.md
+01_ROUND_2A_CLASSIFICATION_CALIBRATION_RECORD.md
+02_ROUND_2A_CANDIDATE_CLASSIFICATION_LEDGER.csv
+03_ROUND_2A_HUMAN_REVIEW_EVIDENCE.md
+04_ROUND_2A_CLASSIFICATION_CLOSURE.md
+```
 
 ---
 
@@ -1858,24 +1870,33 @@ Round 3 Prioritization
 
 # 39. Current Next Step
 
-Round 2A calibration is complete and recorded in:
+Pass 2A is closed as:
+
+```text
+COMPLETE / HUMAN REVIEWED / READY FOR 2B
+```
+
+Its calibration, classification ledger, Human Review evidence, and closure are
+recorded in:
 
 ```text
 01_ROUND_2A_CLASSIFICATION_CALIBRATION_RECORD.md
+02_ROUND_2A_CANDIDATE_CLASSIFICATION_LEDGER.csv
+03_ROUND_2A_HUMAN_REVIEW_EVIDENCE.md
+04_ROUND_2A_CLASSIFICATION_CLOSURE.md
 ```
 
 Current ruleset status:
 
 ```text
-2A Classification Ruleset V1.1 — CALIBRATED / POST-CLASSIFICATION AUDIT REVISION
+Classification Ruleset V1.1
 ```
 
-The full 89-Candidate classification and V1.1 targeted re-review are complete.
-The current 2A output is:
+The next authorized activity is:
 
 ```text
-02_ROUND_2A_CANDIDATE_CLASSIFICATION_LEDGER.csv
+Pass 2B — Task Boundary Normalization
 ```
 
-No subsequent pass is authorized by this ruleset-evolution update. Pass 2B
-remains out of scope.
+Pass 2B planning and calibration may begin next. This Pass 2A closure does not
+execute any Pass 2B disposition.
